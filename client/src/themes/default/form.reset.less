@@ -1,0 +1,67 @@
+/* 全局重写form样式  */
+.form {
+  .ant-form {
+    border-top: 1px solid @border-color-base;
+    // border-left: 1px solid @border-color-base;
+
+    .ant-form-item {
+      margin: 0;
+    }
+
+    .ant-row {
+      display: flex;
+      height: 100%;
+      margin: 0 !important;
+      .ant-col {
+        padding: 0 !important;
+      }
+      .ant-col:first-child .ant-form-item-label {
+        border-left: 1px solid @border-color-base;
+      }
+
+      .ant-form-item-label,
+      .ant-form-item-control-wrapper {
+        padding: @base-size !important;
+      }
+    }
+
+    .ant-form-item-label,
+    .ant-form-item-control-wrapper {
+      border-bottom: 1px solid @border-color-base;
+      border-right: 1px solid @border-color-base;
+      display: table;
+      height: 100%;
+      padding: @base-size;
+      word-wrap: break-word;
+      white-space: unset;
+    }
+
+    .ant-table-tbody {
+      .ant-form-item-label,
+      .ant-form-item-control-wrapper {
+        border-bottom: initial;
+        border-right: initial;
+        border-left: initial;
+        width: 100%;
+      }
+    }
+
+    .ant-form-item-label {
+      background-color: @descriptions-bg;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .ant-form-item-label label {
+      vertical-align: middle;
+      display: table-cell;
+    }
+    .ant-form-item-control {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .ant-table-wrapper {
+      width: 100%;
+    }
+  }
+}

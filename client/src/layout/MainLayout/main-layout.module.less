@@ -1,0 +1,146 @@
+@import '../../themes/default/variables.less';
+@import './main-layout-base.less';
+
+@avatar-size: 24px;
+
+.main {
+  height: 100vh;
+  min-width: 1200px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 5px fade(@menu-dark-bg, 30%);
+    padding: 0 @base-size * 2;
+    z-index: @zindex-above-float;
+
+    .logo {
+      color: @heading-color;
+      display: flex;
+      align-items: flex-end;
+
+      img {
+        width: 100px;
+      }
+
+      :global(.ant-divider-vertical) {
+        height: 1em;
+      }
+
+      span {
+        display: inline-block;
+        padding-top: 1px;
+        height: @font-size-lg;
+        line-height: @font-size-lg;
+        font-size: @font-size-lg + 2px;
+        font-weight: @font-weight-bold;
+      }
+    }
+
+    .blank {
+      flex: 1 1 auto;
+    }
+
+    .actions {
+      cursor: default;
+      color: @heading-color;
+      display: flex;
+      align-items: center;
+
+      button {
+        color: @heading-color;
+        padding: 0;
+      }
+
+      .avatar,
+      .impersonate_avatar {
+        display: flex;
+        align-items: center;
+      }
+
+      .impersonate_avatar {
+        padding: 0 8px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        margin-right: 1px;
+      }
+
+      .impersonate_exit {
+        padding: 0 8px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      :global(.ant-avatar) {
+        width: @avatar-size;
+        height: @avatar-size;
+        line-height: @avatar-size;
+        font-size: @avatar-size / 3 * 2;
+        background: @avator-color;
+      }
+    }
+  }
+
+  .menu_container {
+    &,
+    :global(.ant-layout-sider-children) {
+      @supports (grid-area: auto) {
+        height: calc(~'100vh' - @layout-header-height);
+      }
+    }
+
+    &,
+    ul,
+    li,
+    :global(.ant-layout-sider-trigger) {
+      // 同步菜单各个元素的动画时间
+      transition-duration: 0.2s !important;
+    }
+
+    ul,
+    li {
+      // 避免宽度不一致导致的动画时差
+      width: 100% !important;
+    }
+  }
+
+  .menu {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    a {
+      color: @menu-dark-color !important;
+
+      :global(.anticon) {
+        font-size: @font-size-lg;
+      }
+    }
+
+    :global(.ant-badge sup) {
+      box-shadow: none;
+      margin-left: @base-size * 3;
+      margin-top: -4px;
+      transition: all ease 0.2s;
+    }
+
+    &.collapsed {
+      :global(.ant-badge sup) {
+        margin-left: -6px;
+        margin-top: 0 - @base-size * 2 - 4;
+      }
+    }
+  }
+
+  .content_container {
+    padding: @base-size * 2;
+  }
+
+  .content {
+    min-height: calc(~'100vh' - @header-and-padding);
+  }
+}
+
+.helper_dropdown > li {
+  text-align: center !important;
+}

@@ -1,0 +1,73 @@
+@import '../../themes/default/variables.less';
+
+@file-extra-width: 40px;
+
+.card {
+  overflow: hidden;
+  margin-top: 4px;
+  height: @input-height-base;
+  line-height: @input-height-base;
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-base;
+  display: flex;
+  align-items: center;
+
+  .display {
+    display: flex;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+
+    .file {
+      flex: 1 1 auto;
+      width: calc(~'100%' - @file-extra-width);
+      padding: 0 @base-size;
+      color: @heading-color;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .word {
+      color: @word-color;
+    }
+
+    .ppt {
+      color: @ppt-color;
+    }
+
+    .excel {
+      color: @excel-color;
+    }
+
+    .default {
+      color: @text-color-secondary;
+    }
+  }
+
+  .action {
+    transition: all 0.2s;
+
+    &:hover {
+      color: @error-color;
+      background: fade(@error-color, 10%);
+    }
+
+    cursor: pointer;
+    flex-basis: 40px;
+    text-align: center;
+    border-left: 1px solid @muted-color;
+  }
+
+  .card:last-child {
+    margin-bottom: 0px !important;
+  }
+}
+
+.empty {
+  text-align: center;
+  padding: 11px;
+  padding-top: 3px;
+  color: @text-color-secondary;
+  border-bottom: 1px solid @muted-color;
+}

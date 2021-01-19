@@ -1,0 +1,11 @@
+// 除正文外的高度，即顶部菜单加正文边距
+@header-and-padding: @layout-header-height + @base-size * 4;
+// 流程地图的标签高度
+@process-map-tabs: @base-size * 2 * 2 + @font-size-lg;
+// 流程地图的搜索区域高度
+@process-map-condition: @input-height-base + @base-size * 3 + 3;
+// 流程地图的内页边距
+@process-map-padding: @base-size * 3 * 2;
+
+// 除流程地图的全部流程正文外的高度
+@process-map-all: @header-and-padding + @process-map-tabs + @process-map-condition + @process-map-padding;

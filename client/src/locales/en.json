@@ -1,0 +1,843 @@
+{
+    "main-title":{
+        "top-title" : "BPM Management"
+    },
+    "boost": {
+        "layout": {
+            "title": "Mengtuo BPM Process Management Platform",
+            "home": "Home",
+            "logout": "Logout",
+            "login": {
+                "form": {
+                    "title": "Mengtuo BPM Process Management Platform",
+                    "user-input": "User name",
+                    "psd-input": "Password",
+                    "user-title": "User Login",
+                    "login-btn": "Login",
+                    "code": "Code",
+                    "code-change": "Change"
+                },
+                "timeout": {
+                    "title": "Login timeout",
+                    "message": "You are going to redirect to the login page..."
+                }
+            }
+        },
+        "utils": {
+            "selectPromptImage": "/assets/images/no-result-tips-en.png"
+        }
+    },
+    "frontButtons": {
+        "post": "Post",
+        "save": "Save",
+        "cancel": "Cancel",
+        "reject": "Reject"
+    },
+    "buttons": {
+        "read": "Read",
+        "add": "Add",
+        "agent": "Agent",
+        "back": "Back",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "export": "Export",
+        "import": "Import",
+        "handover": "Handover",
+        "iam": "IAM",
+        "ok": "Ok",
+        "reset": "Reset",
+        "save": "Save",
+        "search": "Search",
+        "searching": "Searching",
+        "user": "User",
+        "cancel-modify": "Cancel Modify",
+        "chooseUser": "Choose User",
+        "impersonate": "Impersonate",
+        "form": "Form Edit",
+        "node": "Node Edit",
+        "addNode": "Add Node",
+        "up": "Up",
+        "down": "Down",
+        "move": "Move to here(It takes about 5 seconds to take effect)",
+        "repush": "Repush"
+    },
+    "paginations": {
+        "total": "Total {{value}} items"
+    },
+    "controls": {
+        "input": "Please input {{value}}",
+        "select": "Please select {{value}}",
+        "selectItems": "Please select data"
+    },
+    "units": {
+        "hour": " Hour"
+    },
+    "messages": {
+        "delete": "Sure to delete? ",
+        "cancel-modify": "Sure to cancel modify? ",
+        "success": "The operation was successful",
+        "fail": "The operation was fail",
+        "exists": "{{value}} already exists"
+    },
+    "platform": {
+        "configManangement": {
+            "fileConfigration": "File Configration",
+            "logo": "System Logo",
+            "weChat": "WeChat",
+            "dingDing": "DingDing",
+            "messages": {
+                "success": "Save successfully!",
+                "uploadError": "Attachment upload failed!",
+                "errorPath": "Please configure the server address and upload path first!",
+                "errorFormat": "You can only upload JPG file!",
+                "errorSize": "Image must smaller than 2MB!"
+            },
+            "fields": {
+                "serviceAddress": "Service Address",
+                "storagePath": "Storage Path",
+                "corpId": "CorpID",
+                "secret": "Secret",
+                "sendMessage": "Send Message",
+                "messageUrl": "Mssage Url",
+                "inUse": "In Use",
+                "PCMessageUrl": "PC Message Url",
+                "APPMessageUrl": "APP Message Url"
+            },
+            "validators": {
+                "serviceAddress": "Please fill in the document server address and no more than 200 words",
+                "storagePath": "Please fill in the file storage path and do not exceed 200 words",
+                "corpId": "Please fill in CorpID and no more than 200 words",
+                "secret": "Please fill in Secret and no more than 200 words",
+                "sendMessage": "Please fill in the message and cannot exceed 200 words",
+                "messageUrl": "Please fill in the message URL and do not exceed 200 words",
+                "PCMessageUrl": "Please fill in the PC message URL and no more than 200 words",
+                "APPMessageUrl": "Please fill in the APP message URL with no more than 200 words"
+            }
+        },
+        "routes": {
+            "user": "User Management",
+            "log": "Log Management",
+            "operationLog": "Operation Log",
+            "organization": "Organization",
+            "company": "Company",
+            "department": "Department",
+            "positionLevel": "PositionLevel",
+            "project": "Project",
+            "system": "System Management",
+            "dataPermission": "Data Permission",
+            "dictionary": "Dictionary",
+            "menu": "Menu",
+            "platform": "Platform",
+            "home": "Home",
+            "login": "Login",
+            "loginout": "Loginout",
+            "positionLevelSetting": "PositionLevel Setting",
+            "role": "Role",
+            "roleMember": "Role Member",
+            "roleMenu": "Role Menu",
+            "userHome": "User Center",
+            "userAdd": "User Add",
+            "userEdit": "User Edit",
+            "userDetail": "User Detail",
+            "message": "Message",
+            "messageRule": "Message Rule",
+            "messageTemplate": "Message Template"
+        },
+        "fields": {
+            "company": "Company",
+            "position": "Position",
+            "department": "Department",
+            "project": "Project",
+            "positionLevel": "PositionLevel",
+            "role": "Role",
+            "leader": "Leader",
+            "phone": "Phone",
+            "city": "City",
+            "remark": "Remark",
+            "code": "Code",
+            "name": "Name",
+            "menu": "Menu",
+            "englishName": "English Name",
+            "chineseName": "Chinese Name",
+            "type": "Type",
+            "illustration": "Illustration",
+            "description": "Description",
+            "keyword": "Keyword",
+            "operation": "Operation",
+            "parameter": "Parameter",
+            "user": "User",
+            "order": "Order",
+            "yes": "Yes",
+            "no": "No",
+            "detail": "Detail",
+            "level": "Level",
+            "account": "Account",
+            "password": "Password",
+            "status": "Status",
+            "message": "Message",
+            "inUse": "InUse",
+            "language": "Language",
+            "inStart": "InStart",
+            "frequency": "Frequency",
+            "orgLevel": "Organition Level"
+        },
+        "application": {
+            "pageName": "Application Settings",
+            "statusDataset": [{
+                    "label": "有效",
+                    "value": "1"
+                },
+                {
+                    "label": "InValid",
+                    "value": "0"
+                }
+            ]
+        },
+        "externalSystems": {
+            "domain": "Domain",
+            "secretKey": "Secret Key",
+            "appKey": "App Key",
+            "settingOfCreate": "Setting Of Create Callback",
+            "settingOfAudit": "Setting Of Audit Callback",
+            "settingOfApprove": "Setting Of Approve Callback",
+            "interface": "Interface",
+            "params": "Callback Parameters",
+            "preview": "Preview",
+            "generate": "Generate Secretkey",
+            "requestMethod": [{
+                    "label": "GET",
+                    "value": "get"
+                },
+                {
+                    "label": "POST",
+                    "value": "post"
+                }
+            ],
+            "statusDataset": [{
+                    "label": "Valid",
+                    "value": "1"
+                },
+                {
+                    "label": "InValid",
+                    "value": "0"
+                }
+            ]
+        },
+        "log": {
+            "projectName": "Project Name",
+            "module": "Module",
+            "largeModule": "LargeModule",
+            "smallModule": "SmallModule",
+            "logType": "LogType",
+            "firstFilterField": "First filter-field",
+            "secondFilterField": "Second filter-field",
+            "lately": "Lately",
+            "interval": "Interval",
+            "time": "Time",
+            "message": "Message",
+            "detail": "Message Info",
+            "operator": "Operator",
+            "serverName": "Server Name",
+            "interfaceName": "Interface Name",
+            "responseData": "Response Data",
+            "interfaceTime": "Interface Time",
+            "info": "Message Info",
+            "interfaceAddress": "Interface Address",
+            "requestParam": "Request Parameters",
+            "requestBody": "Request Data",
+            "errorMessage": "Error Message"
+        },
+        "monitor": {
+            "service": "Service",
+            "middleWare": "MiddleWare",
+            "html": "Html",
+            "address": "Probe Address",
+            "mailAddress": "Mail Address",
+            "templeteCode": "Templete Code",
+            "cron": "expression",
+            "failCount": "Fail Counts",
+            "type": "Probe Type",
+            "typeDateset": [{
+                    "label": "Service",
+                    "value": 0
+                },
+                {
+                    "label": "MiddleWare",
+                    "value": 1
+                },
+                {
+                    "label": "Html",
+                    "value": 2
+                }
+            ],
+            "cronDateset": [{
+                    "label": "Every minute",
+                    "value": "*/1 * * * *"
+                },
+                {
+                    "label": "Every two minutes",
+                    "value": "*/2 * * * *"
+                },
+                {
+                    "label": "Every three minutes",
+                    "value": "*/3 * * * *"
+                }
+            ]
+        },
+        "company": {
+            "list": "Comapny List",
+            "info": "Comapny Info",
+            "subsidiary": "Subsidiary",
+            "topCompanies": "Top-Companies",
+            "superiorCompany": "Superior-Company",
+            "address": "Address",
+            "contact": "Contact",
+            "fax": "Fax",
+            "domain": "Domain",
+            "typeDataset": [{
+                    "label": "Group",
+                    "value": 1
+                },
+                {
+                    "label": "Group headquarters",
+                    "value": 2
+                },
+                {
+                    "label": "Business Department",
+                    "value": 3
+                },
+                {
+                    "label": "Division headquarters",
+                    "value": 4
+                },
+                {
+                    "label": "Project Company",
+                    "value": 5
+                }
+            ]
+        },
+        "department": {
+            "list": "Department List",
+            "info": "Department Info",
+            "subdivision": "Subdivision",
+            "topDepartment": "Top-Department",
+            "archive": "IsArchive",
+            "isPrimary": "IsPrimary",
+            "inUse": "InUse",
+            "user": "User",
+            "addCheck": "Please select Company or Department! "
+        },
+        "position": {
+            "addCheck": "Please select Company or Department! "
+        },
+        "positionLevel": {
+            "shortName": "ShortName",
+            "setting": "PositionLevel Setting",
+            "list": "PositionLevel List",
+            "companyName": "Company Name",
+            "departmentName": "Department Name",
+            "user": "User"
+        },
+        "project": {
+            "list": "Project List",
+            "info": "Project Info",
+            "name": "Project Name",
+            "code": "Project Code",
+            "autoComplete": "Autocomplete",
+            "canPlanAdjustment": "CanPlanAdjustment",
+            "canDevelopmentAdjustment": "CanDevelopmentAdjustment",
+            "addCheck": "Please select Company or Project! ",
+            "transfer": "Project transfer"
+        },
+        "dictionary": {
+            "list": "Type List",
+            "edit": "Type Edit",
+            "topType": "Top-type",
+            "subtype": "Subtype",
+            "superiorParameter": "Superior-parameter",
+            "value": "Value",
+            "selectCheck": "Please select Type"
+        },
+        "menu": {
+            "link": "Link",
+            "nameCheck": "Please save menu data! ",
+            "action": "Actions",
+            "permission": "Permission",
+            "list": "Menu List",
+            "info": "Menu Info",
+            "icon": "Icon",
+            "application": "Application",
+            "route": "Route",
+            "hidden": "Menu Hidden",
+            "path": "Path",
+            "subModule": "Submodule",
+            "topModule": "Top Module",
+            "typeDataset": [{
+                    "label": "Module",
+                    "value": "M"
+                },
+                {
+                    "label": "Page",
+                    "value": "P"
+                }
+            ]
+        },
+        "role": {
+            "keyword": "Name(Code)",
+            "permission": "Menu Permission",
+            "show": "Show",
+            "action": "Actions",
+            "orgLevel": "Organization Level",
+            "businessType": "Business Type",
+            "tagType": "Tag Type",
+            "tag": "Tag",
+            "inUse": "Status",
+            "user": "User",
+            "editTag": "Edit Tags/BusinessType",
+            "includeChildren": "Include Children",
+            "dataRights": "Edit data rights",
+            "organizationLevelLabel": "Organization Level",
+            "organizationGroupLabel": "Organization Group",
+            "personal": "Personal",
+            "custom": "Custom",
+            "organization": "Organization",
+            "exists": "Exists",
+            "dataRightsType": [{
+                    "label": "Organization Level",
+                    "value": 0
+                },
+                {
+                    "label": "Organization Group",
+                    "value": 1
+                },
+                {
+                    "label": "Myself",
+                    "value": 2
+                }
+            ],
+            "inUseDataset": [{
+                    "label": "Valid",
+                    "value": "true"
+                },
+                {
+                    "label": "None",
+                    "value": "false"
+                }
+            ],
+            "memberDataset": [{
+                    "label": "User",
+                    "value": 1
+                },
+                {
+                    "label": "Company",
+                    "value": 2
+                },
+                {
+                    "label": "Department",
+                    "value": 3
+                },
+                {
+                    "label": "Position",
+                    "value": 4
+                }
+            ]
+        },
+        "commonRole": {
+            "keyword": "Name(Code)",
+            "permission": "Permission",
+            "show": "Show",
+            "action": "Actions",
+            "orgLevel": "Organization Level",
+            "businessType": "Business Type",
+            "tagType": "Tag Type",
+            "tag": "Tag",
+            "inUse": "Status",
+            "user": "User",
+            "inUseDataset": [{
+                    "label": "Valid",
+                    "value": "true"
+                },
+                {
+                    "label": "None",
+                    "value": "false"
+                }
+            ],
+            "memberDataset": [{
+                    "label": "User",
+                    "value": 1
+                },
+                {
+                    "label": "Company",
+                    "value": 2
+                },
+                {
+                    "label": "Department",
+                    "value": 3
+                },
+                {
+                    "label": "Position",
+                    "value": 4
+                }
+            ]
+        },
+        "matrix": {
+            "source": "Source",
+            "matrix": "Matrix",
+            "dimension": "Dimension",
+            "dictionary": "Please input dictionary typecode",
+            "config": "Configuration",
+            "preview": "Generate Matrix",
+            "sync": "Sync View Dimension",
+            "sync-dictionary": "Sync Dictionary Dimension",
+            "inUse": "Status",
+            "inUseDataset": [{
+                    "label": "Valid",
+                    "value": "true"
+                },
+                {
+                    "label": "None",
+                    "value": "false"
+                }
+            ],
+            "role": "Roles",
+            "status": "Status",
+            "statusDataset": [{
+                    "label": "Draft",
+                    "value": "-1"
+                },
+                {
+                    "label": "Invalid",
+                    "value": "0"
+                },
+                {
+                    "label": "Valid",
+                    "value": "1"
+                }
+            ]
+        },
+        "user": {
+            "company": "Company",
+            "department": "Department",
+            "position": "Position",
+            "role": "Role",
+            "addTime": "AddTime",
+            "name": "Name",
+            "agentEndTime": "EndTime",
+            "agenter": "Agenter",
+            "dynamicSetting": "Dynamic Setting",
+            "currentUser": "CurrentUser",
+            "phone": "Phone",
+            "baseInfo": "Base Info",
+            "isPrimaryPosition": "IsPrimaryPosition",
+            "lock": "Lock",
+            "gender": "Gender",
+            "man": "Male",
+            "girl": "Female",
+            "birthday": "Birthday",
+            "lessOneOragization": "Less one Organization! ",
+            "lockDataset": [{
+                    "label": "None",
+                    "value": 0
+                },
+                {
+                    "label": "Temporary",
+                    "value": 1
+                },
+                {
+                    "label": "LongTime",
+                    "value": 2
+                }
+            ],
+            "statusDataset": [{
+                    "label": "None",
+                    "value": 0
+                },
+                {
+                    "label": "Valid",
+                    "value": 1
+                },
+                {
+                    "label": "Sure",
+                    "value": 2
+                },
+                {
+                    "label": "Leave",
+                    "value": 3
+                }
+            ]
+        },
+        "region": {
+            "list": "Region List",
+            "info": "Region Info"
+        },
+        "message": {
+            "rule": "Rule",
+            "sendTime": "SendTime",
+            "failCount": "Fail Count",
+            "expression": "Cron Expression",
+            "pushType": "Push Type",
+            "pushTypeDataset": [{
+                    "label": "Immediately Push",
+                    "value": 0
+                },
+                {
+                    "label": "Plan Push",
+                    "value": 1
+                },
+                {
+                    "label": "Loop Push",
+                    "value": 2
+                }
+            ],
+            "noticeType": "Notice Type",
+            "noticeDataset": [{
+                    "label": "Mail",
+                    "value": 0
+                },
+                {
+                    "label": "SMS",
+                    "value": 1
+                }
+            ],
+            "subject": "Subject",
+            "templateContent": "Tamplate Content"
+        },
+        "tag": {
+            "keyword": "Name or Code",
+            "category": "Tag Categories"
+        },
+        "process": {
+            "no": "NO.",
+            "processNo": "Process No.",
+            "title": "Title",
+            "applicant": "Applicant",
+            "creatDate": "Application Time",
+            "status": "Status",
+            "residenceTime": "Residence Time",
+            "formEdit": "Form Edit",
+            "nodeEdit": "Node Edit",
+            "step": "Step Name",
+            "approver": "Approver",
+            "typeName": "Type",
+            "dockingStatus": "Docking Status",
+            "dockingMessage": "Docking Message",
+            "dockingDate": "Docking Date",
+            "lastDockingDate": "Last Docking Date",
+            "dockingCount": "Docking Count"
+        },
+        "init": {
+            "getglobalbtn": "Get global setting",
+            "global": "Global",
+            "customer": "Customer",
+            "mobile": "Mobile",
+            "admin": "Admin",
+            "name": "Name",
+            "logo": "Logo",
+            "icon": "Icon",
+            "theme": "Theme",
+            "copyright": "Copyright",
+            "help": "Help",
+            "trafficLightUnit": "TrafficLight Unit",
+            "trafficLightUnitDataset": [{
+                    "label": "hour",
+                    "value": "hour"
+                },
+                {
+                    "label": "day",
+                    "value": "day"
+                }
+            ],
+            "initProcessEnableOrgFilter": "Initiate process enable organization filtering",
+            "helpText": {
+                "name": "Title of the page",
+                "logo": {
+                    "customer": "The logo of the page. It is recommended to upload PNG pictures below 200 * 48 in width and height",
+                    "mobile": "The logo of the page. It is recommended to upload PNG pictures below 200 * 48 in width and height",
+                    "admin": "The logo of the page. It is recommended to upload PNG pictures below 220 * 48 in width and height"
+                },
+                "icon": "Icon of the page,Please upload icon file of 32 * 23 or 64 * 64",
+                "theme": "Theme color of the page",
+                "copyright": "Does the page display copyright information",
+                "help": "Help text for the page",
+                "trafficLightUnit": "Traffic light unit of the system",
+                "initProcessEnableOrgFilter": "Whether to enable organization filtering for initiating process",
+                "canGetGloablSetting": "You can get the following information from the global configuration:"
+            },
+            "mt-custom-image": {
+                "typeerror": "Format can only be ",
+                "maxsizeerror": "Size cannot exceed ",
+                "maxwidtherror": "Width cannot exceed ",
+                "maxheighterror": "Height cannot exceed "
+            }
+        },
+        "gateway": {
+            "name": "name",
+            "address": "address",
+            "operation": "operation"
+        }
+    },
+    "bpm": {
+        "fields": {
+            "domain": "Domain"
+        },
+        "routes": {
+            "processCategory": "Process Category",
+            "business-type": "Business Type"
+        },
+        "category": {
+            "list": "Process Category List",
+            "categoryName": {
+                "label": "Category Name",
+                "validation": "Please enter Category Name"
+            },
+            "inUse": "Disabled",
+            "organizationName": "Organization Name",
+            "parentIdName": "Primary Classification",
+            "editCategory": "Edit Category",
+            "addPrimaryCategory": "Add Primary Classification",
+            "addSecondaryCategory": "Add Secondary Classification"
+        },
+        "process": {
+            "list": "Process List",
+            "prompts": {
+                "importSuccess": "Import success"
+              }
+        },
+        "messages": {
+            "chooseOrganization": "Please choose Organization"
+        },
+        "form": {
+            "number": "Number",
+            "text": "Text",
+            "table": "Table"
+        },
+        "business-type": {
+            "add": "Add Business Type",
+            "parent": "Parent Business Type"
+        },
+        "excel-process": {
+            "list": {
+                "no": "No",
+                "item": "Item",
+                "dept": "Department",
+                "creator": "Creator",
+                "type": "Type",
+                "name": "Process Code",
+                "introduction": "Introduction",
+                "branch": "Branch",
+                "branchDescription": "Branch Description",
+                "inuse": "In Use",
+                "code": "Code",
+                "entryCondition": "Entry Condition",
+                "method": "Method",
+                "processConfigCondition": "Process Config"
+            },
+            "operation": {
+                "save": "Save",
+                "preview": "Preview",
+                "previewDescription": "Data",
+                "doneDescription": "Done",
+                "description": "Data saved successfully",
+                "success": "Success"
+            },
+            "import": {
+                "upload": "Upload",
+                "description": "Upload excel process",
+                "notFound": "Please upload excel process"
+            },
+            "steps": {
+                "previous": "Previous",
+                "next": "Next"
+            }
+        }
+    },
+    "components": {
+        "comp-expression-designer": {
+            "title": "Expression Editor",
+            "defaultPromptText": "Click \"+\" to add an expression",
+            "explain": "explain:<br /> 1.xxx<br /> 2.xxx",
+            "text": "text",
+            "number": "number",
+            "businessObjects": "Business Objects",
+            "globalObjects": "Global Objects",
+            "custom": "Custom",
+            "simpleEdit": "simple",
+            "seniorEdit": "senior",
+            "customEditPlaceholder": "Please enter a custom expression",
+            "badExpression": "Bad Expression",
+            "logicalOperatorList": [{
+                    "label": "and",
+                    "value": "&&",
+                    "expression": "&&"
+                },
+                {
+                    "label": "or",
+                    "value": "||",
+                    "expression": "||"
+                }
+            ],
+            "operatorList": [{
+                    "label": "equal",
+                    "value": "==",
+                    "expression": "=="
+                },
+                {
+                    "label": "not equal",
+                    "value": "!=",
+                    "expression": "!="
+                },
+                {
+                    "label": "greater",
+                    "value": ">",
+                    "expression": ">"
+                },
+                {
+                    "label": "greater or equal",
+                    "value": ">=",
+                    "expression": ">="
+                },
+                {
+                    "label": "less",
+                    "value": "<",
+                    "expression": "<"
+                },
+                {
+                    "label": "less or equal",
+                    "value": "<=",
+                    "expression": "<="
+                },
+                {
+                    "label": "contains",
+                    "value": "Contains",
+                    "expression": ".Contains"
+                },
+                {
+                    "label": "not contains",
+                    "value": "Not Contains",
+                    "expression": ".Contains"
+                },
+                {
+                    "label": "startsWith",
+                    "value": "StartsWith",
+                    "expression": ".StartsWith"
+                },
+                {
+                    "label": "not startsWith",
+                    "value": "Not StartsWith",
+                    "expression": ".StartsWith"
+                },
+                {
+                    "label": "endsWith",
+                    "value": "EndsWith",
+                    "expression": ".EndsWith"
+                },
+                {
+                    "label": "not endsWith",
+                    "value": "Not EndsWith",
+                    "expression": ".EndsWith"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,34 @@
+@import '../../../themes/default/variables.less';
+@import '../../../layout/MainLayout/main-layout-base.less';
+
+.container {
+  // 高度计算见 main-layout-base.less
+  min-height: calc(~'100vh' - @process-map-all) !important;
+
+  .tree {
+    background-color: @content-bg-1 !important;
+
+    :global(.ant-tree.ant-tree-show-line li::before) {
+      display: none;
+    }
+
+    :global(.ant-tree.ant-tree-show-line li span.ant-tree-switcher) {
+      background-color: transparent;
+    }
+
+    :global(.ant-tree li .ant-tree-node-content-wrapper:hover),
+    :global(.ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected) {
+      background-color: transparent;
+      color: @primary-color;
+      font-weight: @font-weight-bold;
+    }
+  }
+
+  .tree,
+  .processes {
+    height: calc(~'100vh' - @process-map-all);
+    padding: @base-size * 2;
+    min-height: 280px;
+    overflow: auto;
+  }
+}

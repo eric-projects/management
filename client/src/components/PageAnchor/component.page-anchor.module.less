@@ -1,0 +1,49 @@
+@import '../../themes/default/variables.less';
+
+@anchor-size: 30px;
+
+.container {
+  position: fixed;
+  flex-direction: column;
+  align-items: flex-end;
+  right: @base-size * 2;
+  top: 50%;
+  width: @anchor-size;
+  height: @anchor-size;
+  z-index: @zindex-highest;
+  a {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    padding: @base-size;
+    border-radius: @border-radius-base;
+    width: @anchor-size;
+    height: @anchor-size;
+    overflow: hidden;
+    color: @white-color;
+    background-color: tint(@primary-color, 30%);
+    margin-bottom: @base-size / 2;
+    transition: all 0.6s;
+
+    .title {
+      display: inline-block;
+      max-width: 0;
+      margin-left: @base-size;
+      word-break: keep-all;
+    }
+  }
+
+  a:hover {
+    color: @white-color;
+    width: 100px;
+
+    .title {
+      width: 70px;
+    }
+  }
+
+  .primary {
+    background-color: @primary-color;
+  }
+}

@@ -1,0 +1,25 @@
+@import '../../../themes/default/variables.less';
+
+.container {
+  display: flex;
+  align-items: center;
+  height: @base-size*2 + 4px;
+
+  .link {
+    color: @text-color;
+    margin: 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .info {
+    color: @text-color-desc;
+  }
+
+  .pointer,
+  .link,
+  .info {
+    cursor: pointer;
+  }
+}

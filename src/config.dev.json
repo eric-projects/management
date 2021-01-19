@@ -1,0 +1,41 @@
+{
+  "port": 4100,
+  "uploadLimit": "100mb",
+  "apiGateway": {
+    "enable": false,
+    "uri": "http://172.19.50.111:10050",
+    "appKey": "799e6e124ad95e09b055ae8c8cc53d7f",
+    "appSecret": "a1116bf74e17adeb6b11615377b627e874484243129c5941c19058fd3c54bcf0"
+  },
+  "localServices": [
+    {
+      "enable": false,
+      "name": "process",
+      "uri": "http://localhost:5052"
+    }
+  ],
+  "adminUri": "",
+  "sso": {
+    "type": ""
+  },
+  "impersonatePath": "/auth/impersonate",
+  "noNeedAuthPaths": {
+    "state": "/platform/v1/users",
+    "captcha": "/platform/v1/captcha"
+  },
+  "session": {
+    "maxAge": 3600,
+    "redis": {
+      "host": "172.19.50.111",
+      "port": 6379,
+      "db": 0,
+      "password": "architecture"
+    }
+  },
+  "rabbitMQ": {
+    "username": "test",
+    "password": "test",
+    "host": "172.19.50.111",
+    "exchange": "boards.refresh"
+  }
+}

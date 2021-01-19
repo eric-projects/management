@@ -1,0 +1,32 @@
+@import '../../themes/default/variables.less';
+
+.title {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  margin: 0px;
+
+  .sign {
+    background: @primary-color;
+    position: absolute;
+    width: 4px;
+    height: @font-size-lg;
+    left: 0 - @card-inner-head-padding;
+  }
+}
+
+.instance {
+  :global(.ant-card-body) {
+    transition: all 0.2s;
+  }
+
+  &.hidden :global(.ant-card-body) {
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+.icon {
+  font-size: @font-size-lg + 2;
+}

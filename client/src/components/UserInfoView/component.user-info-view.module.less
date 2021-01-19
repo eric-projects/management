@@ -1,0 +1,86 @@
+@import '../../themes/default/variables.less';
+
+@avatar-size: 48px;
+
+.title,
+.content {
+  color: @text-color;
+}
+
+.title {
+  display: flex !important;
+  align-items: center;
+  margin: @base-size 0;
+
+  p {
+    margin-bottom: 0;
+  }
+
+  .topic {
+    flex: 1 1 auto;
+    font-weight: normal;
+
+    .name {
+      font-weight: @font-weight-bold;
+      font-size: @font-size-lg;
+    }
+  }
+
+  .avatar_container {
+    flex: 0 0 @base-size * 6;
+
+    .avatar {
+      width: @avatar-size;
+      height: @avatar-size;
+      line-height: @avatar-size;
+      font-size: @avatar-size / 3 * 2 !important;
+      background: @avator-color;
+    }
+  }
+}
+
+.content {
+  width: 300px;
+
+  p {
+    margin-bottom: @base-size;
+  }
+}
+
+.sub_title {
+  cursor: default;
+  display: inline;
+  padding-right: @base-size - 4px;
+  &:extend(.parent_title);
+
+  i {
+    color: @text-color-desc;
+    margin-left: 2px;
+    cursor: pointer;
+  }
+}
+
+/* 由于 user-info-view 组件较矮，会导致箭头无法对准元素，使用该样式进行微调 */
+.offset_fix {
+  &:global(.ant-popover-placement-rightTop),
+  &:global(.ant-popover-placement-leftTop) {
+    :global(.ant-popover-arrow) {
+      margin-top: 0 - @base-size;
+    }
+
+    :global(.ant-popover-content) {
+      margin-top: 0 - @base-size * 2;
+    }
+  }
+
+  &:global(.ant-popover-placement-rightBottom),
+  &:global(.ant-popover-placement-leftBottom) {
+    :global(.ant-popover-arrow) {
+      margin-bottom: 0 - @base-size;
+    }
+
+    :global(.ant-popover-content) {
+      margin-bottom: 0 - @base-size * 2;
+    }
+  }
+}

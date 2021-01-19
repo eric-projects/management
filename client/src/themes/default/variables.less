@@ -1,0 +1,115 @@
+/*
+变量参考 https://github.com/vueComponent/ant-design-vue/blob/master/components/style/themes/default.less
+或 https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
+*/
+
+/* 重写 AntDesign 的主题样式 */
+// 颜色相关
+@primary-color: #2165d9;
+@error-color: #ff0019;
+@heading-color: #333;
+@text-color: #666;
+@text-color-secondary: #999;
+@text-hover: #3b7ae5;
+@descriptions-bg: #fafafa;
+// 边框相关
+@border-color-base: #e8e8e8;
+@border-radius-base: 2px;
+// 字体相关
+@font-size-base: 14px;
+@font-size-sm: @font-size-base - 2px;
+@font-size-lg: @font-size-base + 2px;
+// layout 相关
+@layout-body-background: transparent;
+@layout-header-height: 48px;
+@layout-header-padding: 0;
+@layout-header-background: transparent;
+@layout-sider-background: transparent;
+@layout-footer-background: transparent;
+@layout-sider-background-light: transparent;
+@layout-trigger-background: #1f2631;
+@layout-trigger-background-light: transparent;
+// card 相关
+@card-head-padding: 12px;
+@card-inner-head-padding: 12px;
+@card-padding-base: 12px;
+@card-padding-wider: 12px;
+@card-head-height: 46px;
+@card-head-background: #eaeaea;
+// form 相关
+@control-padding-horizontal: 6px;
+@form-item-margin-bottom: 16px;
+@form-vertical-label-padding: 0px;
+@form-explain-height: 12px;
+@form-help-margin-top: -2px;
+@form-explain-precision: 2px;
+// btn 相关
+@btn-height-base: 28px;
+@btn-height-sm: 22px;
+// input 相关
+@input-height-base: 28px;
+@input-height-sm: 22px;
+@input-height-lg: 30px;
+// pagination 相关
+@pagination-item-size: 28px;
+@pagination-item-bg-active: @primary-color;
+// table 相关
+@table-padding-vertical: 11px;
+@table-row-hover-bg: #f0f8ff;
+// menu 相关
+@menu-dark-color: #b1b3b6;
+@menu-dark-bg: #2c3340;
+@menu-dark-item-active-bg: @primary-color;
+// modal 相关
+@modal-header-bg: @primary-color;
+@modal-heading-color: @white-color;
+@modal-footer-bg: #f2f2f2;
+@modal-body-padding: @base-size * 2;
+// z-index 相关
+@zindex-popover: 1060; // 将 popover 提高到与 tooltip 一致
+/* 重写 AntDesign 结束 */
+
+/* 自定义相关 */
+// 基础颜色
+@content-bg: #f0f2f5; // 主框色
+@content-bg-1: #f8f8f8; // 内部小区域内容色
+@content-bg-2: #f7f7f7; // 更小区域内容色
+@border-color-lt: #e1e1e1;
+@text-color-desc: #bfbfbf;
+@muted-color: #e0e0e0;
+@white-color: #ffffff;
+@black-color: #000000;
+@topic-color: #1890ff;
+@avator-color: rgba(33, 101, 217, 0.3);
+@word-color: #459aff;
+@ppt-color: #e94f4f;
+@excel-color: #207245;
+// z-index
+@zindex-auto: auto;
+@zindex-float: 10;
+@zindex-under-float: 9;
+@zindex-above-float: 11;
+@zindex-highest: 1100;
+// 导航条
+@navbar-bg: #305382;
+@navbar-bg-selected: #284266;
+@navbar-bg-avatar: #557eb5;
+@navbar-bg-avatar-selected: @primary-color;
+// 字体
+@font-weight-bold: 600;
+
+/* 基础边距 */
+@base-size: 8px;
+// 系统的头部
+@header-height: @base-size * 6;
+// 正文页面的边距
+@content-padding-size: @base-size * 2;
+// 流程 Tag
+@process-start: #2998fe;
+@process-ready: #2998fe;
+@process-processing: #f5b25e;
+@process-approved: #41ba42;
+@process-refused: #9c9c9c;
+@process-canceled: #9c9c9c;
+@process-rejected: #9c9c9c;
+@process-todo: #9c9c9c;
