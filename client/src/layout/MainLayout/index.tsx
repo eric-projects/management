@@ -104,50 +104,44 @@ export class MainLayout extends Vue {
     }); */
 
     this.menus.push({
-      id: 'organization-management', icon: 'team', locales: '组织结构', route: '',
+      id: 'release-management',
+      icon: 'team',
+      locales: '发布管理',
+      route: '',
       children: [
-        { id: 'company', locales: '公司管理', route: 'organization-management/company' },
-        { id: 'department', locales: '部门管理', route: 'organization-management/department' },
-        { id: 'position', locales: '岗位管理', route: 'organization-management/position' },
-        { id: 'users', locales: '人员管理', route: 'organization-management/users' }
-      ]
+        { id: 'one-stop-release', locales: '一站式发布', route: 'organization-management/department' },
+        { id: 'release-record', locales: '发布记录', route: 'organization-management/department' },
+        { id: 'projects', locales: '项目列表', route: 'organization-management/company' },
+        { id: 'shell', locales: '通用脚本', route: 'organization-management/department' },
+      ],
+    });
+
+    this.menus.push({
+      id: 'api-imitate',
+      icon: 'user',
+      locales: '接口模拟',
+      route: '',
+      children: [{ id: 'role', locales: '接口列表', route: 'common-roles/role' }],
     });
     this.menus.push({
-      id: 'common-roles', icon: 'user', locales: '标准角色', route: '',
-      children: [
-        { id: 'role', locales: '角色库', route: 'common-roles/role' },
-        { id: 'common-role-user', locales: '按组织', route: 'common-roles/common-role-user' },
-        { id: 'match-common-role', locales: '按角色', route: 'common-roles/match-common-role' }
-      ]
+      id: 'component-management',
+      icon: 'switcher',
+      locales: '组件库',
+      route: '',
+      children: [{ id: 'matrix', locales: '组件列表', route: 'matrix-management/matrix' }],
     });
+
     this.menus.push({
-      id: 'matrix-management', icon: 'switcher', locales: '矩阵管理', route: '',
+      id: 'modelling-management',
+      icon: 'dropbox',
+      locales: '建模工厂',
+      route: '',
       children: [
-        { id: 'matrix', locales: '矩阵管理', route: 'matrix-management/matrix' },
-        { id: 'dimension', locales: '维度管理', route: 'matrix-management/dimension' },
-      ]
-    });
-    this.menus.push({
-      id: 'tag-management', icon: 'tags', locales: '标签管理', route: '',
-      children: [
-        { id: 'tag', locales: '标签列表', route: 'tag-management/tag' }
-      ]
-    });
-    this.menus.push({
-      id: 'log-management', icon: 'file', locales: '日志中心', route: '',
-      children: [
-        { id: 'log', locales: '日志列表', route: 'log-management/log' }
-      ]
-    });
-    this.menus.push({
-      id: 'system-management', icon: 'setting', locales: '系统管理', route: '',
-      children: [
-        { id: 'menu', locales: '菜单管理', route: 'system-management/menu' },
-        { id: 'rights', locales: '权限管理', route: 'system-management/rights' },
-        { id: 'dictionary', locales: '数据字典', route: 'system-management/dictionary' },
-        { id: 'init', locales: '初始化配置', route: 'system-management/init' },
-        { id: 'gateway', locales: '网关管理', route: 'system-management/gateway' }
-      ]
+        { id: 'web-comp', locales: 'Web组件', route: 'matrix-management/matrix' },
+        { id: 'api', locales: '接口建模', route: 'matrix-management/matrix' },
+        { id: 'page', locales: '页面建模', route: 'matrix-management/matrix' },
+        { id: 'table', locales: '表建模', route: 'matrix-management/matrix' },
+      ],
     });
     this.$forceUpdate();
   }
@@ -209,11 +203,7 @@ export class MainLayout extends Vue {
           </a-modal>
         </a-layout-header>
         <a-layout>
-          <a-layout-sider
-            class={styles.menu_container}
-            width={Settings.MenuExpandedWidth}
-            collapsedWidth={Settings.MenuCollapsedWidth}
-          >
+          <a-layout-sider class={styles.menu_container} width={Settings.MenuExpandedWidth} collapsedWidth={Settings.MenuCollapsedWidth}>
             <a-menu
               mode='inline'
               theme='dark'
@@ -221,19 +211,21 @@ export class MainLayout extends Vue {
               default-selected-keys={['company']}
               default-open-keys={['organization-management']}
             >
-              { this.menus.map(item => (
-               <a-sub-menu key={item.id}>
-               <span slot='title'><a-icon type={item.icon} />{item.locales}</span>
-                { (item['children'] as MenuItem[]).map(child => (
+              {this.menus.map(item => (
+                <a-sub-menu key={item.id}>
+                  <span slot='title'>
+                    <a-icon type={item.icon} />
+                    {item.locales}
+                  </span>
+                  {(item['children'] as MenuItem[]).map(child => (
                     <a-menu-item key={child.id}>
-                    <router-link to={'/' + child.route}>
-                      <span>{child.locales}</span>
-                    </router-link>
-                  </a-menu-item>
+                      <router-link to={'/' + child.route}>
+                        <span>{child.locales}</span>
+                      </router-link>
+                    </a-menu-item>
                   ))}
-              </a-sub-menu>
-              ))
-              }
+                </a-sub-menu>
+              ))}
             </a-menu>
           </a-layout-sider>
           <a-layout-content>

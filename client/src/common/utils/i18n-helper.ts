@@ -8,6 +8,14 @@ class I18nHelper {
 
     return `${vueContext.$t(key)}`;
   }
+
+  getLocaleObject(key: string): any {
+    return vueContext.$t(key);
+  }
+
+  getReplaceLocale(key: string, replaceKey: string): string {
+    return `${vueContext.$t(key)}`.replace('{{value}}', `${vueContext.$t(replaceKey)}`);
+  }
 }
 
 export const i18nHelper = new I18nHelper();

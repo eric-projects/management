@@ -1,6 +1,8 @@
 import Vue, { VNode } from 'vue';
 import { MD5 } from 'crypto-js';
 import { Validation, ValidationOptions } from '../defines';
+import { WrappedFormUtils } from 'ant-design-vue/types/form/form';
+import { first } from 'rxjs/operators';
 
 export class FormHelper {
   private cacheKey = 'validationKey';
@@ -85,7 +87,7 @@ export class FormHelper {
         }
 
         return vNode;
-      }
+      },
     };
   }
 
@@ -108,6 +110,24 @@ export class FormHelper {
       .filter(err => !!err);
     context.$forceUpdate();
     return messages;
+  }
+
+  /**
+   * Form校验并返回错误信息
+   */
+  validateForm(form: WrappedFormUtils): string[] {
+    const msgs: string[] = [];
+    form.validateFields(error => {
+      if (error) {
+        Object.keys(error).forEach(err => {
+          (((error as any)[err] as any)['errors'] as []).forEach((e: any) => {
+            msgs.push(e.message as string);
+          });
+        });
+      }
+    });
+
+    return msgs;
   }
 
   /**
@@ -134,3 +154,5 @@ export class FormHelper {
     }
   }
 }
+
+export const formHelper = new FormHelper();

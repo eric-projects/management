@@ -1,0 +1,44 @@
+@import '../../themes/default/variables.less';
+
+.card {
+  height: 100%;
+  overflow: hidden;
+  // :global(.ant-card-head) {
+  //   background: white;
+  // }
+
+  > :global(.ant-card-head) {
+    > :global(.ant-card-head-wrapper::before) {
+      content: '';
+      position: absolute;
+      height: 20px;
+      width: 4px;
+      background-color: @primary-color;
+      top: (@card-head-height - 20)/2;
+      left: -@base-size * 2;
+    }
+  }
+
+  :global(.ant-card-extra) {
+    // height: @card-head-height;
+    line-height: @card-head-height;
+    padding: 0;
+  }
+
+  :global(.ant-card-body) {
+    overflow: auto;
+    height: 100%;
+  }
+
+  :global(.ant-card-head) {
+    // padding: 0 @base-size;
+    padding: 0 @base-size * 2;
+    font-weight: bold;
+    font-size: @font-size-base;
+  }
+
+  .no-result-tips {
+    width: 445px;
+    margin: 36px;
+  }
+}

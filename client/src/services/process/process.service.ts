@@ -35,7 +35,7 @@ class ProcessService {
     }
 
     return httpHelper.get(`/api/todo-centre/v1/tasks/${id}/summary`, undefined, { loading: false }).pipe(
-      map(m => {
+      map((m: any) => {
         this.cacheSummary[id] = m;
         return m;
       })
@@ -51,7 +51,7 @@ class ProcessService {
     const domainOb = httpHelper.get(`/api/platform/v1/select-domains`, {}, { loading: false });
     const businessTypeTree = httpHelper.get(`/api/process/v1/process-map`, { params: toCasedStyleObject(params) }, { loading: false });
     return zip(domainOb, businessTypeTree).pipe(
-      map(data => {
+      map((data: any) => {
         const [domains, businessTypes] = data;
         const transferData = transferFN ? transferFN(businessTypes) : this.convertTreeKey(businessTypes);
         const result: ProcessTreeData[] = [];

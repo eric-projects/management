@@ -4,7 +4,6 @@ import { httpHelper } from '@/common/utils';
 import { Settings } from '@/common/defines';
 import { Featrue } from '../auth';
 import { MenuViewState } from './menu.types';
-import { map } from 'rxjs/operators';
 
 class MenuService {
   /* private menus: MenuGroup[] = [];
@@ -82,7 +81,7 @@ class MenuService {
   }
 
   getCurrentPageKeys(path: string): string[] {
-/*     const menuGroup = this.authorizedMenus.find(m => m.children.some(c => c.route === path));
+    /*     const menuGroup = this.authorizedMenus.find(m => m.children.some(c => c.route === path));
 
     if (menuGroup) {
       const page = menuGroup.children.find(c => c.route === path);
@@ -97,7 +96,7 @@ class MenuService {
   getBreadcrumbs(path: string): string[] {
     const breadcrumbs: string[] = [];
     // 筛选页面
-/*     const menuGroup = this.authorizedMenus.find(m => m.children.some(c => c.route === path));
+    /*     const menuGroup = this.authorizedMenus.find(m => m.children.some(c => c.route === path));
 
     if (menuGroup) {
       const page = menuGroup.children.find(c => c.route === path);

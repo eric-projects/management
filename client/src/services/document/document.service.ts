@@ -1,6 +1,5 @@
-import { Observable } from 'rxjs';
-
 import { downloadHelper } from '@/common/utils';
+import { Observable } from 'rxjs';
 
 class DocumentService {
   downDocument(id: string, name: string): Observable<any> {

@@ -22,7 +22,7 @@ class AuthService {
 
   getAuthState() {
     return httpHelper.get('/auth/state').pipe(
-      tap(data => {
+      tap((data: any) => {
         this.setAuthState(data);
         return data;
       })

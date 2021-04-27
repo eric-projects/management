@@ -1,5 +1,5 @@
 {
-  "port": 4100,
+  "port": 5100,
   "uploadLimit": "100mb",
   "apiGateway": {
     "enable": false,
@@ -12,6 +12,10 @@
   "sso": {
     "type": ""
   },
+  "fileSetting": {
+    "maxSize": 2048,
+    "path": "/tmp"
+  },
   "impersonatePath": "/auth/impersonate",
   "noNeedAuthPaths": {
     "state": "/platform/v1/users",
@@ -20,10 +24,11 @@
   "session": {
     "maxAge": 3600,
     "redis": {
-      "host": "172.19.50.111",
+      "host": "192.168.1.158",
       "port": 6379,
       "db": 0,
-      "password": "architecture"
+      "dataDB": 10,
+      "password": "huayangnian"
     }
   },
   "rabbitMQ": {

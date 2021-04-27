@@ -2,5 +2,6 @@
   "watch": ["src"],
   "ext": "ts,json",
   "exec": "ts-node ./src/app.ts",
-  "env": { "NODE_ENV": "development" }
+  "env": { "NODE_ENV": "development" },
+  "ignore": ["src/data/*"]
 }

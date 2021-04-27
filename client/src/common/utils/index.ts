@@ -13,6 +13,4 @@ export * from './notification-helper';
 export * from './object-helper';
 export * from './props-helper';
 export * from './router-guard';
-export * from './router-permission-guard';
-export * from './router-state-guard';
 export * from './scroll-helper';

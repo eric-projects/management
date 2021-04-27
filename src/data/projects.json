@@ -1,0 +1,88 @@
+{
+  "list": [
+    {
+      "code": "medusa.admin",
+      "name": "管理平台",
+      "remark": "",
+      "tag": "花样年",
+      "k_id": "25c11ff6-b17c-7913-9e9d-ec314f6940b8"
+    },
+    {
+      "code": "medusa.customer",
+      "name": "审批平台",
+      "remark": "",
+      "tag": "花样年",
+      "k_id": "fdd925d8-f731-e269-285a-89aa7620f283"
+    },
+    {
+      "code": "medusa.customer-mobile",
+      "name": "审批移动平台",
+      "remark": "",
+      "tag": "花样年",
+      "k_id": "f107f396-0c34-dfe4-ad77-b6bf1f1ff177"
+    },
+    {
+      "code": "medusa.service.platform",
+      "name": "平台接口",
+      "remark": "接口",
+      "tag": "花样年",
+      "k_id": "682d260d-5a2a-094a-5d70-eedcb72a8d9e"
+    },
+    {
+      "code": "medusa.service.process",
+      "name": "流程接口",
+      "remark": "接口",
+      "tag": "花样年",
+      "k_id": "166a9023-4333-cfee-dca9-de8ad45b0e89"
+    },
+    {
+      "code": "medusa.service.form",
+      "name": "表单接口",
+      "remark": "接口",
+      "tag": "花样年",
+      "k_id": "8429aaf0-01f5-a858-f9df-87d9123b99b3"
+    },
+    {
+      "code": "medusa.service.todo-centre",
+      "name": "待办中心接口",
+      "remark": "接口",
+      "tag": "花样年",
+      "k_id": "e9c599fc-bc66-dad8-030f-728b4be9992f"
+    },
+    {
+      "code": "medusa.engine.api",
+      "name": "引擎接口",
+      "remark": "接口",
+      "tag": "花样年",
+      "k_id": "508eea38-ac8f-095f-05c5-a8b66333e714"
+    },
+    {
+      "code": "medusa.engine",
+      "name": "引擎事件",
+      "remark": "事件",
+      "tag": "花样年",
+      "k_id": "0ade9c46-160f-95b7-a116-ea65c2c9bd53"
+    },
+    {
+      "code": "medusa.service.biz-logic",
+      "name": "业务接口",
+      "remark": "接口",
+      "tag": "花样年",
+      "k_id": "79825531-fd2f-6122-3d08-cc7000121a25"
+    },
+    {
+      "code": "medusa.gateway",
+      "name": "网关",
+      "remark": "",
+      "tag": "花样年",
+      "k_id": "0ee3489c-f9f7-27ca-143c-9f5ee23fc42f"
+    },
+    {
+      "code": "medusa.cron-job",
+      "name": "Job",
+      "remark": "",
+      "tag": "花样年",
+      "k_id": "e0db3be1-a69c-1d52-2f07-0e666d607765"
+    }
+  ]
+}

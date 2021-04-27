@@ -7,23 +7,23 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:4100',
+        target: 'http://localhost:5100',
         changeOrigin: true
       },
       '/auth': {
-        target: 'http://localhost:4100',
+        target: 'http://localhost:5100',
         changeOrigin: true
       },
       '/version': {
-        target: 'http://localhost:4100',
+        target: 'http://localhost:5100',
         changeOrigin: true
       },
       '/static-form': {
-        target: 'http://localhost:4100',
+        target: 'http://localhost:5100',
         changeOrigin: true
       },
       '/socket.io': {
-        target: 'http://localhost:4100',
+        target: 'http://localhost:5100',
         changeOrigin: true,
         ws: true
       }

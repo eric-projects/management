@@ -1,4 +1,3 @@
-export { ApproveStatus } from './ApproveStatus';
 export { Attachment } from './Attachment';
 export { CommonApprovalComment } from './CommonApprovalComment';
 export { CustomIcon } from './CustomIcon';
@@ -24,3 +23,8 @@ export { ProcessDiagram } from './Process/ProcessDiagram';
 export { MenuItem } from './MenuItem';
 export { UserInfoView } from './UserInfoView';
 export { UserTransferInput } from './OrganizationUser/UserTransferInput';
+
+export { CompCard } from './CompCard';
+export { CompBaseTable } from './CompTable';
+export { CompModalForm } from './CompModalForm';
+export { CompRich } from './CompRich';

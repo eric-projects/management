@@ -5,11 +5,10 @@
  */
 
 import config from './config.json';
-import devConfig from './config.dev.json';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 export const environment: { [key: string]: any | any[] } = {
   isDevelopment: isDevelopment,
-  ...(isDevelopment ? devConfig : config),
+  ...(isDevelopment ? config : config),
 };

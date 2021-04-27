@@ -20,6 +20,7 @@
   "dependencies": {
     "amqplib": "~0.5.3",
     "crypto-js": "~3.1.9-1",
+    "ioredis": "^4.26.0",
     "koa": "~2.5.2",
     "koa-better-http-proxy": "~0.2.4",
     "koa-body": "~4.0.4",
@@ -29,12 +30,14 @@
     "koa-router": "~7.4.0",
     "koa-static": "~5.0.0",
     "lodash": "~4.17.11",
+    "lowdb": "^1.0.0",
     "socket.io": "~2.1.1",
     "statuses": "~1.5.0",
     "superagent": "~3.8.3"
   },
   "devDependencies": {
     "@types/amqplib": "~0.5.9",
+    "@types/ioredis": "^4.22.3",
     "@types/koa": "~2.0.47",
     "@types/koa-generic-session": "~1.0.2",
     "@types/koa-logger": "~3.1.1",
@@ -42,6 +45,7 @@
     "@types/koa-router": "~7.0.35",
     "@types/koa-static": "~4.0.0",
     "@types/lodash": "~4.14.119",
+    "@types/lowdb": "^1.0.9",
     "@types/node": "~11.11.3",
     "@types/socket.io": "~1.4.39",
     "@types/statuses": "~1.5.0",
