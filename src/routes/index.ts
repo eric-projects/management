@@ -9,6 +9,7 @@ import { GetUserStateAsync, ModifyUserLanguage, LogoutAsync } from '../controlle
 import { ImpersonateLoginAsync, ImpersonateLogoutAsync } from '../controllers/impersonate.controller';
 import { redisHelper } from '../utils/helper-redis';
 import { dbHelper } from '../utils/helper-lowdb';
+import { fileHelper } from '../utils/helper-file';
 
 const router = new Router();
 
@@ -54,6 +55,22 @@ router.all('/auth/*', noNeedAuthProxy(), async (ctx: Koa.ParameterizedContext, n
 //     ctx.session.cookie.tick = new Date().getTime();
 //   }
 // });
+
+/**
+ * 附件
+ * 上传内容到路径文件
+ */
+router.post('/api/upload/string', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
+  console.log('/api/upload/string', ctx.request.body);
+  await fileHelper.uploadStringToFile(ctx.request.body.data, ctx.request.body.path).then(
+    () => {
+      ctx.status = 200;
+    },
+    error => {
+      ctx.throw(500, error.message);
+    }
+  );
+});
 
 /**
  * 查询
@@ -105,57 +122,57 @@ router.post('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedCont
   );
 });
 
-/**
- * 查询
- * 查询模块：module下数据
- */
-router.get('/api/:module/hash', async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  await redisHelper.hgetData(ctx.query.key, ctx.params.module).then(data => {
-    ctx.body = data;
-  });
-});
+// /**
+//  * 查询
+//  * 查询模块：module下数据
+//  */
+// router.get('/api/:module/hash', async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
+//   await redisHelper.hgetData(ctx.query.key, ctx.params.module).then(data => {
+//     ctx.body = data;
+//   });
+// });
 
-/**
- * Proxy
- * 加上一个空回调以阻止 proxy 中间件调用 next
- */
-router.delete('/api/:module/hash', async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  await redisHelper.delData(ctx.params.module, ctx.query.key).then(data => {
-    ctx.body = data;
-  });
-});
+// /**
+//  * Proxy
+//  * 加上一个空回调以阻止 proxy 中间件调用 next
+//  */
+// router.delete('/api/:module/hash', async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
+//   await redisHelper.delData(ctx.params.module, ctx.query.key).then(data => {
+//     ctx.body = data;
+//   });
+// });
 
-/**
- * Proxy
- * 加上一个空回调以阻止 proxy 中间件调用 next
- */
-router.get('/api/:module/*', async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  await redisHelper.getData(ctx.query.key, ctx.params.module).then(data => {
-    ctx.body = data;
-  });
-});
+// /**
+//  * Proxy
+//  * 加上一个空回调以阻止 proxy 中间件调用 next
+//  */
+// router.get('/api/:module/*', async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
+//   await redisHelper.getData(ctx.query.key, ctx.params.module).then(data => {
+//     ctx.body = data;
+//   });
+// });
 
-/**
- * Proxy
- * 加上一个空回调以阻止 proxy 中间件调用 next
- */
-router.post('/api/:module/hash', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  console.log('ctx.params');
-  console.log(ctx.request.body);
-  await redisHelper.hsetData(ctx.query.key, ctx.request.body, ctx.params.module).then(data => {
-    ctx.status = 200;
-  });
-});
+// /**
+//  * Proxy
+//  * 加上一个空回调以阻止 proxy 中间件调用 next
+//  */
+// router.post('/api/:module/hash', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
+//   console.log('ctx.params');
+//   console.log(ctx.request.body);
+//   await redisHelper.hsetData(ctx.query.key, ctx.request.body, ctx.params.module).then(data => {
+//     ctx.status = 200;
+//   });
+// });
 
-/**
- * Proxy
- * 加上一个空回调以阻止 proxy 中间件调用 next
- */
-router.post('/api/:module', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  await redisHelper.setData(ctx.query.key, ctx.request.body, ctx.params.module).then(data => {
-    ctx.status = 200;
-  });
-});
+// /**
+//  * Proxy
+//  * 加上一个空回调以阻止 proxy 中间件调用 next
+//  */
+// router.post('/api/:module', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
+//   await redisHelper.setData(ctx.query.key, ctx.request.body, ctx.params.module).then(data => {
+//     ctx.status = 200;
+//   });
+// });
 
 /**
  * 其他所有请求均指向首页，用于配合 angular 路由

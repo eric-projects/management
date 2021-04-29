@@ -46,10 +46,12 @@ import {
   Badge,
   Anchor,
   Result,
+  message,
 } from 'ant-design-vue';
 import { notificationHelper, i18nHelper } from '@/common/utils';
 
 Vue.prototype.$notify = notificationHelper;
+Vue.prototype.$message = message;
 Vue.prototype.$l = i18nHelper;
 
 Vue.use(ConfigProvider);

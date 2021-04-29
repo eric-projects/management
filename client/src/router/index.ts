@@ -2,11 +2,10 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import { routerGuard } from '@/common/utils';
 import { MainLayout } from '@/layout/MainLayout';
-import { EmptyLayout } from '@/layout/EmptyLayout';
 import { Login } from '@/views/Login';
 import { UnAuthorized } from '@/views/401';
 import { PlatFormRoutes } from './platform/platform.routes';
-import { CompRich } from '@/components';
+import { RichView } from '@/views/Rich';
 
 Vue.use(Router);
 
@@ -21,8 +20,8 @@ export default new Router({
       beforeEnter: routerGuard,
     },
     {
-      path: '/rich',
-      component: CompRich,
+      path: '/rich/:id',
+      component: RichView,
     },
     {
       path: '/login',

@@ -39,7 +39,8 @@ export class CompRich extends Vue {
   render() {
     return (
       <div>
-        <editor id='tinymceId' disabled={this.disabled} v-model={this.richData} init={this.init}></editor>
+        <editor id='tinymceId' disabled={this.disabled} outputFormat='text' v-model={this.richData} init={this.init}></editor>
+        <div style='position: absolute;top: 10px;right: 30px;z-index: 1;'>{this.$slots.default}</div>
       </div>
     );
   }

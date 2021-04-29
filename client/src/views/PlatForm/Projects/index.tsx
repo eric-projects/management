@@ -1,13 +1,13 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { CompCard, CompBaseTable, CompModalForm, CompRich } from '@/components';
-import { guidHelper, toCasedStyleObject } from '@/common/utils';
+import { CompCard, CompBaseTable, CompModalForm } from '@/components';
+import { toCasedStyleObject } from '@/common/utils';
 import { commonService } from '@/services/common';
 import { ToolDataKeys, ToolDataModule, ToolDataType } from '@/services/common/types';
 import { TableValueDto } from '@/components/CompTable';
 import { map } from 'rxjs/operators';
 import { FetchDataSourceDto } from '@/common/defines';
 
-@Component({ components: { CompCard, CompBaseTable, CompModalForm, CompRich } })
+@Component({ components: { CompCard, CompBaseTable, CompModalForm } })
 export class ProjectList extends Vue {
   private projectAddData: any = { code: '', name: '', remark: '', tag: '' };
   private projectEditVisible = false;
@@ -68,24 +68,36 @@ export class ProjectList extends Vue {
   render() {
     return (
       <comp-card>
-        <comp-rich></comp-rich>
         <comp-base-table
           ref='table'
+          // showPagination={false}
           columns={this.columns}
           scoped-slots={{
             actions: (cell: string, row: any) => {
               return (
-                <a-popconfirm
-                  placement='top'
-                  on-confirm={() => {
-                    this.onDeleteRow(row);
-                  }}
-                  title={this.$t('framework.delete-info')}
-                >
-                  <a-button size='small' type='danger'>
-                    删除
+                <span>
+                  <a-button
+                    class='mr-1'
+                    size='small'
+                    type='primary'
+                    on-click={() => {
+                      window.open(`/rich/${row[commonService.rowKey]}`);
+                    }}
+                  >
+                    配置
                   </a-button>
-                </a-popconfirm>
+                  <a-popconfirm
+                    placement='top'
+                    on-confirm={() => {
+                      this.onDeleteRow(row);
+                    }}
+                    title={this.$t('framework.delete-info')}
+                  >
+                    <a-button size='small' type='danger'>
+                      删除
+                    </a-button>
+                  </a-popconfirm>
+                </span>
               );
             },
           }}

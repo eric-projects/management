@@ -17,6 +17,7 @@ export class CompBaseTable extends Vue {
   @Prop() title!: string;
   @Prop({ default: false }) cardStyle!: boolean;
   @Prop({ default: true }) asyncData!: boolean;
+  @Prop({ default: true }) showPagination!: boolean;
   isCardStyle!: boolean;
 
   private pagination = {
@@ -95,7 +96,7 @@ export class CompBaseTable extends Vue {
           size='middle'
           columns={this.columns}
           data-source={this.data}
-          pagination={this.pagination}
+          pagination={this.showPagination ? this.pagination : false}
           scopedSlots={this.scopedSlots}
           on-change={(pagination: any) => {
             this.pagination = pagination;
