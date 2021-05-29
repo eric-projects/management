@@ -4,6 +4,7 @@ import App from './App';
 import i18n from './i18n';
 import '@babel/polyfill';
 import '@/plugins/ant-design-vue';
+import '@/plugins/antd-mobile-vue';
 import './styles.less';
 import { i18nService } from './services/i18n';
 // import { Editor } from 'tinymce';

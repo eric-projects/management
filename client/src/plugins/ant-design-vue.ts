@@ -47,6 +47,7 @@ import {
   Anchor,
   Result,
   message,
+  Empty,
 } from 'ant-design-vue';
 import { notificationHelper, i18nHelper } from '@/common/utils';
 
@@ -101,3 +102,4 @@ Vue.use(Descriptions);
 Vue.use(Badge);
 Vue.use(Anchor);
 Vue.use(Result);
+Vue.use(Empty);

@@ -6,6 +6,7 @@ import { Login } from '@/views/Login';
 import { UnAuthorized } from '@/views/401';
 import { PlatFormRoutes } from './platform/platform.routes';
 import { RichView } from '@/views/Rich';
+import { DesignerView } from '@/views/Designer';
 
 Vue.use(Router);
 
@@ -22,6 +23,10 @@ export default new Router({
     {
       path: '/rich/:id',
       component: RichView,
+    },
+    {
+      path: '/designer',
+      component: DesignerView,
     },
     {
       path: '/login',

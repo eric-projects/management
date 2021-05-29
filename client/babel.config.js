@@ -5,9 +5,9 @@ module.exports = {
       '@babel/preset-env',
       {
         modules: false,
-        useBuiltIns: 'entry'
-      }
-    ]
+        useBuiltIns: 'entry',
+      },
+    ],
   ],
   plugins: [
     '@babel/plugin-transform-runtime',
@@ -17,8 +17,17 @@ module.exports = {
       {
         libraryName: 'ant-design-vue',
         libraryDirectory: 'es',
-        style: true
-      }
-    ]
-  ]
+        style: true,
+      },
+    ],
+    [
+      'import',
+      {
+        libraryName: 'antd-mobile-vue',
+        libraryDirectory: 'es',
+        style: true,
+      },
+      'antd-mobile-vue',
+    ],
+  ],
 };

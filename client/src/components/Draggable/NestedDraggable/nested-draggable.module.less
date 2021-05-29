@@ -1,0 +1,36 @@
+.drag_area {
+  min-height: 50px;
+  position: relative;
+  padding: 10px 25px;
+  // outline: 1px dashed;
+
+  :global(.mover) {
+    display: none;
+  }
+
+  // .drag_area:hover {
+  .draggable_area:hover {
+    position: relative;
+    > :global(.mover) {
+      position: absolute;
+      z-index: 1;
+      display: block;
+      left: -6px;
+      top: -3px;
+      height: 20px;
+      line-height: 20px;
+      background: #409eff;
+      font-size: 14px;
+      color: #fff;
+      padding: 0 2px;
+      cursor: move;
+    }
+  }
+  // }
+}
+
+.component {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  list-style-type: none;
+}

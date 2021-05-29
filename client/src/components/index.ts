@@ -28,3 +28,5 @@ export { CompCard } from './CompCard';
 export { CompBaseTable } from './CompTable';
 export { CompModalForm } from './CompModalForm';
 export { CompRich } from './CompRich';
+export { NestedDraggable } from './Draggable/NestedDraggable';
+export { ComponentBox } from './Draggable/NestedDraggable/ComponentBox';

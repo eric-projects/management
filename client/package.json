@@ -13,6 +13,7 @@
     "@babel/runtime": "^7.13.10",
     "@tinymce/tinymce-vue": "^3.2.6",
     "ant-design-vue": "1.6.3",
+    "antd-mobile-vue": "^0.4.3",
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
     "crypto-js": "^3.1.9-1",
@@ -28,7 +29,8 @@
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.5.1",
     "vue-smooth-dnd": "^0.8.0",
-    "vue-virtual-scroller": "0.12.2"
+    "vue-virtual-scroller": "0.12.2",
+    "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
