@@ -26,6 +26,7 @@ export { UserTransferInput } from './OrganizationUser/UserTransferInput';
 
 export { CompCard } from './CompCard';
 export { CompBaseTable } from './CompTable';
+export { CompTableHeader } from './CompTable';
 export { CompModalForm } from './CompModalForm';
 export { CompRich } from './CompRich';
 export { NestedDraggable } from './Draggable/NestedDraggable';

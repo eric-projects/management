@@ -1,0 +1,257 @@
+@import '../../themes/default/variables.less';
+.layout{
+    height: 100vh;
+    .layout_content{
+        display: flex;
+        flex-direction: column;
+        .header{
+            height: 40px;
+            line-height: 40px;
+            text-align: right;
+            background: #ffffff;
+            padding: 0px;
+            margin: 0 40px;
+        }
+        .content{
+            height: 100px;
+            border: 1px dashed #999;
+            padding: 5px;
+        }
+    }
+}
+.components{
+    height: 100%;
+    overflow: auto;
+    border-right: 1px solid #e0e0e0;
+    padding: 0 @base-size * 2;
+    .group_title{
+        margin: @base-size 0;
+    }
+    ul {
+        position: relative;
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
+        .item_layout{
+            display: block;
+            width: 48%;
+            line-height: 26px;
+            position: relative;
+            float: left;
+            left: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin: 1%;
+            border: 1px solid #f4f6fc;
+            a{
+                display: block;
+                color: #1890ff;
+                cursor: move;
+                background: #f4f6fc;
+                border: 1px solid #f4f6fc;
+                i{
+                    margin: 0 2px;
+                    font-size: 14px;
+                }
+                &:hover {
+                    border: 1px dashed #409eff;
+                }
+            }
+        }
+    }
+}
+.layout_components_content,.layout_config_content{
+    height: 100px;
+}
+.config{
+    height: 100%;
+    overflow: auto;
+    border-left: 1px solid #e0e0e0;
+    .config_header{
+        height: 40px;
+        text-align: center;
+        border-bottom: 1px solid #e0e0e0;
+        .config_tab{
+            height: 40px;
+            line-height: 40px;
+            display: inline-block;
+            width: 48%;
+            text-align: center;
+            font-weight: 500;
+            position: relative;
+            cursor: pointer;
+        }
+        .active {
+            border-bottom: 2px solid #409eff;
+        }
+    }
+    .config_content{
+        padding: 10px;
+    }
+}
+.form{
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    form,.form_draggable,.form_transition{
+        height: 100%;
+    }
+    .form_empty{
+        font-size: 20px;
+        color: #ccc;
+        position: absolute;
+        left: 45%;
+        top: 50%;
+    }
+    .div{
+        position: relative;
+        margin-bottom: @base-size;
+    }
+    .baseInfo{
+        position: relative;
+        margin-bottom: @base-size;
+        border: 1px dashed #999;
+        padding: 5px;
+    }
+    .layout_div{
+        position: relative;
+    }
+    .collapse_draggable{
+        min-height: 100px;
+    }
+    .tab_draggable{
+        min-height: 100px;
+        padding: 16px;
+    }
+    .col{
+        min-height: 58px !important;
+        padding: 3px !important;
+        border: 1px dashed #999;
+        .col_component{
+            min-height: 48px;
+        }
+    }
+    .form_item{
+        min-height: 48px !important;
+        margin-bottom: 0px !important;
+        border: 1px dashed #999;
+        display: flex !important;
+        align-items: flex-start;
+        padding: 5px 3px !important;
+        cursor: pointer;
+    }
+    .border_none{
+        border: 0px;
+    }
+    .form_item_action {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        height: 20px;
+        line-height: 20px;
+        background: #409eff;
+        z-index: 2;
+        i {
+          font-size: 14px;
+          color: #fff;
+          margin: 0 5px;
+          cursor: pointer;
+        }
+    }
+    .form_item_down_action{
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        height: 20px;
+        line-height: 20px;
+        background: #409eff;
+        z-index: 2;
+        i {
+          font-size: 14px;
+          color: #fff;
+          margin: 0 5px;
+          cursor: pointer;
+        }
+    }
+    .form_item_drag {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        height: 20px;
+        line-height: 20px;
+        background: #409eff;
+        z-index: 2;
+        i {
+          font-size: 14px;
+          color: #fff;
+          margin: 0 5px;
+          cursor: move;
+        }
+    }
+    .active {
+        border: 1px solid #409eff !important;
+    }
+    .table_content{
+        position: relative;
+        min-height: 110px;
+        overflow: auto;
+        border: 1px dashed #999;
+        padding: 5px;
+    }
+    .system_column{
+        height: 90px;
+        width: 50px;
+        text-align: center;
+        float: left;
+        border: 1px solid #999;
+    }
+    .custom_column{
+        height: 90px;
+        border: 1px solid #999;
+        margin: 0 2px;
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+    }
+    .column_header{
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #999;
+    }
+    .column_content{
+        padding: 3px;
+        height: 50px;
+        line-height: 50px;
+    }
+    .draggable{
+        float: left;
+        height: 90px;
+        position: absolute;
+        display: flex;
+    }
+}
+.column_ghost{
+    background: #f56c6c;
+    border: 1px solid #f56c6c;
+    outline-width: 0;
+    width: 3px;
+    min-height: 90px;
+    box-sizing: border-box;
+    font-size: 0;
+    content: "";
+    overflow: hidden;
+    padding: 0;
+}
+.ghost {
+    background: #f56c6c;
+    border: 1px solid #f56c6c;
+    outline-width: 0;
+    height: 2px;
+    box-sizing: border-box;
+    font-size: 0;
+    content: "";
+    overflow: hidden;
+    padding: 0;
+    margin-bottom: 5px;
+}

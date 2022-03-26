@@ -24,13 +24,20 @@ class DBHelper {
     }
   }
 
-  async Add(module: string, key: string, dataType: 'object' | 'array', data: any) {
+  async Add(module: string, key: string, data: any, dataType: 'object' | 'array' | undefined = undefined) {
     if (!data) {
       throw new Error('数据为空！');
     }
 
     const db = this.init_db(module);
     const hasValue = db.has(key).value();
+    if (dataType == undefined) {
+      if (data instanceof Array) {
+        dataType = 'array';
+      } else if (data instanceof Object) {
+        dataType = 'object';
+      }
+    }
     if (dataType === 'array') {
       if (!hasValue) {
         db.set(key, []).write();
@@ -50,7 +57,7 @@ class DBHelper {
         }
 
         Object.keys(data).forEach(e => {
-          db.set(`${key}.{e}`, data[e]).write();
+          db.set(`${key}.${e}`, data[e]).write();
         });
       } else {
         // 单一值
@@ -62,6 +69,11 @@ class DBHelper {
   async Get(module: string, key: string) {
     const db = this.init_db(module);
     return db.get(key).value();
+  }
+
+  async GetAll(module: string) {
+    const db = this.init_db(module);
+    return db.read();
   }
 
   async Delete(module: string, key: string, dataType: 'object' | 'array' = 'object', param: any = {}) {

@@ -15,6 +15,7 @@ export class CompBaseTable extends Vue {
   @Prop() value!: TableValueDto;
   @Prop() scopedSlots!: any;
   @Prop() title!: string;
+  @Prop({ default: 'middle' }) size!: string;
   @Prop({ default: false }) cardStyle!: boolean;
   @Prop({ default: true }) asyncData!: boolean;
   @Prop({ default: true }) showPagination!: boolean;
@@ -93,7 +94,7 @@ export class CompBaseTable extends Vue {
         {titleLeftDom ? <template slot='title'>{titleLeftDom}</template> : null}
         {titleRightDom ? <template slot='extra'>{titleRightDom}</template> : null}
         <a-table
-          size='middle'
+          size={this.size}
           columns={this.columns}
           data-source={this.data}
           pagination={this.showPagination ? this.pagination : false}

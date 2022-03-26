@@ -14,3 +14,4 @@ export * from './object-helper';
 export * from './props-helper';
 export * from './router-guard';
 export * from './scroll-helper';
+export * from './jwt-helper';

@@ -1,6 +1,6 @@
 {
-    "main-title":{
-        "top-title" : "管理工具"
+    "main-title": {
+        "top-title": "开发工具"
     },
     "boost": {
         "layout": {
@@ -8,7 +8,7 @@
             "logout": "登出",
             "login": {
                 "form": {
-                    "title": "管理工具",
+                    "title": "开发工具",
                     "user-input": "用户名",
                     "psd-input": "密码",
                     "user-title": "用户登录",
@@ -146,7 +146,8 @@
         },
         "application": {
             "pageName": "应用维护",
-            "statusDataset": [{
+            "statusDataset": [
+                {
                     "label": "有效",
                     "value": "1"
                 },
@@ -168,7 +169,8 @@
             "baseInfo": "基本信息",
             "generate": "生成密钥",
             "preview": "预览",
-            "apiType": [{
+            "apiType": [
+                {
                     "label": "WebService",
                     "value": "webservice"
                 },
@@ -177,7 +179,8 @@
                     "value": "webapi"
                 }
             ],
-            "requestMethod": [{
+            "requestMethod": [
+                {
                     "label": "GET",
                     "value": "get"
                 },
@@ -186,7 +189,8 @@
                     "value": "post"
                 }
             ],
-            "statusDataset": [{
+            "statusDataset": [
+                {
                     "label": "有效",
                     "value": "1"
                 },
@@ -230,7 +234,8 @@
             "cron": "表达式",
             "failCount": "失败次数",
             "type": "探针类型",
-            "typeDateset": [{
+            "typeDateset": [
+                {
                     "label": "服务",
                     "value": 0
                 },
@@ -243,7 +248,8 @@
                     "value": 2
                 }
             ],
-            "cronDateset": [{
+            "cronDateset": [
+                {
                     "label": "每隔一分钟",
                     "value": "*/1 * * * *"
                 },
@@ -267,7 +273,8 @@
             "contact": "联系人",
             "fax": "传真",
             "domain": "域名",
-            "typeDataset": [{
+            "typeDataset": [
+                {
                     "label": "集团",
                     "value": 1
                 },
@@ -334,7 +341,8 @@
             "application": "应用",
             "subModule": "子模块",
             "topModule": "顶级模块",
-            "typeDataset": [{
+            "typeDataset": [
+                {
                     "label": "模块",
                     "value": "M"
                 },
@@ -364,7 +372,8 @@
             "custom": "自定义",
             "organization": "选择组织",
             "exists": "已存在组织",
-            "dataRightsType": [{
+            "dataRightsType": [
+                {
                     "label": "组织层级",
                     "value": 0
                 },
@@ -377,7 +386,8 @@
                     "value": 2
                 }
             ],
-            "inUseDataset": [{
+            "inUseDataset": [
+                {
                     "label": "有效",
                     "value": "true"
                 },
@@ -386,7 +396,8 @@
                     "value": "false"
                 }
             ],
-            "memberDataset": [{
+            "memberDataset": [
+                {
                     "label": "人员",
                     "value": 1
                 },
@@ -415,7 +426,8 @@
             "orgLevel": "组织等级",
             "businessType": "业态",
             "tag": "标签",
-            "inUseDataset": [{
+            "inUseDataset": [
+                {
                     "label": "有效",
                     "value": "true"
                 },
@@ -424,7 +436,8 @@
                     "value": "false"
                 }
             ],
-            "memberDataset": [{
+            "memberDataset": [
+                {
                     "label": "人员",
                     "value": 1
                 },
@@ -452,7 +465,8 @@
             "sync": "同步视图维度",
             "sync-dictionary": "同步字典维度",
             "inUse": "状态",
-            "inUseDataset": [{
+            "inUseDataset": [
+                {
                     "label": "有效",
                     "value": "true"
                 },
@@ -463,7 +477,8 @@
             ],
             "role": "角色",
             "status": "状态",
-            "statusDataset": [{
+            "statusDataset": [
+                {
                     "label": "草稿",
                     "value": "-1"
                 },
@@ -471,7 +486,6 @@
                     "label": "无效",
                     "value": "0"
                 },
-
                 {
                     "label": "已发布",
                     "value": "1"
@@ -498,7 +512,8 @@
             "lock": "锁定状态",
             "birthday": "生日",
             "lessOneOragization": "至少得选择一个组织！",
-            "lockDataset": [{
+            "lockDataset": [
+                {
                     "label": "无锁定",
                     "value": 0
                 },
@@ -511,7 +526,8 @@
                     "value": 2
                 }
             ],
-            "statusDataset": [{
+            "statusDataset": [
+                {
                     "label": "无效",
                     "value": 0
                 },
@@ -535,7 +551,8 @@
             "failCount": "失败次数",
             "expression": "Cron表达式",
             "pushType": "推送类型",
-            "pushTypeDataset": [{
+            "pushTypeDataset": [
+                {
                     "label": "立即推送",
                     "value": 0
                 },
@@ -549,7 +566,8 @@
                 }
             ],
             "noticeType": "通知类型",
-            "noticeDataset": [{
+            "noticeDataset": [
+                {
                     "label": "邮件",
                     "value": 0
                 },
@@ -597,7 +615,8 @@
             "copyright": "版权",
             "help": "帮助",
             "trafficLightUnit": "红绿灯单位",
-            "trafficLightUnitDataset": [{
+            "trafficLightUnitDataset": [
+                {
                     "label": "小时",
                     "value": "hour"
                 },
@@ -660,7 +679,7 @@
             "list": "流程列表",
             "prompts": {
                 "importSuccess": "导入成功"
-              }
+            }
         },
         "messages": {
             "chooseOrganization": "请先选择组织"
@@ -724,7 +743,8 @@
             "seniorEdit": "高级",
             "customEditPlaceholder": "请输入自定义表达式",
             "badExpression": "表达式格式不正确",
-            "logicalOperatorList": [{
+            "logicalOperatorList": [
+                {
                     "label": "并且",
                     "value": "&&",
                     "expression": "&&"
@@ -735,7 +755,8 @@
                     "expression": "||"
                 }
             ],
-            "operatorList": [{
+            "operatorList": [
+                {
                     "label": "等于",
                     "value": "==",
                     "expression": "=="

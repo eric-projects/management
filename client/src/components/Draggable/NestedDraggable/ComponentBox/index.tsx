@@ -2,7 +2,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
 import * as PCComp from '../../DraggableComponent/PCComponent';
 import * as MobileComp from '../../DraggableComponent/MobileComponent';
-import { DraggableItem, DraggableTypeEnum } from '../../draggable.types';
+import { DraggableContainerTypeEnum, DraggableItem, DraggableTypeEnum } from '../../draggable.types';
 import styles from './component-box.module.less';
 
 @Component({ components: { draggable } })
@@ -11,7 +11,12 @@ export class ComponentBox extends Vue {
     const comps: DraggableItem[] = [];
     console.log(PCComp);
     Object.keys(PCComp).map(m => {
-      comps.push({ key: m, name: m, type: DraggableTypeEnum.Input, children: [] });
+      let containerNum = 0;
+      if ((PCComp as any)[m].extendOptions.computed) {
+        const compContainer = (PCComp as any)[m].extendOptions.computed.InputContainer.get();
+        containerNum = compContainer ? compContainer : 0;
+      }
+      comps.push({ key: m, name: m, container: containerNum, type: DraggableTypeEnum.Input, children: [] });
     });
 
     return (

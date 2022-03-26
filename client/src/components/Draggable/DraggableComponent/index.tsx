@@ -9,8 +9,10 @@ export class DraggableComponent extends Vue {
   @Prop() data!: DraggableItem;
   @Prop({ default: '' }) terminal!: TerminalTypeEnum;
   render() {
+    console.log('name-', this.data.name);
+    const compName = this.terminal ? `${this.terminal}-e-${this.data.type}` : `e-${this.data.type}`;
     return this.$createElement(
-      `${this.terminal}-e-${this.data.type}`,
+      compName,
       {
         props: {},
         scopedSlots: this.$scopedSlots,

@@ -10,6 +10,7 @@ export class DesignerView extends Vue {
   private data: DraggableItem[] = [
     {
       name: 'task 2',
+      key: 'input',
       type: DraggableTypeEnum.Input,
       children: [],
     },
@@ -57,16 +58,31 @@ export class DesignerView extends Vue {
     this.data = this.loopData(this.data);
   }
 
+  mounted() {
+    // const testVNode = (this.$refs.draggable as any).$vnode;
+    // const testCompile = Vue.compile(`<div id="test">aaa</div>`);
+    // // testCompile.render.call(this);
+    // console.log(testCompile);
+    // console.log(testVNode);
+    // new Vue({
+    //   render: e => {
+    //     console.log(testCompile.render.call(this, e));
+    //     return testVNode;
+    //   },
+    // }).$mount('#test');
+  }
+
   render() {
     // <nested-draggable data={m.children}></nested-draggable>
     return (
       <a-layout>
         <a-layout-sider>
           <component-box></component-box>
+          <div id='test'></div>
         </a-layout-sider>
         <a-layout>
           <a-layout-content>
-            <nested-draggable data={this.data} />
+            <nested-draggable ref='draggable' data={this.data} />
           </a-layout-content>
         </a-layout>
       </a-layout>

@@ -1,6 +1,5 @@
 module.exports = {
   outputDir: '../public',
-
   runtimeCompiler: true,
 
   devServer: {
@@ -8,26 +7,37 @@ module.exports = {
     proxy: {
       '/api': {
         target: 'http://localhost:5100',
-        changeOrigin: true
+        changeOrigin: true,
       },
       '/auth': {
         target: 'http://localhost:5100',
-        changeOrigin: true
+        changeOrigin: true,
       },
       '/version': {
         target: 'http://localhost:5100',
-        changeOrigin: true
+        changeOrigin: true,
+      },
+      '/node-api/': {
+        target: 'http://localhost:5100',
+        changeOrigin: true,
       },
       '/static-form': {
         target: 'http://localhost:5100',
-        changeOrigin: true
+        changeOrigin: true,
       },
       '/socket.io': {
         target: 'http://localhost:5100',
         changeOrigin: true,
-        ws: true
-      }
-    }
+        ws: true,
+      },
+      // '/ticket': {
+      //   target: 'https://proxy.finance.qq.com',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '^/ticket': '', // 路径重写
+      //   },
+      // },
+    },
   },
 
   pluginOptions: {
@@ -35,7 +45,7 @@ module.exports = {
       locale: 'zh',
       fallbackLocale: 'zh',
       localeDir: 'locales',
-      enableInSFC: false
-    }
-  }
+      enableInSFC: false,
+    },
+  },
 };

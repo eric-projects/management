@@ -48,6 +48,7 @@ import {
   Result,
   message,
   Empty,
+  Slider,
 } from 'ant-design-vue';
 import { notificationHelper, i18nHelper } from '@/common/utils';
 
@@ -58,6 +59,7 @@ Vue.prototype.$l = i18nHelper;
 Vue.use(ConfigProvider);
 Vue.use(Layout);
 Vue.use(Menu);
+Vue.use(Slider);
 Vue.use(Icon);
 Vue.use(Card);
 Vue.use(Breadcrumb);

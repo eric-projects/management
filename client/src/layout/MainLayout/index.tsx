@@ -102,6 +102,13 @@ export class MainLayout extends Vue {
         this.menus[m.key] = m;
       });
     }); */
+    this.menus.push({
+      id: 'tool-management',
+      icon: 'inbox',
+      locales: '工具箱',
+      route: '',
+      children: [{ id: 'common-tool', locales: '常用工具', route: 'tool-management/common' }],
+    });
 
     this.menus.push({
       id: 'release-management',
@@ -141,6 +148,20 @@ export class MainLayout extends Vue {
         { id: 'api', locales: '接口建模', route: 'matrix-management/matrix' },
         { id: 'page', locales: '页面建模', route: 'matrix-management/matrix' },
         { id: 'table', locales: '表建模', route: 'matrix-management/matrix' },
+        { id: 'bpmn', locales: '流程图', route: 'matrix-management/bpmn' },
+      ],
+    });
+
+    this.menus.push({
+      id: 'ticket-management',
+      icon: 'strikethrough',
+      locales: '股票分析',
+      route: '',
+      children: [
+        { id: 'ticket-pond', locales: '股票池', route: 'ticket-management/pond' },
+        { id: 'ticket-rank', locales: '龙虎榜', route: 'ticket-management/rank' },
+        { id: 'ticket-rise', locales: '涨停', route: 'ticket-management/rise' },
+        { id: 'ticket-replay', locales: '复盘', route: 'ticket-management/replay' },
       ],
     });
     this.$forceUpdate();

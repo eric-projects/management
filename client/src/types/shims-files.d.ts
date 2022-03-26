@@ -36,3 +36,5 @@ declare module 'vue-smooth-dnd' {
   const Container: any;
   const Draggable: any;
 }
+
+declare module 'jsonwebtoken';

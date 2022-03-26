@@ -7,7 +7,8 @@ export interface DraggableItem extends DraggableItemInfo {
 export interface DraggableItemInfo {
   name: string;
   key?: string;
-  type: DraggableTypeEnum;
+  type?: DraggableTypeEnum;
+  container?: number;
 }
 
 export interface DraggableItemConfig {
@@ -64,4 +65,26 @@ export enum DraggableTypeEnum {
    * 一行两列
    */
   TwoGrid = 'two-grid',
+}
+
+export enum DraggableContainerTypeEnum {
+  /**
+   * 非容器
+   */
+  None = 'none',
+
+  /**
+   * 一个占位
+   */
+  OneSeat = 'one',
+
+  /**
+   * 二个占位
+   */
+  TwoSeat = 'two',
+
+  /**
+   * 多个占位
+   */
+  MoreSeat = 'more',
 }
