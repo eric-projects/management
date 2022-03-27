@@ -30,6 +30,10 @@ module.exports = {
         changeOrigin: true,
         ws: true,
       },
+      '/ticket-api/': {
+        target: 'http://localhost:5100',
+        changeOrigin: true,
+      },
       // '/ticket': {
       //   target: 'https://proxy.finance.qq.com',
       //   changeOrigin: true,

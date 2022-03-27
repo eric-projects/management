@@ -8,11 +8,11 @@ import { environment } from '../environment';
 import { noNeedAuthProxy } from '../middlewares/no-need-auth-proxy';
 import { GetUserStateAsync, ModifyUserLanguage, LogoutAsync } from '../controllers/auth-state.controller';
 import { ImpersonateLoginAsync, ImpersonateLogoutAsync } from '../controllers/impersonate.controller';
-import { redisHelper } from '../utils/helper-redis';
 import { dbHelper } from '../utils/helper-lowdb';
 import { fileHelper } from '../utils/helper-file';
 import { jwtHelper } from '../utils/jwt-helper';
 import { sqlitedb } from '../utils/helper-better-sqlite';
+import { TicketLogic } from '../controllers/ticket-controller';
 
 const router = new Router();
 
@@ -41,6 +41,11 @@ router.get('/auth/impersonate', ImpersonateLoginAsync);
  * 结束模拟
  */
 router.delete('/auth/impersonate', ImpersonateLogoutAsync);
+
+/**
+ * ticket
+ */
+router.all('/ticket-api/*', TicketLogic);
 
 /**
  * Proxy
@@ -91,7 +96,11 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
           if (ctx.query.cache_key) {
             console.log('insert', ctx.query.cache_key);
             // fields.push('value');
-            sqlitedb.insert(ctx.query.cache_module, { _key: ctx.query.cache_key, value: result }, fields);
+            if (ctx.query.cache_refresh) {
+              sqlitedb.update_row(ctx.query.cache_module, '_key', { _key: ctx.query.cache_key, value: result }, fields);
+            } else {
+              sqlitedb.insert(ctx.query.cache_module, { _key: ctx.query.cache_key, value: result }, fields);
+            }
           } else if (ctx.query.cache_data_key) {
             console.log(ctx.query.cache_data_key);
             // 针对数据自建key 存储数据
@@ -109,17 +118,35 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
             if (cacheData instanceof Array) {
               cacheData.forEach(e => {
                 // dbHelper.Add(ctx.query.cache_module, e[ctx.query.cache_data_key], e).then(() => {});
-                sqlitedb.insert(ctx.query.cache_module, { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) }, fields);
+                if (!ctx.query.cache_refresh) {
+                  sqlitedb.insert(ctx.query.cache_module, { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) }, fields);
+                } else {
+                  sqlitedb.update_row(
+                    ctx.query.cache_module,
+                    '_key',
+                    { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) },
+                    fields
+                  );
+                }
                 // sqlitedb.insert(ctx.query.cache_module, { ...e, _key: e[ctx.query.cache_data_key] }, fields);
               });
             } else {
               // dbHelper.Add(ctx.query.cache_module, cacheData[ctx.query.cache_data_key], cacheData).then(() => {});
-              sqlitedb.insert(
-                ctx.query.cache_module,
-                // { ...cacheData, _key: cacheData[ctx.query.cache_data_key] },
-                { _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
-                fields
-              );
+              if (!ctx.query.cache_refresh) {
+                sqlitedb.insert(
+                  ctx.query.cache_module,
+                  // { ...cacheData, _key: cacheData[ctx.query.cache_data_key] },
+                  { _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
+                  fields
+                );
+              } else {
+                sqlitedb.update_row(
+                  ctx.query.cache_module,
+                  '_key',
+                  { _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
+                  fields
+                );
+              }
             }
           }
         }
@@ -130,8 +157,8 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
       });
   }
 
-  // console.log(ctx.query);
-  if (ctx.query.cache_module && ctx.query.cache_key && sqlitedb.exist_table(ctx.query.cache_module)) {
+  console.log(ctx.query);
+  if (ctx.query.cache_module && ctx.query.cache_key && !ctx.query.cache_refresh && sqlitedb.exist_table(ctx.query.cache_module)) {
     console.log(ctx.query.cache_key + 'eric*********************1');
     await sqlitedb.query(ctx.query.cache_module, { _key: ctx.query.cache_key }).then(async data => {
       console.log('dbHelper.Get', data);

@@ -183,6 +183,7 @@ class SqliteBetterHelper {
    * @param dbName 数据库
    */
   async update_row(tbName: string, rowKey: string, data: object, fields: string[] = [], dbName: string = '') {
+    console.log(tbName, rowKey);
     if (!rowKey || !tbName || !data || !this.exist_table(tbName)) {
       return false;
     }
@@ -191,10 +192,10 @@ class SqliteBetterHelper {
     if (fields.length > 0) {
       fArry = fields.map(m => m + '=@' + m);
     } else {
-      fields = Object.keys(data);
+      fields = Object.keys(data).filter(f => !this.queryPrivateKeys.includes(f));
       fArry = fields.map(m => m + '=@' + m);
     }
-    var sql = `UPDATE ${tbName} SET ${fArry.join(',')} WHERE ${rowKey}=${(data as any)[rowKey]}`;
+    var sql = `UPDATE ${tbName} SET ${fArry.join(',')} WHERE ${rowKey}='${(data as any)[rowKey]}'`;
     console.log(sql);
     const stmt = this.getdb(dbName).prepare(sql);
     stmt.run(data);

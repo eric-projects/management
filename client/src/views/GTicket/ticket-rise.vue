@@ -29,6 +29,38 @@
         <echart :option="onerise"></echart>
       </a-col>
     </a-row>
+    <a-divider />
+    <a-dropdown class="ml-2">
+      <a-menu slot="overlay" @click="addSelect">
+        <a-menu-item v-for="item in mySelectOption" :key="item.groupId">
+          {{ item.groupName + '_' + item.stockList.length }}
+        </a-menu-item>
+      </a-menu>
+      <a-button type="primary"> 加入自选 <a-icon type="down" /> </a-button>
+    </a-dropdown>
+    <!-- <a-button class="ml-2" ghost type="primary" @click="clearSelect">清空自选</a-button> -->
+    <a-dropdown class="ml-2">
+      <a-menu slot="overlay" @click="clearSelect">
+        <a-menu-item v-for="item in mySelectOption" :key="item.groupId">
+          {{ item.groupName + '_' + item.stockList.length }}
+        </a-menu-item>
+      </a-menu>
+      <a-button> 清空自选 <a-icon type="down" /> </a-button>
+    </a-dropdown>
+    <a-button class="ml-2" ghost type="primary" @click="updateSelect">刷新自选</a-button>
+    <div class="ml-2 mt-1">
+      <div :style="{ borderBottom: '1px solid #E9E9E9' }">
+        <a-checkbox :indeterminate="indeterminate" :checked="checkAll">
+          全选
+        </a-checkbox>
+      </div>
+      <br />
+      <h3>一字：</h3>
+      <a-checkbox-group v-model="checkedOneRiseList" :options="oneRiseSelect" />
+      <a-divider />
+      <h3>涨停：</h3>
+      <a-checkbox-group v-model="checkedRiseList" :options="risetSelect" />
+    </div>
   </div>
 </template>
 
@@ -40,12 +72,28 @@ export default {
     echart,
   },
   data() {
-    return { nowDate: '', rangeDate: '', rangeValue: [], tCount: 10, onerise: undefined, rise: undefined };
+    return {
+      indeterminate: false,
+      checkAll: false,
+      nowDate: '',
+      rangeDate: '',
+      rangeValue: [],
+      tCount: 10,
+      onerise: undefined,
+      rise: undefined,
+      oneRiseSelect: [],
+      risetSelect: [],
+      checkedOneRiseList: [],
+      checkedRiseList: [],
+      allTicketList: [],
+      mySelectOption: [],
+    };
   },
   mounted() {
     this.nowDate = this.currentDate();
     this.rangeDate = this.nowDate;
     this.getData([this.nowDate]);
+    this.initMySelect();
   },
   methods: {
     getData(dates) {
@@ -58,7 +106,6 @@ export default {
           ticketApi.initRise(dates[i]).subscribe(res => {
             flag++;
             var jxData = this.jx(res.value);
-            // console.log(jxData, res);
             arry.push(jxData);
             if (flag == dates.length) {
               this.initRank(jxData.rise);
@@ -107,7 +154,6 @@ export default {
               position: 'inside',
               color: '#FFFFFF',
               formatter: params => {
-                console.log('bar', params);
                 var code = params.data.code;
                 var text = '';
                 if (code.includes('sz3')) {
@@ -129,7 +175,6 @@ export default {
       var resKeys = res.filter((f, i) => i < this.tCount).map(f => f.name);
       var resValue = res.filter((f, i) => i < this.tCount && !f.top);
       var resTopValue = res.filter((f, i) => i < this.tCount && f.top);
-      console.log(resTopValue);
       var option = {
         title: {
           text: '一字涨停',
@@ -138,11 +183,10 @@ export default {
         tooltip: {
           trigger: 'item',
           formatter: (params, ticket, callback) => {
-            console.log('pie', params);
             var a = params.data.name;
             var c = params.value;
             var d = params.percent;
-            var result = `${a}<br>涨停天数：${c}<br>比例：${d}<br>`;
+            var result = `${a}<br>板块：${params.data.profession}<br>涨停天数：${c}<br>比例：${d}<br>`;
             // if (ticketStrArry.length > 5) {
             //   var linshi = '';
             //   for (var i = 1; i <= ticketStrArry.length; i++) {
@@ -186,7 +230,6 @@ export default {
             },
             label: {
               formatter: params => {
-                console.log('params', params);
                 var a = params.data.name;
                 var b = params.value;
                 var d = params.percent;
@@ -195,7 +238,7 @@ export default {
                 // '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ';
                 // var ticketStr = item[3].replace(/--/g, '');
                 // var result = `{a|${a}}\n{hr|}\n {aa|${ticketStr}}\n{aa|${money.value}${money.unit}}`;
-                var result = `{a|${a}}\n{hr|}\n {aa|涨停天数：${b}}`;
+                var result = `{a|${a}}\n{hr|}\n{aa|板块：${params.data.profession}}\n {aa|涨停次数：${b}}`;
                 return result;
               },
 
@@ -306,29 +349,38 @@ export default {
       for (var i = 0; i < len; i++) {
         var code = nameStrs[i].substring(nameStrs[i].lastIndexOf('_') + 1);
         var timeline = ztitems[nameStrs[i]].timeline;
+        var reason = ztitems[nameStrs[i]].reason;
         var name = decodeURI(ztitems[nameStrs[i]].name.replace(/\\u/gi, '%u'));
         var tlen = timeline.length;
         var isRise = timeline[tlen - 1].color == 'red';
         var isOneRise = timeline.filter(f => f.color == 'red').length == tlen && timeline[0].time == '0930';
         var isTopRise = isOneRise && tlen == 1;
         var day = ztitems[nameStrs[i]].days;
-        gsData[name] = { code: code, rise: isRise, one_rise: isOneRise, day: day };
+        gsData[name] = { code: code, rise: isRise, one_rise: isOneRise, day: day, profession: reason };
         if (isOneRise) {
-          oneRiseData.push({ name: name, value: day, top: isTopRise, code: code });
+          oneRiseData.push({ name: name, value: day, top: isTopRise, code: code, profession: reason });
         }
 
         if (isRise) {
-          riseData.push({ name: name, value: day, code: code });
+          riseData.push({ name: name, value: day, code: code, profession: reason });
         }
       }
 
+      var sortOneRise = oneRiseData.sort((a, b) => {
+        return b.value - a.value;
+      });
+      var sortRise = riseData.sort((a, b) => {
+        return b.value - a.value;
+      });
+
+      this.oneRiseSelect = sortOneRise.map(m => `${m.name}_${m.value}`);
+      this.risetSelect = sortRise
+        .filter(f => !f.name.includes('ST') && !sortOneRise.find(of => of.name == f.name))
+        .map(m => `${m.name}_${m.value}`);
+      this.allTicketList = riseData;
       return {
-        one_rise: oneRiseData.sort((a, b) => {
-          return b.value - a.value;
-        }),
-        rise: riseData.sort((a, b) => {
-          return b.value - a.value;
-        }),
+        one_rise: sortOneRise,
+        rise: sortRise,
       };
     },
     totalJx(data) {
@@ -367,8 +419,6 @@ export default {
         });
       }
 
-      debugger;
-      console.log(result.ticketcount);
       var sortKeys = Object.keys(result.ticketcount).sort((a, b) => {
         return result.ticketcount[b].count - result.ticketcount[a].count;
       });
@@ -453,6 +503,28 @@ export default {
       var dd = (d.getDate() + '').padStart(2, '0');
       current = `${dy}-${dm}-${dd}`;
       return current;
+    },
+    clearSelect(value) {
+      var codes = this.mySelectOption.find(f => f.groupId == value.key).stockList;
+      if (codes.length > 0) {
+        ticketApi.userSelectTicket(codes, value.key, 'clear_select').subscribe(() => {});
+      }
+    },
+    addSelect(value) {
+      var codes = this.allTicketList
+        .filter(f => this.checkedOneRiseList.includes(`${f.name}_${f.value}`) || this.checkedRiseList.includes(`${f.name}_${f.value}`))
+        .map(m => m.code);
+      if (codes.length > 0) {
+        ticketApi.userSelectTicket(codes, value.key, 'add_select').subscribe(() => {});
+      }
+    },
+    initMySelect() {
+      ticketApi.my_select().subscribe(res => {
+        this.mySelectOption = res.value.data.groupInfoList;
+      });
+    },
+    updateSelect() {
+      ticketApi.my_select(true).subscribe(() => {});
     },
   },
 };
