@@ -10,7 +10,6 @@ import { GetUserStateAsync, ModifyUserLanguage, LogoutAsync } from '../controlle
 import { ImpersonateLoginAsync, ImpersonateLogoutAsync } from '../controllers/impersonate.controller';
 import { redisHelper } from '../utils/helper-redis';
 import { dbHelper } from '../utils/helper-lowdb';
-import { sqliteHelper } from '../utils/helper-sqlite';
 import { fileHelper } from '../utils/helper-file';
 import { jwtHelper } from '../utils/jwt-helper';
 import { sqlitedb } from '../utils/helper-better-sqlite';
@@ -49,17 +48,6 @@ router.delete('/auth/impersonate', ImpersonateLogoutAsync);
  */
 router.all('/auth/*', noNeedAuthProxy(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {});
 
-// /**
-//  * Proxy
-//  * 加上一个空回调以阻止 proxy 中间件调用 next
-//  */
-// router.all('/api/*', apiProxy(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-//   if (ctx.session && ctx.session.user) {
-//     // 刷新登录状态
-//     ctx.session.cookie.tick = new Date().getTime();
-//   }
-// });
-
 /**
  * 附件
  * 上传内容到路径文件
@@ -83,19 +71,31 @@ router.post('/api/upload/string', bodyParser(), async (ctx: Koa.ParameterizedCon
 router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
   async function dataGet() {
     var url = jwtHelper.decrypt(jwtHelper.defaultKey, ctx.params.url);
-    console.log(url);
+    var fields: string[] = ['_key', 'value'];
+    var fieldStruct: any = {};
+    if (ctx.query.cache_field) {
+      fields = fields.concat(ctx.query.cache_field.split(','));
+    }
+
+    fields.forEach(f => {
+      fieldStruct[f] = sqlitedb.TypeString;
+    });
+    sqlitedb.init_table(ctx.query.cache_module, { value: sqlitedb.TypeString, ...fieldStruct }, ['_key']);
+    console.log('url', url);
     await agent
       .get(url)
       .then(data => {
+        var result = data.text;
         if (ctx.query.cache_module) {
-          console.log(ctx.query.cache_module);
+          // console.log(ctx.query.cache_module);
           if (ctx.query.cache_key) {
-            console.log(ctx.query.cache_key);
-            dbHelper.Add(ctx.query.cache_module, ctx.query.cache_key, data.body).then(() => {});
+            console.log('insert', ctx.query.cache_key);
+            // fields.push('value');
+            sqlitedb.insert(ctx.query.cache_module, { _key: ctx.query.cache_key, value: result }, fields);
           } else if (ctx.query.cache_data_key) {
             console.log(ctx.query.cache_data_key);
             // 针对数据自建key 存储数据
-            var cacheData = data.body;
+            var cacheData = JSON.parse(result);
             if (ctx.query.cache_data_path) {
               var pathSplit = ctx.query.cache_data_path.split('.');
               var flag = 0;
@@ -108,30 +108,38 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
 
             if (cacheData instanceof Array) {
               cacheData.forEach(e => {
-                dbHelper.Add(ctx.query.cache_module, e[ctx.query.cache_data_key], e).then(() => {});
+                // dbHelper.Add(ctx.query.cache_module, e[ctx.query.cache_data_key], e).then(() => {});
+                sqlitedb.insert(ctx.query.cache_module, { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) }, fields);
+                // sqlitedb.insert(ctx.query.cache_module, { ...e, _key: e[ctx.query.cache_data_key] }, fields);
               });
             } else {
-              dbHelper.Add(ctx.query.cache_module, cacheData[ctx.query.cache_data_key], cacheData).then(() => {});
+              // dbHelper.Add(ctx.query.cache_module, cacheData[ctx.query.cache_data_key], cacheData).then(() => {});
+              sqlitedb.insert(
+                ctx.query.cache_module,
+                // { ...cacheData, _key: cacheData[ctx.query.cache_data_key] },
+                { _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
+                fields
+              );
             }
           }
         }
-        ctx.body = data.body;
+        ctx.body = { _key: ctx.query.cache_key, value: JSON.parse(result) };
       })
       .catch(x => {
         console.log('error', x);
       });
   }
-  // ctx.params.module, ctx.query.key
-  console.log(ctx.query);
-  if (ctx.query.cache_module && ctx.query.cache_key) {
+
+  // console.log(ctx.query);
+  if (ctx.query.cache_module && ctx.query.cache_key && sqlitedb.exist_table(ctx.query.cache_module)) {
     console.log(ctx.query.cache_key + 'eric*********************1');
-    await dbHelper.Get(ctx.query.cache_module, ctx.query.cache_key).then(async data => {
-      // console.log('dbHelper.Get', data);
-      if (data) {
-        ctx.body = data;
-      } else {
+    await sqlitedb.query(ctx.query.cache_module, { _key: ctx.query.cache_key }).then(async data => {
+      console.log('dbHelper.Get', data);
+      if (!data || data.length == 0) {
         console.log(ctx.query.cache_key + 'eric*********************2');
         await dataGet();
+      } else {
+        ctx.body = { ...data[0], value: JSON.parse(data[0].value) };
       }
     });
   } else {
@@ -144,7 +152,6 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
  * :url 接口地址
  */
 router.post('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  // ctx.params.module, ctx.query.key
   console.log('ctx.params');
   console.log(ctx.params);
   if (ctx.query.cache_module && ctx.query.cache_key) {
@@ -202,10 +209,8 @@ router.get('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedConte
  * :module 模块名（db 文件名）
  */
 router.get('/api/:module', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  // ctx.params.module, ctx.query.key
-  console.log('dbHelper.Get');
-  await dbHelper.GetAll(ctx.params.module).then(data => {
-    // console.log('dbHelper.Get', data);
+  await sqlitedb.query_page(ctx.params.module, ctx.query).then(data => {
+    console.log('dbHelper.Get', data);
     ctx.body = data;
   });
 });
@@ -216,8 +221,6 @@ router.get('/api/:module', bodyParser(), async (ctx: Koa.ParameterizedContext, n
  * :key 数据key/数据path
  */
 router.delete('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  // ctx.params.module, ctx.query.key
-
   await dbHelper.Delete(ctx.params.module, ctx.params.key, ctx.query.dataType, ctx.query).then(
     () => {
       ctx.status = 200;
@@ -234,7 +237,6 @@ router.delete('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedCo
  * :key 数据key/数据path
  */
 router.post('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  // ctx.params.module, ctx.query.key
   console.log('dbHelper.Add');
   await dbHelper.Add(ctx.params.module, ctx.params.key, ctx.request.body, ctx.query.dataType).then(
     () => {
@@ -245,58 +247,6 @@ router.post('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedCont
     }
   );
 });
-
-// /**
-//  * 查询
-//  * 查询模块：module下数据
-//  */
-// router.get('/api/:module/hash', async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-//   await redisHelper.hgetData(ctx.query.key, ctx.params.module).then(data => {
-//     ctx.body = data;
-//   });
-// });
-
-// /**
-//  * Proxy
-//  * 加上一个空回调以阻止 proxy 中间件调用 next
-//  */
-// router.delete('/api/:module/hash', async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-//   await redisHelper.delData(ctx.params.module, ctx.query.key).then(data => {
-//     ctx.body = data;
-//   });
-// });
-
-// /**
-//  * Proxy
-//  * 加上一个空回调以阻止 proxy 中间件调用 next
-//  */
-// router.get('/api/:module/*', async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-//   await redisHelper.getData(ctx.query.key, ctx.params.module).then(data => {
-//     ctx.body = data;
-//   });
-// });
-
-// /**
-//  * Proxy
-//  * 加上一个空回调以阻止 proxy 中间件调用 next
-//  */
-// router.post('/api/:module/hash', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-//   console.log('ctx.params');
-//   console.log(ctx.request.body);
-//   await redisHelper.hsetData(ctx.query.key, ctx.request.body, ctx.params.module).then(data => {
-//     ctx.status = 200;
-//   });
-// });
-
-// /**
-//  * Proxy
-//  * 加上一个空回调以阻止 proxy 中间件调用 next
-//  */
-// router.post('/api/:module', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-//   await redisHelper.setData(ctx.query.key, ctx.request.body, ctx.params.module).then(data => {
-//     ctx.status = 200;
-//   });
-// });
 
 /**
  * 其他所有请求均指向首页，用于配合 angular 路由

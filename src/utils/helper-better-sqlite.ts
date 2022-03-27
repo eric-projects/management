@@ -9,14 +9,27 @@ class SqliteBetterHelper {
   TypeBLOB = 'BLOB';
   TypeNumberOrBigInt = 'INTEGER';
 
+  private queryPrivateKeys = ['_index', '_size', '_wexpr'];
+
   /**
    * 创建数据库
    * @param dbName 数据库
    * @returns
    */
-  init_db(dbName: string) {
+  async init_db(dbName: string) {
     const filePath = path.resolve(__dirname, `../data/${dbName}.db`);
     return new Database(filePath, { verbose: console.log });
+  }
+
+  /**
+   * 判断表是否存在
+   * @param tbName 表
+   * @param dbName 数据库
+   */
+  exist_table(tbName: string, dbName: string = '') {
+    var sql = `SELECT count(1) as count FROM sqlite_master WHERE type='table' AND name = '${tbName}'`;
+    var result = this.getdb(dbName).prepare(sql).get().count;
+    return result;
   }
 
   /**
@@ -27,7 +40,7 @@ class SqliteBetterHelper {
    * @param primaryKeys 主键字段
    * @param dbName 数据库
    */
-  init_table(tbName: string, fieldAndType: object, notNullKeys: string[], primaryKeys: string[] = [], dbName: string = '') {
+  async init_table(tbName: string, fieldAndType: object, primaryKeys: string[] = [], notNullKeys: string[] = [], dbName: string = '') {
     var sqlArry = Object.keys(fieldAndType).map(m => {
       var nullStr = primaryKeys.includes(m) || notNullKeys.includes(m) ? 'NOT NULL' : '';
       return `${m} ${(fieldAndType as any)[m]} ${nullStr}`;
@@ -45,27 +58,92 @@ class SqliteBetterHelper {
    * 查询数据
    * @param tbName 表
    * @param data 数据
+   * @param wexpr where条件
    * @param dbName 数据库
    */
-  query(tbName: string, data: object, expr: string, dbName: string = '') {
-    if (!!tbName || !data) {
-      return false;
+  async query(tbName: string, data: any, wexpr = '', dbName = '') {
+    if (!tbName || !data || !this.exist_table(tbName)) {
+      return '';
     }
 
     // {and:{a:1,b:2},or:{d:1,e:2}}
     // (a&b)|(d&e)&(f|(g&h))
     // (a,b),(d,e),(f,(g,h))
     // (a&(b||(c&d)))
-    var keys = expr.replace(/&/g, ',').replace(/|/g, ',').replace(/\(/g, '').replace(/)/g, '').replace(/ /g, '').split(',');
-    keys.forEach(k => {
-      expr = expr.replace(k, `${k}=@${k}`);
-    });
+    var whereExpr = wexpr || data._wexpr;
+    if (whereExpr) {
+      var keys = whereExpr.replace(/&/g, ',').replace(/\|/g, ',').replace(/\(/g, '').replace(/\)/g, '').split(',');
+      keys.forEach((k: string) => {
+        if (!k.includes('like')) {
+          whereExpr = whereExpr.replace(k, `${k}=@${k}`);
+        }
+      });
+      whereExpr = whereExpr.replace(/&/g, ' AND ').replace(/\|/g, ' OR ');
+    } else {
+      whereExpr = Object.keys(data)
+        .filter(f => !this.queryPrivateKeys.includes(f))
+        .map(m => {
+          return `${m}=@${m}`;
+        })
+        .join(' AND ');
+    }
 
-    var sql = `SELECT * FROM WHERE ${expr}`;
+    var whereStr = whereExpr ? ` WHERE ${whereExpr}` : '';
+    var sql = `SELECT * FROM ${tbName} ${whereStr} `;
     console.log(sql);
     const stmt = this.getdb(dbName).prepare(sql);
-    stmt.all(data);
-    return true;
+    return stmt.all(data);
+  }
+
+  /**
+   * 查询分页数据
+   * @param tbName 表
+   * @param data 数据
+   * @param wexpr where条件
+   * @param dbName 数据库
+   */
+  async query_page(tbName: string, data: any, index = 0, size = 10, wexpr: string = '', dbName: string = '') {
+    console.log(tbName, data, wexpr);
+    if (!tbName || !data || !this.exist_table(tbName)) {
+      return '';
+    }
+
+    // {and:{a:1,b:2},or:{d:1,e:2}}
+    // (a&b)|(d&e)&(f|(g&h))
+    // (a,b),(d,e),(f,(g,h))
+    // (a&(b||(c&d)))
+    var whereExpr = wexpr || data._wexpr;
+    if (whereExpr) {
+      var keys = whereExpr.replace(/&/g, ',').replace(/\|/g, ',').replace(/\(/g, '').replace(/\)/g, '').split(',');
+      keys.forEach((k: string) => {
+        if (!k.includes('like')) {
+          whereExpr = whereExpr.replace(k, `${k}=@${k}`);
+        }
+      });
+
+      whereExpr = whereExpr.replace(/&/g, ' AND ').replace(/\|/g, ' OR ');
+    } else {
+      whereExpr = Object.keys(data)
+        .filter(f => !this.queryPrivateKeys.includes(f))
+        .map(m => {
+          return `${m}=@${m}`;
+        })
+        .join(' AND ');
+    }
+
+    var whereStr = whereExpr ? ` WHERE ${whereExpr}` : '';
+    var sql = `SELECT * FROM ${tbName} ${whereStr} `;
+    console.log(sql);
+    var count = 0;
+    var indexT = data._index || index;
+    if (indexT > 0) {
+      var sizeT = data._size || size || 10;
+      var limitS = (indexT - 1) * sizeT;
+      sql += ` LIMIT ${limitS},${sizeT}`;
+      count = this.getdb(dbName).prepare(`SELECT COUNT(1) AS count from ${tbName} ${whereStr}`).get(data).count;
+    }
+    const stmt = this.getdb(dbName).prepare(sql);
+    return { items: stmt.all(data), total: count };
   }
 
   /**
@@ -75,8 +153,9 @@ class SqliteBetterHelper {
    * @param fields 操作字段
    * @param dbName 数据库
    */
-  insert(tbName: string, data: object, fields: string[] = [], dbName: string = '') {
-    if (!!tbName || !data) {
+  async insert(tbName: string, data: object, fields: string[] = [], dbName: string = '') {
+    console.log('insert', tbName, data);
+    if (!tbName || !data || !this.exist_table(tbName)) {
       return false;
     }
 
@@ -103,8 +182,8 @@ class SqliteBetterHelper {
    * @param fields 操作字段
    * @param dbName 数据库
    */
-  update_row(tbName: string, rowKey: string, data: object, fields: string[] = [], dbName: string = '') {
-    if (!rowKey || !tbName || !data) {
+  async update_row(tbName: string, rowKey: string, data: object, fields: string[] = [], dbName: string = '') {
+    if (!rowKey || !tbName || !data || !this.exist_table(tbName)) {
       return false;
     }
 
@@ -129,8 +208,8 @@ class SqliteBetterHelper {
    * @param data 数据
    * @param dbName 数据库
    */
-  delete_row(tbName: string, rowKey: string, data: any, dbName: string = '') {
-    if (!rowKey || !tbName || !data) {
+  async delete_row(tbName: string, rowKey: string, data: any, dbName: string = '') {
+    if (!rowKey || !tbName || !data || !this.exist_table(tbName)) {
       return false;
     }
 
@@ -151,7 +230,7 @@ class SqliteBetterHelper {
    * @param sql sql语句
    * @param dbName 数据库
    */
-  exec_sql(sql: string, dbName: string = '') {
+  async exec_sql(sql: string, dbName: string = '') {
     console.log(sql);
     this.getdb(dbName).exec(sql);
   }

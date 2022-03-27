@@ -36,10 +36,23 @@ export class CompTableHeader extends Vue {
               ) : null}
               <a-col span='18' style='float:right'>
                 <a-button-group>
-                  <a-button size='middle' type='primary' icon='search' on-click={this.onSearch}>
+                  <a-button
+                    size='middle'
+                    type='primary'
+                    icon='search'
+                    on-click={() => {
+                      this.onSearch();
+                    }}
+                  >
                     查询
                   </a-button>
-                  <a-button size='middle' icon='reload' on-click={this.onReset}>
+                  <a-button
+                    size='middle'
+                    icon='reload'
+                    on-click={() => {
+                      this.onReset();
+                    }}
+                  >
                     重置
                   </a-button>
                 </a-button-group>

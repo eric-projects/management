@@ -57,7 +57,7 @@ export default {
           record.push(dates[i]);
           ticketApi.initRank(dates[i]).subscribe(res => {
             flag++;
-            var jxData = this.jx(res);
+            var jxData = this.jx(res.value);
             arry.push(jxData);
             if (flag == dates.length) {
               var totalJxData = this.totalJx(arry);

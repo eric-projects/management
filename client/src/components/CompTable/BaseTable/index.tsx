@@ -51,7 +51,7 @@ export class CompBaseTable extends Vue {
     }
 
     this.onLoadData({
-      params: { 'page-index': this.pagination.current - 1, 'page-size': this.pagination.pageSize },
+      params: { _index: this.pagination.current, _size: this.pagination.pageSize },
       callback: (data: TableValueDto | Observable<TableValueDto>) => {
         if (data instanceof Observable) {
           data.subscribe(s => {

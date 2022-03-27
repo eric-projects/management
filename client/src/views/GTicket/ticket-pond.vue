@@ -1,14 +1,20 @@
 <template>
   <div>
     <!-- <a-row class="mb-1 pt-1"><a-col> </a-col></a-row> -->
-    <comp-table-header @search="loadData">
-      <template slot="base"> <a-input placeholder="名称/编号"/></template>
+    <comp-table-header
+      @search="
+        () => {
+          this.$refs.table.refreshData(1);
+        }
+      "
+    >
+      <template slot="base"> <a-input v-model="keyword" placeholder="名称/编号"/></template>
     </comp-table-header>
-    <comp-base-table :columns="columns" size="small" @load-data="loadData">
+    <comp-base-table ref="table" :columns="columns" size="small" @load-data="loadData">
       <template slot="title-left">
         <a-button type="primary" @click="initData('sh000001')">初始上证</a-button
-        ><a-button class="ml-1" type="primary" @click="initData('sh000001')">初始深证</a-button
-        ><a-button class="ml-1" type="primary" @click="initData('sh000001')">初始创业</a-button></template
+        ><a-button class="ml-1" type="primary" @click="initData('sz399001')">初始深证</a-button
+        ><a-button class="ml-1" type="primary" @click="initData('sz399006')">初始创业</a-button></template
       >
     </comp-base-table>
     <!-- <a-table :columns="columns" :data-source="data">
@@ -40,6 +46,7 @@ export default {
   },
   data() {
     return {
+      keyword: '',
       data: [],
       columns: [],
     };
@@ -75,10 +82,15 @@ export default {
       });
     },
     loadData(load) {
-      ticketApi.searchData().subscribe(res => {
+      console.log(load);
+      var queryData = { ...load.params };
+      if (this.keyword) {
+        queryData.code = this.keyword;
+        queryData._wexpr = `code like '%${this.keyword}%'|name like '%${this.keyword}%'`;
+      }
+      ticketApi.searchData(queryData).subscribe(res => {
         console.log('eric', res);
-        var data = Object.keys(res).map(m => ({ name: res[m].name, code: m }));
-        load.callback({ items: data, total: data.length });
+        load.callback(res);
       });
     },
   },

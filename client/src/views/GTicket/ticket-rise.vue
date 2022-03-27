@@ -23,10 +23,10 @@
     <a-divider />
     <a-row>
       <a-col :span="12">
-        <echart :option="yybbar"></echart>
+        <echart :option="rise"></echart>
       </a-col>
       <a-col :span="12">
-        <echart :option="yybpie"></echart>
+        <echart :option="onerise"></echart>
       </a-col>
     </a-row>
   </div>
@@ -40,7 +40,7 @@ export default {
     echart,
   },
   data() {
-    return { nowDate: '', rangeDate: '', rangeValue: [], tCount: 10, yybbar: undefined, yybpie: undefined };
+    return { nowDate: '', rangeDate: '', rangeValue: [], tCount: 10, onerise: undefined, rise: undefined };
   },
   mounted() {
     this.nowDate = this.currentDate();
@@ -55,14 +55,14 @@ export default {
       for (let i = 0; i < dates.length; i++) {
         if (!record.includes(dates[i])) {
           record.push(dates[i]);
-          ticketApi.initRank(dates[i]).subscribe(res => {
+          ticketApi.initRise(dates[i]).subscribe(res => {
             flag++;
-            var jxData = this.jx(res);
+            var jxData = this.jx(res.value);
+            // console.log(jxData, res);
             arry.push(jxData);
             if (flag == dates.length) {
-              var totalJxData = this.totalJx(arry);
-              this.initBar(totalJxData.yybRank);
-              this.initRank(totalJxData.ticketcount);
+              this.initRank(jxData.rise);
+              this.initPie(jxData.one_rise);
             }
           });
         } else {
@@ -70,47 +70,101 @@ export default {
         }
       }
     },
-    initBar(res) {
-      var resData = res.filter((f, i) => i < this.tCount);
+    initRank(res) {
+      var resKeys = res.filter((f, i) => i < this.tCount).map(f => f.name);
+      var resValue = res.filter((f, i) => i < this.tCount);
       var option = {
         title: {
-          text: '营业部统计',
+          text: '涨停',
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow',
+          },
+        },
+        legend: {},
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+        },
+        xAxis: {
+          type: 'value',
+          boundaryGap: [0, 0.01],
+        },
+        yAxis: {
+          type: 'category',
+          data: resKeys.reverse(),
+        },
+        series: [
+          {
+            name: this.rangeDate,
+            type: 'bar',
+            label: {
+              show: true,
+              position: 'inside',
+              color: '#FFFFFF',
+              formatter: params => {
+                console.log('bar', params);
+                var code = params.data.code;
+                var text = '';
+                if (code.includes('sz3')) {
+                  text = '创业';
+                } else if (code.includes('sz688')) {
+                  text = '科创';
+                }
+                return `${code} ${text}`;
+              },
+            },
+            data: resValue.reverse(),
+          },
+        ],
+      };
+
+      this.rise = option;
+    },
+    initPie(res) {
+      var resKeys = res.filter((f, i) => i < this.tCount).map(f => f.name);
+      var resValue = res.filter((f, i) => i < this.tCount && !f.top);
+      var resTopValue = res.filter((f, i) => i < this.tCount && f.top);
+      console.log(resTopValue);
+      var option = {
+        title: {
+          text: '一字涨停',
           left: 'center',
         },
         tooltip: {
           trigger: 'item',
           formatter: (params, ticket, callback) => {
+            console.log('pie', params);
             var a = params.data.name;
             var c = params.value;
             var d = params.percent;
-            var item = res.find(f => f[1] == a);
-            var money = this.moneyTransfer(c);
-            debugger;
-            var ticketStr = item[3].replace(/--/g, '');
-            var ticketStrArry = ticketStr.split(';');
-            var result = `${item[1]}<br>${money.value}${money.unit}<br>`;
-            if (ticketStrArry.length > 5) {
-              var linshi = '';
-              for (var i = 1; i <= ticketStrArry.length; i++) {
-                linshi += ticketStrArry[i] + ';';
-                if (i % 5 == 0 || i == ticketStrArry.length - 1) {
-                  result += `${linshi}<br>`;
-                  linshi = '';
-                }
-              }
-            } else {
-              result += `${ticketStr}`;
-            }
+            var result = `${a}<br>涨停天数：${c}<br>比例：${d}<br>`;
+            // if (ticketStrArry.length > 5) {
+            //   var linshi = '';
+            //   for (var i = 1; i <= ticketStrArry.length; i++) {
+            //     linshi += ticketStrArry[i] + ';';
+            //     if (i % 5 == 0 || i == ticketStrArry.length - 1) {
+            //       result += `${linshi}<br>`;
+            //       linshi = '';
+            //     }
+            //   }
+            // } else {
+            //   result += `${ticketStr}`;
+            // }
             return result;
           },
         },
         legend: {
-          data: resData.map(m => m[1]),
+          data: resKeys,
           show: false,
         },
         series: [
           {
-            name: '营业部',
+            name: '强一字',
             type: 'pie',
             selectedMode: 'single',
             radius: [0, '30%'],
@@ -121,10 +175,10 @@ export default {
             labelLine: {
               show: false,
             },
-            data: res.filter((f, i) => i < 3).map(m => ({ value: m[4], name: m[1] })),
+            data: resTopValue,
           },
           {
-            name: '营业部',
+            name: '一字',
             type: 'pie',
             radius: ['45%', '60%'],
             labelLine: {
@@ -132,14 +186,16 @@ export default {
             },
             label: {
               formatter: params => {
+                console.log('params', params);
                 var a = params.data.name;
-                var c = params.value;
+                var b = params.value;
                 var d = params.percent;
-                var item = res.find(f => f[1] == a);
-                var money = this.moneyTransfer(item[4]);
+                // var item = res.find(f => f.name == a);
+                // var money = this.moneyTransfer(item[4]);
                 // '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ';
-                var ticketStr = item[3].replace(/--/g, '');
-                var result = `{a|${item[1]}}\n{hr|}\n {aa|${ticketStr}}\n{aa|${money.value}${money.unit}}`;
+                // var ticketStr = item[3].replace(/--/g, '');
+                // var result = `{a|${a}}\n{hr|}\n {aa|${ticketStr}}\n{aa|${money.value}${money.unit}}`;
+                var result = `{a|${a}}\n{hr|}\n {aa|涨停天数：${b}}`;
                 return result;
               },
 
@@ -173,74 +229,12 @@ export default {
                 },
               },
             },
-            data: res.filter((f, i) => i > 2 && i < 12).map(m => ({ value: m[4], name: m[1] })),
+            data: resValue,
           },
         ],
       };
 
-      this.yybpie = option;
-    },
-    initRank(res) {
-      var resKeys = Object.keys(res).filter((f, i) => i < this.tCount);
-      var option = {
-        title: {
-          text: '营业部入场量',
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow',
-          },
-        },
-        legend: {},
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true,
-        },
-        xAxis: {
-          type: 'value',
-          boundaryGap: [0, 0.01],
-        },
-        yAxis: {
-          type: 'category',
-          data: resKeys.reverse(),
-        },
-        series: [
-          {
-            name: this.rangeDate,
-            type: 'bar',
-            label: {
-              show: true,
-              position: 'inside',
-              color: '#FFFFFF',
-              formatter: params => {
-                var item = res[params.name];
-                var text = '';
-                if (item.code.includes('sz3')) {
-                  text = '创业';
-                } else if (item.code.includes('sz688')) {
-                  text = '科创';
-                }
-                console.log('params', item);
-                return `${item.code} ${text}`;
-              },
-            },
-            data: resKeys.map(m => {
-              return {
-                value: res[m].count,
-                name: m,
-                itemStyle: {
-                  color: res[m].code.includes('sz3') ? '#FF7070' : res[m].code.includes('sz688') ? '#FF915A' : '#4786e6',
-                },
-              };
-            }),
-          },
-        ],
-      };
-
-      this.yybbar = option;
+      this.onerise = option;
     },
     onChange(date, str) {
       this.rangeValue = str;
@@ -299,49 +293,43 @@ export default {
       this.getData(dlist);
     },
     jx(data) {
-      if (!data || !data.data || !data.data.yyb) {
+      if (!data || !data.data) {
         return {};
       }
-      var yyb = data.data.yyb;
-      var len = yyb.length;
-      // var tj = {};
-      // var gsArry = [];
+
+      var ztitems = data.data;
+      var nameStrs = Object.keys(ztitems);
+      var len = nameStrs.length;
       var gsData = {};
+      var oneRiseData = [];
+      var riseData = [];
       for (var i = 0; i < len; i++) {
-        var gs = yyb[i][3];
-        if (gs == '--') {
-          continue;
+        var code = nameStrs[i].substring(nameStrs[i].lastIndexOf('_') + 1);
+        var timeline = ztitems[nameStrs[i]].timeline;
+        var name = decodeURI(ztitems[nameStrs[i]].name.replace(/\\u/gi, '%u'));
+        var tlen = timeline.length;
+        var isRise = timeline[tlen - 1].color == 'red';
+        var isOneRise = timeline.filter(f => f.color == 'red').length == tlen && timeline[0].time == '0930';
+        var isTopRise = isOneRise && tlen == 1;
+        var day = ztitems[nameStrs[i]].days;
+        gsData[name] = { code: code, rise: isRise, one_rise: isOneRise, day: day };
+        if (isOneRise) {
+          oneRiseData.push({ name: name, value: day, top: isTopRise, code: code });
         }
-        var gsSplit = gs.split(';');
-        var bm = yyb[i][1];
-        var codes = yyb[i][2].split(';');
-        // var money = yyb[i][4];
-        var gsLen = gsSplit.length;
-        for (var j = 0; j < gsLen; j++) {
-          var currentGs = gsSplit[j];
-          if (!gsData[currentGs]) {
-            gsData[currentGs] = { code: codes[j], count: 0, yyb: '' };
-          }
-          gsData[currentGs].count++;
-          gsData[currentGs].yyb += ';' + bm;
-          // gsData[currentGs].money += money;
+
+        if (isRise) {
+          riseData.push({ name: name, value: day, code: code });
         }
-        // gsArry = gsArry.concat(gsSplit);
-        // tj[bm] = (tj[bm] || []).concat(gsSplit);
       }
 
-      var sortKeys = Object.keys(gsData).sort((a, b) => {
-        return gsData[b].count - gsData[a].count;
-      });
-
-      var ticketcount = {};
-      var resultArry = {};
-      for (var i = 0; i < sortKeys.length; i++) {
-        ticketcount[sortKeys[i]] = gsData[sortKeys[i]];
-        resultArry[sortKeys[i]] = gsData[sortKeys[i]].count;
-      }
-
-      return { ticketcount: ticketcount, yybRank: yyb };
+      return {
+        one_rise: oneRiseData.sort((a, b) => {
+          return b.value - a.value;
+        }),
+        rise: riseData.sort((a, b) => {
+          return b.value - a.value;
+        }),
+      };
     },
     totalJx(data) {
       debugger;
