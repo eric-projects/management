@@ -49,16 +49,16 @@
     </a-dropdown>
     <a-button class="ml-2" ghost type="primary" @click="updateSelect">刷新自选</a-button>
     <div class="ml-2 mt-1">
-      <div :style="{ borderBottom: '1px solid #E9E9E9' }">
-        <a-checkbox :indeterminate="indeterminate" :checked="checkAll">
-          全选
-        </a-checkbox>
-      </div>
-      <br />
       <h3>一字：</h3>
       <a-checkbox-group v-model="checkedOneRiseList" :options="oneRiseSelect" />
       <a-divider />
       <h3>涨停：</h3>
+      <div :style="{ borderBottom: '1px solid #E9E9E9' }">
+        <a-checkbox :indeterminate="indeterminate" :checked="checkAll" @change="onCheckAllChange">
+          全选
+        </a-checkbox>
+      </div>
+      <br />
       <a-checkbox-group v-model="checkedRiseList" :options="risetSelect" />
     </div>
   </div>
@@ -96,6 +96,15 @@ export default {
     this.initMySelect();
   },
   methods: {
+    onCheckAllChange(e) {
+      Object.assign(this, {
+        checkedRiseList: e.target.checked ? this.risetSelect : [],
+        indeterminate: false,
+        checkAll: e.target.checked,
+      });
+
+      // console.log(this.checkedRiseList);
+    },
     getData(dates) {
       var arry = [];
       var record = [];
@@ -485,7 +494,7 @@ export default {
       var addDay = 0;
       switch (dweek) {
         case 1:
-          addDay = dhour < 17 ? -3 : 0;
+          addDay = dhour < 15 ? -3 : 0;
           break;
         case 6:
           addDay = -1;
@@ -494,7 +503,7 @@ export default {
           addDay = -2;
           break;
         default:
-          addDay = dhour < 17 ? -1 : 0;
+          addDay = dhour < 15 ? -1 : 0;
           break;
       }
       d.setDate(d.getDate() + addDay);
@@ -507,7 +516,7 @@ export default {
     clearSelect(value) {
       var codes = this.mySelectOption.find(f => f.groupId == value.key).stockList;
       if (codes.length > 0) {
-        ticketApi.userSelectTicket(codes, value.key, 'clear_select').subscribe(() => {});
+        ticketApi.userSelectTicket(codes, value.key, 'delete_select').subscribe(() => {});
       }
     },
     addSelect(value) {

@@ -1,21 +1,22 @@
 <template>
   <div>
     <a-row :gutter="8" class="pt-2 pl-2 pr-2">
-      <a-col :span="6">
+      <a-col :span="5">
         <a-row type="flex" justify="start">
           <a-col flex="100px">统计量：</a-col>
           <a-col flex="auto"><a-slider style="width:100px" v-model="tCount" :tooltip-visible="true"/></a-col> </a-row
       ></a-col>
-      <a-col :span="18"
+      <a-col :span="19"
         ><a-row type="flex" justify="end" :gutter="8">
           <a-col flex="100px">日期：</a-col>
           <a-col flex="auto">
             <a-range-picker format="YYYY-MM-DD" :disabled-date="disabledDate" @change="onChange"> </a-range-picker>
           </a-col>
-          <a-col flex="200px">
+          <a-col flex="300px">
             <a-button type="primary" @click="lookRangeDate">查看</a-button>
             <a-button class="ml-2" ghost type="primary" @click="lastWeek">近1周</a-button>
             <a-button class="ml-2" ghost type="primary" @click="lastMonth">近1月</a-button>
+            <a-button class="ml-2" ghost type="primary" @click="initTodyReplay">初始今日复盘</a-button>
           </a-col>
         </a-row></a-col
       >
@@ -33,7 +34,9 @@
 </template>
 
 <script>
+import { guidHelper } from '@/common/utils';
 import ticketApi from './ticket-api';
+import commonApi from '../../services/common/common';
 import echart from '../ShareComp/echart.vue';
 export default {
   components: {
@@ -465,6 +468,33 @@ export default {
       var dd = (d.getDate() + '').padStart(2, '0');
       current = `${dy}-${dm}-${dd}`;
       return current;
+    },
+    initTodyReplay() {
+      ticketApi.initRank(this.nowDate).subscribe(res => {
+        var jxData = this.jx(res.value);
+        var ticketData = jxData.ticketcount;
+        console.log(ticketData, jxData);
+        var keys = Object.keys(ticketData);
+        keys.forEach((name, i) => {
+          if (i < this.tCount) {
+            var item = ticketData[name];
+            var id = `${this.nowDate.replace(/-/g, '')}_${item.code}`;
+            commonApi
+              .post('ticket_replay', id, {
+                code: item.code,
+                name: name,
+                yyb: item.yyb.replace(/^(\s|;)+|(\s|;)+$/g, ''),
+                yyb_count: item.count,
+                jg: '',
+                addtime: this.nowDate,
+                _key: id,
+              })
+              .subscribe(() => {});
+          }
+        });
+        // arry.push(jxData.yybRank);ticketcount
+        // commonApi.post('ticket_replay', guidHelper.generate(), {});
+      });
     },
   },
 };

@@ -260,12 +260,26 @@ router.delete('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedCo
 
 /**
  * 添加
- * :module 模块名（db 文件名）
+ * :module 模块名（db 文件名/表名）
  * :key 数据key/数据path
  */
 router.post('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
+  var fields: string[] = ['_key', 'value'];
+  var fieldStruct: any = {};
+
+  if (ctx.query.cache_field) {
+    fields = fields.concat(ctx.query.cache_field.split(','));
+  } else {
+    fields = Object.keys(ctx.request.body);
+  }
+
+  fields.forEach(f => {
+    fieldStruct[f] = sqlitedb.TypeString;
+  });
+
+  sqlitedb.init_table(ctx.params.module, { value: sqlitedb.TypeString, ...fieldStruct }, ['_key']);
   console.log('dbHelper.Add');
-  await dbHelper.Add(ctx.params.module, ctx.params.key, ctx.request.body, ctx.query.dataType).then(
+  await sqlitedb.insert(ctx.params.module, { ...ctx.request.body, _key: ctx.params.key }, fields).then(
     () => {
       ctx.status = 200;
     },
