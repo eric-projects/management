@@ -3,7 +3,7 @@
   "uploadLimit": "100mb",
   "apiGateway": {
     "enable": false,
-    "uri": "http://172.19.50.111:10050",
+    "uri": "",
     "appKey": "799e6e124ad95e09b055ae8c8cc53d7f",
     "appSecret": "a1116bf74e17adeb6b11615377b627e874484243129c5941c19058fd3c54bcf0"
   },

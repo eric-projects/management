@@ -116,7 +116,7 @@ export default {
             flag++;
             var jxData = this.jx(res.value);
             arry.push(jxData);
-            if (flag == dates.length) {
+            if (flag === dates.length) {
               this.initRank(jxData.rise);
               this.initPie(jxData.one_rise);
             }
@@ -412,8 +412,8 @@ export default {
 
         var currentyyb = current.yybRank;
         currentyyb.forEach(f => {
-          var index = result.yybRank.findIndex(fi => fi[0] == f[0]);
-          if (index == -1) {
+          var index = result.yybRank.findIndex(fi => fi[0] === f[0]);
+          if (index === -1) {
             result.yybRank.push(f);
           } else {
             var newArry = [];
