@@ -36,5 +36,12 @@
     "password": "test",
     "host": "172.19.50.111",
     "exchange": "boards.refresh"
+  },
+  "mysql": {
+    "host": "139.224.224.217",
+    "port": 6001,
+    "user": "root",
+    "password": "eric",
+    "database": "tools"
   }
 }

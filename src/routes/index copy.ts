@@ -13,7 +13,7 @@ import { dbHelper } from '../utils/helper-lowdb';
 import { sqliteHelper } from '../utils/helper-sqlite';
 import { fileHelper } from '../utils/helper-file';
 import { jwtHelper } from '../utils/jwt-helper';
-import { sqlitedb } from '../utils/helper-better-sqlite';
+// import { sqlitedb } from '../utils/helper-better-sqlite';
 
 const router = new Router();
 

@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "amqplib": "~0.5.3",
-    "better-sqlite3": "^7.5.0",
     "crypto-js": "~3.1.9-1",
     "ioredis": "^4.26.0",
     "jsonwebtoken": "^8.5.1",
@@ -33,8 +32,8 @@
     "koa-static": "~5.0.0",
     "lodash": "~4.17.11",
     "lowdb": "^1.0.0",
+    "mysql": "^2.18.1",
     "socket.io": "~2.1.1",
-    "sqlite3": "^5.0.2",
     "statuses": "~1.5.0",
     "superagent": "~3.8.3"
   },

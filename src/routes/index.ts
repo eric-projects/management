@@ -11,7 +11,8 @@ import { ImpersonateLoginAsync, ImpersonateLogoutAsync } from '../controllers/im
 import { dbHelper } from '../utils/helper-lowdb';
 import { fileHelper } from '../utils/helper-file';
 import { jwtHelper } from '../utils/jwt-helper';
-import { sqlitedb } from '../utils/helper-better-sqlite';
+// import { sqlitedb } from '../utils/helper-better-sqlite';
+import { sqldb } from '../utils/helper-mysql';
 import { TicketLogic } from '../controllers/ticket-controller';
 
 const router = new Router();
@@ -83,9 +84,13 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
     }
 
     fields.forEach(f => {
-      fieldStruct[f] = sqlitedb.TypeString;
+      if (f == '_key') {
+        fieldStruct[f] = sqldb.TypeString;
+      } else {
+        fieldStruct[f] = sqldb.TypeText;
+      }
     });
-    sqlitedb.init_table(ctx.query.cache_module, { value: sqlitedb.TypeString, ...fieldStruct }, ['_key']);
+    await sqldb.init_table(ctx.query.cache_module, { value: sqldb.TypeString, ...fieldStruct }, ['_key']);
     console.log('url', url);
     await agent
       .get(url)
@@ -97,9 +102,9 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
             console.log('insert', ctx.query.cache_key);
             // fields.push('value');
             if (ctx.query.cache_refresh) {
-              sqlitedb.update_row(ctx.query.cache_module, '_key', { _key: ctx.query.cache_key, value: result }, fields);
+              sqldb.update_row(ctx.query.cache_module, '_key', { _key: ctx.query.cache_key, value: result }, fields);
             } else {
-              sqlitedb.insert(ctx.query.cache_module, { _key: ctx.query.cache_key, value: result }, fields);
+              sqldb.insert(ctx.query.cache_module, { _key: ctx.query.cache_key, value: result }, fields);
             }
           } else if (ctx.query.cache_data_key) {
             console.log(ctx.query.cache_data_key);
@@ -119,28 +124,23 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
               cacheData.forEach(e => {
                 // dbHelper.Add(ctx.query.cache_module, e[ctx.query.cache_data_key], e).then(() => {});
                 if (!ctx.query.cache_refresh) {
-                  sqlitedb.insert(ctx.query.cache_module, { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) }, fields);
+                  sqldb.insert(ctx.query.cache_module, { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) }, fields);
                 } else {
-                  sqlitedb.update_row(
-                    ctx.query.cache_module,
-                    '_key',
-                    { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) },
-                    fields
-                  );
+                  sqldb.update_row(ctx.query.cache_module, '_key', { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) }, fields);
                 }
                 // sqlitedb.insert(ctx.query.cache_module, { ...e, _key: e[ctx.query.cache_data_key] }, fields);
               });
             } else {
               // dbHelper.Add(ctx.query.cache_module, cacheData[ctx.query.cache_data_key], cacheData).then(() => {});
               if (!ctx.query.cache_refresh) {
-                sqlitedb.insert(
+                sqldb.insert(
                   ctx.query.cache_module,
                   // { ...cacheData, _key: cacheData[ctx.query.cache_data_key] },
                   { _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
                   fields
                 );
               } else {
-                sqlitedb.update_row(
+                sqldb.update_row(
                   ctx.query.cache_module,
                   '_key',
                   { _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
@@ -157,10 +157,9 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
       });
   }
 
-  console.log(ctx.query);
-  if (ctx.query.cache_module && ctx.query.cache_key && !ctx.query.cache_refresh && sqlitedb.exist_table(ctx.query.cache_module)) {
+  if (ctx.query.cache_module && ctx.query.cache_key && !ctx.query.cache_refresh && (await sqldb.exist_table(ctx.query.cache_module))) {
     console.log(ctx.query.cache_key + 'eric*********************1');
-    await sqlitedb.query(ctx.query.cache_module, { _key: ctx.query.cache_key }).then(async data => {
+    await sqldb.query(ctx.query.cache_module, { _key: ctx.query.cache_key }).then(async (data: any) => {
       console.log('dbHelper.Get', data);
       if (!data || data.length == 0) {
         console.log(ctx.query.cache_key + 'eric*********************2');
@@ -236,7 +235,8 @@ router.get('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedConte
  * :module 模块名（db 文件名）
  */
 router.get('/api/:module', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  await sqlitedb.query_page(ctx.params.module, ctx.query).then(data => {
+  console.log('ctx.query', '1111111111111');
+  await sqldb.query_page(ctx.params.module, ctx.query).then((data: any) => {
     console.log('dbHelper.Get', data);
     ctx.body = data;
   });
@@ -274,16 +274,16 @@ router.post('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedCont
   }
 
   fields.forEach(f => {
-    fieldStruct[f] = sqlitedb.TypeString;
+    fieldStruct[f] = sqldb.TypeString;
   });
 
-  sqlitedb.init_table(ctx.params.module, { value: sqlitedb.TypeString, ...fieldStruct }, ['_key']);
+  await sqldb.init_table(ctx.params.module, { value: sqldb.TypeString, ...fieldStruct }, ['_key']);
   console.log('dbHelper.Add');
-  await sqlitedb.insert(ctx.params.module, { ...ctx.request.body, _key: ctx.params.key }, fields).then(
+  await sqldb.insert(ctx.params.module, { ...ctx.request.body, _key: ctx.params.key }, fields).then(
     () => {
       ctx.status = 200;
     },
-    error => {
+    (error: { message: string | number | {} }) => {
       ctx.throw(500, error.message);
     }
   );
