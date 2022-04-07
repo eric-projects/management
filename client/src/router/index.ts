@@ -28,6 +28,11 @@ export default new Router({
       children: [{ path: 'bpmn', component: () => import('@/views/Matrix/bpmn.vue') }],
     },
     {
+      path: '/release-management/',
+      component: MainLayout,
+      children: [{ path: 'dockerfile', component: () => import('@/views/PublishManager/docker-file.vue') }],
+    },
+    {
       path: '/ticket-management/',
       component: MainLayout,
       children: [

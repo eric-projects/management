@@ -265,20 +265,20 @@ router.delete('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedCo
  */
 router.post('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
   var fields: string[] = ['_key', 'value'];
-  var fieldStruct: any = {};
-
+  console.log(' ctx.params.key', ctx.params.key);
   if (ctx.query.cache_field) {
     fields = fields.concat(ctx.query.cache_field.split(','));
   } else {
-    fields = Object.keys(ctx.request.body);
+    fields = fields.concat(Object.keys(ctx.request.body));
   }
 
-  fields.forEach(f => {
-    fieldStruct[f] = sqldb.TypeString;
-  });
-
-  await sqldb.init_table(ctx.params.module, { value: sqldb.TypeString, ...fieldStruct }, ['_key']);
-  console.log('dbHelper.Add');
+  if (!(await sqldb.exist_table(ctx.params.module))) {
+    var fieldStruct: any = {};
+    fields.forEach(f => {
+      fieldStruct[f] = sqldb.TypeString;
+    });
+    await sqldb.init_table(ctx.params.module, { value: sqldb.TypeString, ...fieldStruct }, ['_key']);
+  }
   await sqldb.insert(ctx.params.module, { ...ctx.request.body, _key: ctx.params.key }, fields).then(
     () => {
       ctx.status = 200;

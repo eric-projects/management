@@ -120,6 +120,7 @@ export class MainLayout extends Vue {
         { id: 'release-record', locales: '发布记录', route: 'organization-management/department' },
         { id: 'projects', locales: '项目列表', route: 'organization-management/company' },
         { id: 'shell', locales: '通用脚本', route: 'organization-management/department' },
+        { id: 'dockerfile', locales: 'Dockerfile模板', route: 'release-management/dockerfile' },
       ],
     });
 

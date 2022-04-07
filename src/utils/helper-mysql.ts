@@ -212,11 +212,18 @@ class SqlHelper {
     if (fields.length === 0) {
       fields = Object.keys(data);
     }
-    var dArry = fields.map(m => {
-      return `'${data[m]}'`;
+
+    var emtyF: any = [];
+    var dArry: any = [];
+    fields.forEach(m => {
+      if (data[m]) {
+        dArry.push(`'${data[m]}'`);
+      } else {
+        emtyF.push(m);
+      }
     });
 
-    var sql = `INSERT INTO ${tbName} (${fields.join(',')}) VALUES (${dArry.join(',')})`;
+    var sql = `INSERT INTO ${tbName} (${fields.filter(f => !emtyF.includes(f)).join(',')}) VALUES (${dArry.join(',')})`;
     console.log(sql);
     return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
       this.getdb(dbName).query(sql, function (err: any, result: any) {
