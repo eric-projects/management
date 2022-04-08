@@ -1,7 +1,7 @@
 <template>
   <div>
     <comp-table-header></comp-table-header>
-    <comp-base-table :columns="columns">
+    <comp-base-table :columns="columns" @load-data="loadData">
       <template slot="title-left">
         <a-button class="ml-1" type="primary" @click="onAdd">创建</a-button
         ><a-button class="ml-1" @click="onImport">导入</a-button></template
@@ -120,6 +120,11 @@ export default {
         tagVisible: false,
         inputValue: '',
       });
+    },
+    loadData(load) {
+      console.log(load);
+      // var queryData = { ...load.params };
+      load.callback(publishApi.getDockerfileTemplate());
     },
   },
 };

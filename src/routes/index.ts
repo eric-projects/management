@@ -236,7 +236,6 @@ router.get('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedConte
  * :module 模块名（db 文件名）
  */
 router.get('/api/:module', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  console.log('ctx.query', '1111111111111');
   await sqldb.query_page(ctx.params.module, ctx.query).then((data: any) => {
     console.log('dbHelper.Get', data);
     ctx.body = data;
