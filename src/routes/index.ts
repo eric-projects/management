@@ -11,6 +11,7 @@ import { ImpersonateLoginAsync, ImpersonateLogoutAsync } from '../controllers/im
 import { dbHelper } from '../utils/helper-lowdb';
 import { fileHelper } from '../utils/helper-file';
 import { jwtHelper } from '../utils/jwt-helper';
+import { utilHelp } from '../utils/helper-util';
 // import { sqlitedb } from '../utils/helper-better-sqlite';
 import { sqldb } from '../utils/helper-mysql';
 import { TicketLogic } from '../controllers/ticket-controller';
@@ -267,9 +268,9 @@ router.post('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedCont
   var fields: string[] = ['_key', 'value'];
   console.log(' ctx.params.key', ctx.params.key);
   if (ctx.query.cache_field) {
-    fields = fields.concat(ctx.query.cache_field.split(','));
+    fields = utilHelp.arrayDistinct(fields.concat(ctx.query.cache_field.split(',')));
   } else {
-    fields = fields.concat(Object.keys(ctx.request.body));
+    fields = utilHelp.arrayDistinct(fields.concat(Object.keys(ctx.request.body)));
   }
 
   if (!(await sqldb.exist_table(ctx.params.module))) {

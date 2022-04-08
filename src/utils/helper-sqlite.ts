@@ -1,7 +1,4 @@
 import lowdb, { LowdbSync } from 'lowdb';
-import FileSync from 'lowdb/adapters/FileSync';
-import { utilHelper } from './helper-util';
-import path from 'path';
 const sqlite3 = require('sqlite3').verbose();
 
 // https://github.com/typicode/lowdb
@@ -11,7 +8,7 @@ class SqliteHelper {
   private dbN = 'default';
   init_db(dbName: string) {
     const filePath = `../data/${dbName}.db`; // path.resolve(__dirname, `../data/${dbName}.db`);
-    return new sqlite3.Database("mydatebase.db", sqlite3.OPEN_READWRITE, function (err: any) {
+    return new sqlite3.Database('mydatebase.db', sqlite3.OPEN_READWRITE, function (err: any) {
       if (err) {
         return console.log(err.message, filePath);
       }
