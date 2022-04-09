@@ -1,6 +1,6 @@
 import lowdb, { LowdbSync } from 'lowdb';
 import FileSync from 'lowdb/adapters/FileSync';
-import { utilHelper } from './helper-util';
+import { utilHelp } from './helper-util';
 import path from 'path';
 
 // https://github.com/typicode/lowdb
@@ -45,10 +45,10 @@ class DBHelper {
 
       if (data instanceof Array) {
         data.forEach(item => {
-          (db.get(key) as any).push({ ...item, k_id: utilHelper.generate() }).write();
+          (db.get(key) as any).push({ ...item, k_id: utilHelp.generate() }).write();
         });
       } else {
-        (db.get(key) as any).push({ ...data, k_id: utilHelper.generate() }).write();
+        (db.get(key) as any).push({ ...data, k_id: utilHelp.generate() }).write();
       }
     } else {
       if (data instanceof Object) {

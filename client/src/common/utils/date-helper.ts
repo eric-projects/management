@@ -65,7 +65,9 @@ class DateHelper {
     return diffDay(date1, date2);
   }
 
-  dateString(date1: Date) {}
+  dateString(date1: Date) {
+    
+  }
 }
 
 export const dateHelper = new DateHelper();
