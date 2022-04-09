@@ -1,5 +1,5 @@
 import agent from 'superagent';
-class TicketHelper {
+class TicketTXHelper {
   access_token = '55_1HO-04w0wAkXmXGTWwKn9lJRx_ev34YRjEVr2qxYnGu0kfv5i2DXBHTQ_GDAI7c97kuE1saNTplpI9Yj22kcALB6b4N70q-y_UwT13VwMR8';
   fskey = 'v0ba82b0e2062400aedd2cde9342ffdf';
   http = 'https';
@@ -59,4 +59,4 @@ class TicketHelper {
   }
 }
 
-export const ticketHelper = new TicketHelper();
+export const tickettxHelper = new TicketTXHelper();

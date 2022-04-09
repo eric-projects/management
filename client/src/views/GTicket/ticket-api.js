@@ -30,12 +30,14 @@ ticketApi.initRank = date => {
  * @returns
  */
 ticketApi.initData = type => {
-  var url = `https://proxy.finance.qq.com/cgi/cgi-bin/rank/hs/getBoardRankList?board_code=${type}&sort_type=price&direct=down`;
-  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
-  return httpHelper.get(`/node-api/${jm}`, {
-    params: { cache_module: 'ticket_wget', cache_data_path: 'data.rank_list', cache_data_key: 'code' },
-    // params: { cache_module: 'ticket_wget', cache_data_path: 'data.rank_list', cache_data_key: 'code', cache_field: 'code,name' },
-  });
+  // var url = `https://proxy.finance.qq.com/cgi/cgi-bin/rank/hs/getBoardRankList?board_code=${type}&sort_type=price&direct=down`;
+  // var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
+  // return httpHelper.get(`/node-api/${jm}`, {
+  //   params: { cache_module: 'ticket_wget', cache_data_path: 'data.rank_list', cache_data_key: 'code' },
+  //   // params: { cache_module: 'ticket_wget', cache_data_path: 'data.rank_list', cache_data_key: 'code', cache_field: 'code,name' },
+  // });
+  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, 'ticket_list');
+  return httpHelper.post(`/ticket-api/${jm}`, { type: type });
 };
 
 /**
@@ -44,7 +46,7 @@ ticketApi.initData = type => {
  * @returns
  */
 ticketApi.searchData = data => {
-  return httpHelper.get(`/api/ticket`, { params: data });
+  return httpHelper.get(`/api/ticket_list`, { params: data });
 };
 
 /**

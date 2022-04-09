@@ -237,7 +237,7 @@ router.get('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedConte
  */
 router.get('/api/:module', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
   await sqldb.query_page(ctx.params.module, ctx.query).then((data: any) => {
-    console.log('dbHelper.Get', data);
+    // console.log('dbHelper.Get', data);
     ctx.body = data;
   });
 });

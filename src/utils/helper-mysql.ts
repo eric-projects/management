@@ -39,7 +39,6 @@ class SqlHelper {
   async exist_table(tbName: string, dbName: string = '') {
     // var sql = `SELECT count(1) as count FROM sqlite_master WHERE type='table' AND name = '${tbName}'`;
     var sql = `SHOW TABLES LIKE '%${tbName}%'`;
-    console.log(sql);
     var result = await new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
       this.getdb(dbName).query(sql, function (err: any, result: any) {
         if (err) {
@@ -50,7 +49,6 @@ class SqlHelper {
         }
       });
     });
-    console.log('res', result);
     return result;
   }
 
@@ -137,7 +135,7 @@ class SqlHelper {
    * @param dbName 数据库
    */
   async query_page(tbName: string, data: any, index = 0, size = 10, wexpr: string = '', dbName: string = '') {
-    // console.log(tbName, data, wexpr);
+    console.log(tbName, JSON.stringify(data), wexpr);
     if (!tbName || !data || !(await this.exist_table(tbName))) {
       return '';
     }
@@ -151,7 +149,7 @@ class SqlHelper {
       var keys = whereExpr.replace(/&/g, ',').replace(/\|/g, ',').replace(/\(/g, '').replace(/\)/g, '').split(',');
       keys.forEach((k: string) => {
         if (!k.includes('like')) {
-          whereExpr = whereExpr.replace(k, `${k}=@${k}`);
+          whereExpr = whereExpr.replace(k, `${k}='${data[k]}'`);
         }
       });
 
@@ -160,14 +158,14 @@ class SqlHelper {
       whereExpr = Object.keys(data)
         .filter(f => !this.queryPrivateKeys.includes(f))
         .map(m => {
-          return `${m}=@${m}`;
+          return `${m}='${data[m]}'`;
         })
         .join(' AND ');
     }
 
     var whereStr = whereExpr ? ` WHERE ${whereExpr}` : '';
     var sql = `SELECT * FROM ${tbName} ${whereStr} `;
-    console.log(sql);
+    console.log('query_page', sql);
     var indexT = data._index || index;
     var countSql = '';
     if (indexT > 0) {
@@ -186,7 +184,7 @@ class SqlHelper {
         } else {
           if (countSql) {
             that.getdb(dbName).query(countSql, function (err: any, cresult: any) {
-              resolve({ items: result, total: cresult });
+              resolve({ items: result, total: cresult[0].count });
             });
           } else {
             resolve({ items: result, total: 0 });
@@ -238,6 +236,51 @@ class SqlHelper {
   }
 
   /**
+   * 批量插入行数据
+   * @param tbName 表
+   * @param data 数据
+   * @param fields 操作字段
+   * @param dbName 数据库
+   */
+  async insert_batch(tbName: string, data: any[], fields: string[] = [], dbName: string = '') {
+    // console.log('insert', tbName, data);
+    if (!tbName || !data || data.length == 0 || !(await this.exist_table(tbName))) {
+      return false;
+    }
+
+    if (fields.length === 0) {
+      fields = Object.keys(data[0]);
+    }
+
+    var emtyF: any = [];
+    var arryValues: any = [];
+    data.forEach(d => {
+      var dArry: any = [];
+      fields.forEach(m => {
+        if (d[m]) {
+          dArry.push(`'${d[m]}'`);
+        } else {
+          emtyF.push(m);
+        }
+      });
+      arryValues.push(`(${dArry.join(',')})`);
+    });
+
+    var sql = `INSERT INTO ${tbName} (${fields.filter(f => !emtyF.includes(f)).join(',')}) VALUES ${arryValues.join(',')}`;
+    console.log(sql);
+    return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
+      this.getdb(dbName).query(sql, function (err: any, result: any) {
+        if (err) {
+          console.log(err.message);
+          reject(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
+
+  /**
    * 更新行数据
    * @param tbName 表
    * @param rowKey 主键
@@ -275,7 +318,7 @@ class SqlHelper {
   /**
    * 删除行数据
    * @param tbName 表
-   * @param rowKey 主键
+   * @param rowKey 键
    * @param data 数据
    * @param dbName 数据库
    */
@@ -289,8 +332,8 @@ class SqlHelper {
       rowValue = (data as any)[rowKey];
     }
 
-    var sql = `DELETE ${tbName} WHERE ${rowKey}=${rowValue}`;
-    console.log(sql);
+    var sql = `DELETE FROM ${tbName} WHERE ${rowKey}=${rowValue}`;
+    console.log('delete-sql', sql);
     return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
       this.getdb(dbName).query(sql, function (err: any, result: any) {
         if (err) {

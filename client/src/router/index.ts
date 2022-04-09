@@ -39,6 +39,7 @@ export default new Router({
         { path: 'pond', component: () => import('@/views/GTicket/ticket-pond.vue') },
         { path: 'rank', component: () => import('@/views/GTicket/ticket-rank.vue') },
         { path: 'rise', component: () => import('@/views/GTicket/ticket-rise.vue') },
+        { path: 'calculation', component: () => import('@/views/GTicket/ticket-calculation.vue') },
         { path: 'replay', component: () => import('@/views/GTicket/ticket-replay.vue') },
       ],
     },
