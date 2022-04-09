@@ -60,6 +60,12 @@ class DateHelper {
       date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + hours + seperator2 + minutes + seperator2 + seconds;
     return currentdate;
   }
+
+  diffDay(date1: string | Date, date2?: string | Date): number {
+    return diffDay(date1, date2);
+  }
+
+  dateString(date1: Date) {}
 }
 
 export const dateHelper = new DateHelper();

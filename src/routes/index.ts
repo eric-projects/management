@@ -78,20 +78,24 @@ router.post('/api/upload/string', bodyParser(), async (ctx: Koa.ParameterizedCon
 router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
   async function dataGet() {
     var url = jwtHelper.decrypt(jwtHelper.defaultKey, ctx.params.url);
-    var fields: string[] = ['_key', 'value'];
-    var fieldStruct: any = {};
-    if (ctx.query.cache_field) {
-      fields = fields.concat(ctx.query.cache_field.split(','));
+
+    if (ctx.query.cache_module) {
+      var fields: string[] = ['_key', 'value'];
+      var fieldStruct: any = {};
+      if (ctx.query.cache_field) {
+        fields = fields.concat(ctx.query.cache_field.split(','));
+      }
+
+      fields.forEach(f => {
+        if (f == '_key') {
+          fieldStruct[f] = sqldb.TypeString;
+        } else {
+          fieldStruct[f] = sqldb.TypeText;
+        }
+      });
+      await sqldb.init_table(ctx.query.cache_module, { value: sqldb.TypeString, ...fieldStruct }, ['_key']);
     }
 
-    fields.forEach(f => {
-      if (f == '_key') {
-        fieldStruct[f] = sqldb.TypeString;
-      } else {
-        fieldStruct[f] = sqldb.TypeText;
-      }
-    });
-    await sqldb.init_table(ctx.query.cache_module, { value: sqldb.TypeString, ...fieldStruct }, ['_key']);
     console.log('url', url);
     await agent
       .get(url)
@@ -151,7 +155,17 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
             }
           }
         }
-        ctx.body = { _key: ctx.query.cache_key, value: JSON.parse(result) };
+
+        var cacheData = JSON.parse(result);
+        if (ctx.query.cache_data_path) {
+          var pathSplit = ctx.query.cache_data_path.split('.');
+          var flag = 0;
+          while (flag < pathSplit.length) {
+            cacheData = cacheData[pathSplit[flag]];
+            flag++;
+          }
+        }
+        ctx.body = { _key: ctx.query.cache_key, value: cacheData };
       })
       .catch(x => {
         console.log('error', x);

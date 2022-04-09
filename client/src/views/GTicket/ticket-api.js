@@ -46,7 +46,7 @@ ticketApi.initData = type => {
  * @returns
  */
 ticketApi.searchData = data => {
-  return httpHelper.get(`/api/ticket_list`, { params: data });
+  return httpHelper.get(`/api/ticket_list`, { params: data }, { loading: false });
 };
 
 /**
@@ -93,4 +93,14 @@ ticketApi.userSelectTicket = (codes, group, type = 'add_select' | 'delete_select
   return httpHelper.post(`/ticket-api/${jm}`, { codes: codes, group: group });
 };
 
+/**
+ * 获取票票明细
+ * @param {*} code
+ * @returns
+ */
+ticketApi.txTicketDetail = (code, date) => {
+  var url = `https://proxy.finance.qq.com/ifzqgtimg/appstock/app/newkline/newkline?param=${code},day,,,${date + 2}`;
+  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
+  return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: `data.${code}.day` } });
+};
 export default ticketApi;
