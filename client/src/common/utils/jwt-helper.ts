@@ -10,7 +10,7 @@ class JwtHelper {
    * @returns
    */
   encrypt(jwtKey: string, jwtData: any, expires: number = 0) {
-    var option: any = {};
+    const option: any = {};
     if (expires) {
       option.expiresIn = expires;
     }
@@ -21,7 +21,7 @@ class JwtHelper {
    */
   decrypt(jwtKey: string, jwtData: any, checkExpires: boolean = true) {
     let jwtResult = '';
-    var option: any = {};
+    const option: any = {};
     if (!checkExpires) {
       option.ignoreExpiration = true;
     }

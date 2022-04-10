@@ -361,9 +361,9 @@ export default {
         var reason = ztitems[nameStrs[i]].reason;
         var name = decodeURI(ztitems[nameStrs[i]].name.replace(/\\u/gi, '%u'));
         var tlen = timeline.length;
-        var isRise = timeline[tlen - 1].color == 'red';
-        var isOneRise = timeline.filter(f => f.color == 'red').length == tlen && timeline[0].time == '0930';
-        var isTopRise = isOneRise && tlen == 1;
+        var isRise = timeline[tlen - 1].color === 'red';
+        var isOneRise = timeline.filter(f => f.color === 'red').length === tlen && timeline[0].time === '0930';
+        var isTopRise = isOneRise && tlen === 1;
         var day = ztitems[nameStrs[i]].days;
         gsData[name] = { code: code, rise: isRise, one_rise: isOneRise, day: day, profession: reason };
         if (isOneRise) {
@@ -384,7 +384,7 @@ export default {
 
       this.oneRiseSelect = sortOneRise.map(m => `${m.name}_${m.value}`);
       this.risetSelect = sortRise
-        .filter(f => !f.name.includes('ST') && !sortOneRise.find(of => of.name == f.name))
+        .filter(f => !f.name.includes('ST') && !sortOneRise.find(of => of.name === f.name))
         .map(m => `${m.name}_${m.value}`);
       this.allTicketList = riseData;
       return {
@@ -393,11 +393,10 @@ export default {
       };
     },
     totalJx(data) {
-      debugger;
       var result = { ticketcount: {}, yybRank: [] };
       for (var i = 0; i < data.length; i++) {
         var current = data[i];
-        if (Object.keys(current) == 0) {
+        if (Object.keys(current) === 0) {
           continue;
         }
         var currentTicketcount = current.ticketcount;
@@ -446,9 +445,9 @@ export default {
     },
     moneyTransfer(value) {
       var param = {};
-      var k = 10000,
-        sizes = ['', '万', '亿', '万亿'],
-        i;
+      var k = 10000;
+      var sizes = ['', '万', '亿', '万亿'];
+      var i;
       if (value < k) {
         param.value = value;
         param.unit = '';

@@ -88,7 +88,6 @@ export default {
             var d = params.percent;
             var item = res.find(f => f[1] == a);
             var money = this.moneyTransfer(c);
-            debugger;
             var ticketStr = item[3].replace(/--/g, '');
             var ticketStrArry = ticketStr.split(';');
             var result = `${item[1]}<br>${money.value}${money.unit}<br>`;
@@ -347,7 +346,6 @@ export default {
       return { ticketcount: ticketcount, yybRank: yyb };
     },
     totalJx(data) {
-      debugger;
       var result = { ticketcount: {}, yybRank: [] };
       for (var i = 0; i < data.length; i++) {
         var current = data[i];
@@ -382,7 +380,6 @@ export default {
         });
       }
 
-      debugger;
       console.log(result.ticketcount);
       var sortKeys = Object.keys(result.ticketcount).sort((a, b) => {
         return result.ticketcount[b].count - result.ticketcount[a].count;
@@ -402,9 +399,9 @@ export default {
     },
     moneyTransfer(value) {
       var param = {};
-      var k = 10000,
-        sizes = ['', '万', '亿', '万亿'],
-        i;
+      var k = 10000;
+      var sizes = ['', '万', '亿', '万亿'];
+      var i;
       if (value < k) {
         param.value = value;
         param.unit = '';

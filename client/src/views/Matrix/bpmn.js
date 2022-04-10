@@ -221,7 +221,6 @@ export default class BpmnService {
   }
 
   startCreate(type) {
-    debugger;
     const bo = { id: guidHelper.generate(), name: this.getName(type) };
     this._create.start(this.createMoveEvent(0, 0), this.createShapeElement(type, bo));
   }
@@ -422,13 +421,11 @@ export default class BpmnService {
   }
 
   createShapeElement(type, businessObject) {
-    debugger;
     const bo = this.createBusinessObject(type, businessObject);
     return this._elementFactory.createShape({ type: type, businessObject: bo });
   }
 
   createShape(type, businessObject, parent) {
-    debugger;
     const d = new Date();
     const startD = `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
     const shape = this.createShapeElement(type, businessObject);

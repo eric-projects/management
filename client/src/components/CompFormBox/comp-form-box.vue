@@ -9,7 +9,7 @@ import { formHelper, guidHelper, notificationHelper } from '@/common/utils';
 import { from } from 'rxjs';
 export default {
   props: {
-    layout: { type: 'inline' | 'horizontal' | 'vertical', default: 'horizontal' },
+    layout: { type: String, default: 'horizontal' },
   },
   data() {
     return { form: undefined };

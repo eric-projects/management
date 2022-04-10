@@ -26,7 +26,7 @@ export class MobileEInput extends Vue {
     errorMessage: '',
     errorDisplayType: 'text',
   };
-  public disabled: boolean = false;
+  public disabled = false;
 
   public onClick() {
     console.log('item clicked');

@@ -99,7 +99,7 @@ export class CommonApprovalComment extends Vue {
   }
 
   private onDelete(id: string): void {
-    commonApprovalCommentService.delete(id).scribe(s => {
+    commonApprovalCommentService.delete(id).subscribe((s: any) => {
       this.loadComments();
     });
   }

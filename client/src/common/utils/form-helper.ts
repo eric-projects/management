@@ -1,5 +1,5 @@
 import Vue, { VNode } from 'vue';
-import { MD5 } from 'crypto-js';
+// import { MD5 } from 'crypto-js';
 import { Validation, ValidationOptions } from '../defines';
 import { WrappedFormUtils } from 'ant-design-vue/types/form/form';
 import { first } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export class FormHelper {
     return {
       touch: (callback: (validation: Validation) => any) => {
         const callbackSignature = callback.toString();
-        let key = MD5(callbackSignature).toString();
+        let key = ''; // MD5(callbackSignature).toString();
 
         let help: string;
         let disabled = false;

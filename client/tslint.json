@@ -1,9 +1,22 @@
 {
   "extends": "../tslint.json",
   "linterOptions": {
-    "exclude": ["node_modules/**", "node_modules"]
+    "exclude": [
+      "../node_modules/**/*",
+      "./node_modules/**/*",
+      "node_modules",
+      "node_modules/**/*.ts",
+      "**/node_modules/**/*",
+      "**/node_modules/**"
+    ]
   },
   "rules": {
-    "no-eval": false
+    "no-eval": false,
+    "prefer-const": false,
+    "no-var-keyword": false,
+    "no-var-requires": false,
+    "triple-equals": false,
+    "prefer-for-of": false,
+    "skipLibCheck": true
   }
 }

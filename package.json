@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "amqplib": "~0.5.3",
-    "crypto-js": "~3.1.9-1",
     "ioredis": "^4.26.0",
     "js-pinyin": "^0.1.9",
     "jsonwebtoken": "^8.5.1",

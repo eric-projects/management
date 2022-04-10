@@ -66,7 +66,7 @@ class DateHelper {
   }
 
   dateString(date1: Date) {
-    
+
   }
 }
 
