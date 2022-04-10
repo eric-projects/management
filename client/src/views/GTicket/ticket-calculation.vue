@@ -20,11 +20,7 @@
               return new Date(valueDStr) > new Date(this.currentDate);
             }
           "
-          @change="
-            (m, s) => {
-              this.date = s;
-            }
-          "
+          @change="onDateChange"
       /></a-col>
       <a-col :span="4" :offset="1"> <a-button type="primary" @click="onCalc">计算</a-button></a-col>
     </a-row>
@@ -161,6 +157,7 @@ export default {
       }
     },
     onCalc() {
+      this.initDefaultData();
       this.mPrice1Check = false;
       this.mPrice2Check = false;
       if (this.code) {
@@ -202,6 +199,14 @@ export default {
           // console.log(current);
         });
       }
+    },
+
+    initDefaultData() {
+      this.data = { name: '***', max: '***', min: '***', start: '***', end: '***' };
+      this.preObj = { preMax: '***', preMin: '***', preStart: '***', preEnd: '***' };
+    },
+    onDateChange(m, s) {
+      this.date = s;
     },
   },
 };

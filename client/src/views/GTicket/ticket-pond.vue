@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <a-row class="mb-1 pt-1"><a-col> </a-col></a-row> -->
     <comp-table-header
       @search="
         () => {
@@ -37,38 +36,32 @@
         >
       </template>
     </comp-table-header>
-    <comp-base-table ref="table" :columns="columns" size="small" :scopedSlots="fieldsSlotMap" @load-data="loadData">
+    <comp-base-table
+      ref="table"
+      rowKey="code"
+      :columns="columns"
+      size="small"
+      :scopedSlots="fieldsSlotMap"
+      @load-data="loadData"
+      @select-row="onSelectRows"
+    >
       <template slot="title-left">
-        <a-button type="primary" @click="initData('m:1+t:2')">初始上证</a-button
-        ><a-button class="ml-1" type="primary" @click="initData('m:0+t:6')">初始深证</a-button
-        ><a-button class="ml-1" type="primary" @click="initData('m:0+t:80')">初始创业</a-button>
-        <a-button class="ml-1" type="primary" @click="initData('m:1+t:23')">初始科创</a-button></template
+        <a-button @click="initData('m:1+t:2')">初始上证</a-button><a-button class="ml-1" @click="initData('m:0+t:6')">初始深证</a-button
+        ><a-button class="ml-1" @click="initData('m:0+t:80')">初始创业</a-button>
+        <a-button class="ml-1" @click="initData('m:1+t:23')">初始科创</a-button></template
       >
+      <template slot="title-right"> <ticket-select-button :codes="selectCodes">加自选</ticket-select-button></template>
     </comp-base-table>
-    <!-- <a-table :columns="columns" :data-source="data">
-      <a slot="name" slot-scope="text">{{ text }}</a>
-      <span slot="customTitle"><a-icon type="smile-o" /> Name</span>
-      <span slot="tags" slot-scope="tags">
-        <a-tag v-for="tag in tags" :key="tag" :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'">
-          {{ tag.toUpperCase() }}
-        </a-tag>
-      </span>
-      <span slot="action" slot-scope="text, record">
-        <a>Invite 一 {{ record.name }}</a>
-        <a-divider type="vertical" />
-        <a>Delete</a>
-        <a-divider type="vertical" />
-        <a class="ant-dropdown-link"> More actions <a-icon type="down" /> </a>
-      </span>
-    </a-table> -->
   </div>
 </template>
 
 <script>
 import ticketApi from './ticket-api';
 import { CompTableHeader, CompBaseTable } from '@/components';
+import TicketSelectButton from '../ShareComp/ticket-select-button.vue';
 export default {
   components: {
+    TicketSelectButton,
     CompBaseTable,
     CompTableHeader,
   },
@@ -77,6 +70,7 @@ export default {
       keyword: '',
       data: [],
       columns: [],
+      selectCodes: [],
       fieldsSlotMap: {},
       searchType: 'm:1+t:2',
     };
@@ -105,8 +99,18 @@ export default {
           key: 'type',
           scopedSlots: { customRender: 'type' },
         },
+        {
+          title: '操作',
+          dataIndex: 'opeate',
+          key: 'opeate',
+          width: 120,
+          scopedSlots: { customRender: 'opeate' },
+        },
       ];
 
+      this.fieldsSlotMap['opeate'] = (cell, row) => {
+        return <div></div>;
+      };
       this.fieldsSlotMap['type'] = (cell, row) => {
         let tv = '上证';
         switch (cell) {
@@ -147,6 +151,9 @@ export default {
         console.log('eric', res);
         load.callback(res);
       });
+    },
+    onSelectRows(rows) {
+      this.selectCodes = rows.map(m => `${m.type_code}${m.code}`);
     },
   },
 };

@@ -1,7 +1,7 @@
 import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator';
 import { Observable } from 'rxjs';
 
-import { getComponentFromProp, i18nHelper } from '@/common/utils';
+import { getComponentFromProp, guidHelper, i18nHelper } from '@/common/utils';
 import { FetchDataSourceDto } from '@/common/defines';
 import { CompCard } from '@/components';
 
@@ -15,11 +15,13 @@ export class CompBaseTable extends Vue {
   @Prop() value!: TableValueDto;
   @Prop() scopedSlots!: any;
   @Prop() title!: string;
+  @Prop() rowKey!: string;
   @Prop({ default: 'middle' }) size!: string;
   @Prop({ default: false }) cardStyle!: boolean;
   @Prop({ default: true }) asyncData!: boolean;
   @Prop({ default: true }) showPagination!: boolean;
   isCardStyle!: boolean;
+  selectedRowKeys: any = [];
 
   private pagination = {
     total: 0,
@@ -38,6 +40,8 @@ export class CompBaseTable extends Vue {
 
   @Emit('load-data')
   onLoadData(data: FetchDataSourceDto<TableValueDto>) {}
+  @Emit('select-row')
+  onSelectItem(data: any[]) {}
 
   refreshData(pageIndex?: number) {
     setTimeout(() => {
@@ -68,6 +72,11 @@ export class CompBaseTable extends Vue {
     });
   }
 
+  private onSelectChange(selectedRowKeys: any[], selectedRows: any[]) {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    this.selectedRowKeys = selectedRowKeys;
+    this.onSelectItem(selectedRows);
+  }
   created(): void {
     this.isCardStyle = false;
     if (this.asyncData) {
@@ -94,11 +103,19 @@ export class CompBaseTable extends Vue {
         {titleLeftDom ? <template slot='title'>{titleLeftDom}</template> : null}
         {titleRightDom ? <template slot='extra'>{titleRightDom}</template> : null}
         <a-table
+          rowKey={
+            this.rowKey
+              ? this.rowKey
+              : () => {
+                  return guidHelper.generate();
+                }
+          }
           size={this.size}
           columns={this.columns}
           data-source={this.data}
           pagination={this.showPagination ? this.pagination : false}
           scopedSlots={this.scopedSlots}
+          rowSelection={this.rowKey ? { selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange } : null}
           on-change={(pagination: any) => {
             this.pagination = pagination;
             this.onLoad();

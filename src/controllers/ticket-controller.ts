@@ -9,6 +9,7 @@ import { jwtHelper } from '../utils/jwt-helper';
 import { sqldb } from '../utils/helper-mysql';
 let pinyin = require('js-pinyin');
 pinyin.setOptions({ checkPolyphone: false, charCase: 0 });
+const shArry = ['m:1+t:2', 'm:1+t:23'];
 
 export async function TicketLogic(ctx: Koa.ParameterizedContext, next: Koa.Next) {
   await bodyParser().call(null, ctx, next);
@@ -48,6 +49,7 @@ export async function TicketLogic(ctx: Koa.ParameterizedContext, next: Koa.Next)
         name: sqldb.TypeString,
         zm: sqldb.TypeString,
         type: sqldb.TypeString,
+        type_code: sqldb.TypeString,
       });
       var type = ctx.request.body.type;
       console.log('ctx.request.query', ctx.request.body.type);
@@ -55,7 +57,14 @@ export async function TicketLogic(ctx: Koa.ParameterizedContext, next: Koa.Next)
       await ticketdfHelper.get_df_ticket(type).then(res => {
         sqldb.insert_batch(
           module,
-          res.map((item: any) => ({ _key: item.f12, code: item.f12, name: item.f14, type: type, zm: pinyin.getCamelChars(item.f14) }))
+          res.map((item: any) => ({
+            _key: item.f12,
+            code: item.f12,
+            name: item.f14,
+            type: type,
+            zm: pinyin.getCamelChars(item.f14),
+            type_code: shArry.includes(type) ? 'sh' : 'sz',
+          }))
         );
       });
       break;
