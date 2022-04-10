@@ -2,7 +2,17 @@ import path from 'path';
 var mysql = require('mysql');
 import { environment } from '../environment';
 
-var connection = mysql.createConnection({
+// var connection = mysql.createConnection({
+//   host: environment.mysql.host,
+//   port: environment.mysql.port || 3306,
+//   user: environment.mysql.user,
+//   password: environment.mysql.password,
+//   database: environment.mysql.database,
+// });
+
+// connection.connect();
+
+var pool = mysql.createPool({
   host: environment.mysql.host,
   port: environment.mysql.port || 3306,
   user: environment.mysql.user,
@@ -10,7 +20,21 @@ var connection = mysql.createConnection({
   database: environment.mysql.database,
 });
 
-connection.connect();
+var queryable = function (sql: string, callback: any) {
+  pool.getConnection(function (err: any, conn: any) {
+    if (err) {
+      callback(err, null, null);
+    } else {
+      conn.query(sql, function (qerr: any, vals: any, fields: any) {
+        //释放连接
+        conn.release();
+        //事件驱动回调
+        callback(qerr, vals, fields);
+      });
+    }
+  });
+};
+
 class SqlHelper {
   TypeString = 'varchar(255)';
   TypeText = 'text';
@@ -40,7 +64,7 @@ class SqlHelper {
     // var sql = `SELECT count(1) as count FROM sqlite_master WHERE type='table' AND name = '${tbName}'`;
     var sql = `SHOW TABLES LIKE '%${tbName}%'`;
     var result = await new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
-      this.getdb(dbName).query(sql, function (err: any, result: any) {
+      queryable(sql, function (err: any, result: any) {
         if (err) {
           console.log(err.message);
           reject(err.message);
@@ -73,7 +97,7 @@ class SqlHelper {
     var sql = `create table if not exists \`${tbName}\`(${sqlArry.join(',')} )`;
     console.log('init_table', sql);
     await new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
-      this.getdb(dbName).query(sql, function (err: any, res: any) {
+      queryable(sql, function (err: any, res: any) {
         resolve(res);
       });
     });
@@ -117,7 +141,7 @@ class SqlHelper {
     var sql = `SELECT * FROM ${tbName} ${whereStr} `;
     console.log(sql);
     return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
-      this.getdb(dbName).query(sql, function (err: any, result: any) {
+      queryable(sql, function (err: any, result: any) {
         if (err) {
           reject(err.message);
         } else {
@@ -177,13 +201,13 @@ class SqlHelper {
     }
     var that = this;
     return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
-      this.getdb(dbName).query(sql, function (err: any, result: any) {
+      queryable(sql, function (err: any, result: any) {
         if (err) {
           console.log(err.message);
           reject(err.message);
         } else {
           if (countSql) {
-            that.getdb(dbName).query(countSql, function (err: any, cresult: any) {
+            queryable(countSql, function (err: any, cresult: any) {
               resolve({ items: result, total: cresult[0].count });
             });
           } else {
@@ -224,7 +248,7 @@ class SqlHelper {
     var sql = `INSERT INTO ${tbName} (${fields.filter(f => !emtyF.includes(f)).join(',')}) VALUES (${dArry.join(',')})`;
     console.log(sql);
     return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
-      this.getdb(dbName).query(sql, function (err: any, result: any) {
+      queryable(sql, function (err: any, result: any) {
         if (err) {
           console.log(err.message);
           reject(false);
@@ -269,7 +293,7 @@ class SqlHelper {
     var sql = `INSERT INTO ${tbName} (${fields.filter(f => !emtyF.includes(f)).join(',')}) VALUES ${arryValues.join(',')}`;
     console.log(sql);
     return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
-      this.getdb(dbName).query(sql, function (err: any, result: any) {
+      queryable(sql, function (err: any, result: any) {
         if (err) {
           console.log(err.message);
           reject(false);
@@ -304,7 +328,7 @@ class SqlHelper {
     var sql = `UPDATE ${tbName} SET ${fArry.join(',')} WHERE ${rowKey}='${(data as any)[rowKey]}'`;
     console.log(sql);
     return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
-      this.getdb(dbName).query(sql, function (err: any, result: any) {
+      queryable(sql, function (err: any, result: any) {
         if (err) {
           console.log(err.message);
           reject(false);
@@ -335,7 +359,7 @@ class SqlHelper {
     var sql = `DELETE FROM ${tbName} WHERE ${rowKey}=${rowValue}`;
     console.log('delete-sql', sql);
     return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
-      this.getdb(dbName).query(sql, function (err: any, result: any) {
+      queryable(sql, function (err: any, result: any) {
         if (err) {
           console.log(err.message);
           reject(false);
@@ -353,7 +377,7 @@ class SqlHelper {
    */
   async exec_sql(sql: string, dbName: string = '') {
     console.log(sql);
-    this.getdb(dbName).query(sql);
+    // queryable(sql);
   }
 
   private getdb(dbName: string = '') {
@@ -361,7 +385,7 @@ class SqlHelper {
     // if (dbName) {
     //   db = this.init_db(dbName);
     // }
-    return connection;
+    // return connection;
   }
 }
 
