@@ -21,7 +21,7 @@ class GlobalLoadingHelper {
           marginBottom: '10px',
         },
       }),
-      vueContext.$createElement('div', vueContext.$t('framework.loading') + '...'),
+      vueContext.$createElement('div', 'loading...'),
     ]);
   }
 

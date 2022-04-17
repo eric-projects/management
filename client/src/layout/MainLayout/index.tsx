@@ -156,14 +156,14 @@ export class MainLayout extends Vue {
     this.menus.push({
       id: 'ticket-management',
       icon: 'strikethrough',
-      locales: '股票分析',
+      locales: '股分析',
       route: '',
       children: [
+        { id: 'ticket-news', locales: '要闻', route: 'ticket-management/news' },
         { id: 'ticket-pond', locales: '股票池', route: 'ticket-management/pond' },
         { id: 'ticket-rank', locales: '龙虎榜', route: 'ticket-management/rank' },
         { id: 'ticket-rise', locales: '涨停', route: 'ticket-management/rise' },
         { id: 'ticket-calculation', locales: '计算', route: 'ticket-management/calculation' },
-        { id: 'ticket-replay', locales: '复盘', route: 'ticket-management/replay' },
       ],
     });
     this.$forceUpdate();

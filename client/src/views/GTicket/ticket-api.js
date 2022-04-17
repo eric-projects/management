@@ -103,4 +103,15 @@ ticketApi.txTicketDetail = (code, date) => {
   var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
   return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: `data.${code}.day` } });
 };
+
+/**
+ * 获取票新闻
+ * @param {*} index 页码
+ * @returns
+ */
+ticketApi.txTicketDetail = index => {
+  var url = `http://comment.10jqka.com.cn/api/realtime.php?block=getnews&page=${index}`;
+  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
+  return httpHelper.get(`/node-api/${jm}`, { params: { cache_module: 'ticket_news', cache_data_key: `guid` } });
+};
 export default ticketApi;
