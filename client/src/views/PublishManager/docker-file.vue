@@ -1,11 +1,14 @@
 <template>
   <div>
     <comp-table-header></comp-table-header>
-    <comp-base-table :columns="columns" @load-data="loadData">
+    <comp-base-table :columns="columns" @load-data="loadData" :scopedSlots="fieldsSlotMap">
       <template slot="title-left">
         <a-button class="ml-1" type="primary" @click="onAdd">创建</a-button
         ><a-button class="ml-1" @click="onImport">导入</a-button></template
       >
+      <!-- <template slot="operate">
+        <a-button type="link">查看</a-button>
+      </template> -->
     </comp-base-table>
     <a-modal width="660px" v-model="visible" title="操作模板" @ok="saveTemplate">
       <comp-form-box ref="formb">
@@ -13,6 +16,7 @@
           <a-col :span="24">
             <a-form-item label="模板名称">
               <a-input
+                v-if="edit"
                 v-decorator="['name', { rules: [{ required: true, message: '请输入模板名称!' }] }]"
                 placeholder="请输入模板名称"
                 @change="
@@ -20,8 +24,10 @@
                     this.saveData.name = v.target.value;
                   }
                 "
-              /> </a-form-item
-          ></a-col>
+              />
+              <span v-else>{{ this.saveData.name }}</span></a-form-item
+            ></a-col
+          >
         </a-row>
         <a-row>
           <a-col :span="24">
@@ -47,6 +53,7 @@
             <a-form-item label="模板内容">
               <!-- v-decorator="['richData', { rules: [{ required: true, message: '请输入模板内容!' }] }]" -->
               <comp-rich
+                :data="saveData.value"
                 :height="260"
                 @data-change="
                   v => {
@@ -85,6 +92,7 @@ export default {
       tagVisible: false,
       inputValue: '',
       tagValue: [],
+      fieldsSlotMap: {},
       saveData: { remark: '', name: '', value: '' },
     };
   },
@@ -97,10 +105,31 @@ export default {
         { dataIndex: 'name', key: 'name', title: '模板名称' },
         { dataIndex: 'tag', key: 'tag', title: '标签' },
         { dataIndex: 'remark', key: 'remark', title: '备注' },
+        { dataIndex: 'operate', key: 'operate', title: '操作', scopedSlots: { customRender: 'operate' } },
       ];
+
+      this.fieldsSlotMap['operate'] = (cell, row) => {
+        return (
+          <div>
+            <a-button
+              type='link'
+              on-click={() => {
+                this.onLook(row._key);
+              }}
+            >
+              查看
+            </a-button>
+          </div>
+        );
+      };
     },
     onAdd() {
       this.edit = true;
+      this.visible = true;
+    },
+    onLook(id) {
+      this.edit = false;
+      this.loadDetail(id);
       this.visible = true;
     },
     onImport() {},
@@ -124,7 +153,13 @@ export default {
     loadData(load) {
       console.log(load);
       // var queryData = { ...load.params };
-      load.callback(publishApi.getDockerfileTemplate());
+      load.callback(publishApi.getDockerfileTemplates());
+    },
+    loadDetail(id) {
+      publishApi.getDockerfileTemplate(id).subscribe(res => {
+        this.saveData = { ...res, value: res.value.replace(/\n/g, '<br>') };
+        this.tagValue = (res.tag || []).split(';');
+      });
     },
   },
 };

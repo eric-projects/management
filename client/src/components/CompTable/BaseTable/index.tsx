@@ -22,6 +22,7 @@ export class CompBaseTable extends Vue {
   @Prop({ default: true }) showPagination!: boolean;
   isCardStyle!: boolean;
   selectedRowKeys: any = [];
+  private test: any;
 
   private pagination = {
     total: 0,
@@ -47,6 +48,14 @@ export class CompBaseTable extends Vue {
     setTimeout(() => {
       this.onLoad(pageIndex);
     });
+  }
+
+  public get slotItems(): any {
+    if (this.scopedSlots) {
+      return [];
+    }
+
+    return this.columns.filter(f => f.scopedSlots);
   }
 
   private onLoad(pageIndex?: number) {
@@ -122,6 +131,19 @@ export class CompBaseTable extends Vue {
           }}
         >
           {this.$slots.default}
+          {/* {this.slotItems.map((m: any) => {
+            return (
+              <template slot={m.scopedSlots.customRender}>
+                {[1].map(v => {
+                  var t11 = this.$scopedSlots[m.scopedSlots.customRender];
+                  console.log((t11 as any)());
+                  console.log(this);
+                  return '';
+                })}
+                {getComponentFromProp(this, m.scopedSlots.customRender, { text: 1, record: 2, index: 3 })}
+              </template>
+            );
+          })} */}
         </a-table>
       </comp-card>
     );

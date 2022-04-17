@@ -153,6 +153,31 @@ class SqlHelper {
   }
 
   /**
+   * 查询数据
+   * @param tbName 表
+   * @param keyValue 主键值
+   * @param key 主键
+   * @param dbName 数据库
+   */
+  async query_row(tbName: string, keyValue: any, key = this.DefaultKey, dbName = '') {
+    if (!tbName || (!keyValue && keyValue != 0) || !(await this.exist_table(tbName))) {
+      return null;
+    }
+
+    var sql = `SELECT * FROM ${tbName} WHERE ${key}='${keyValue}' `;
+    console.log(sql);
+    return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
+      queryable(sql, function (err: any, result: any) {
+        if (err) {
+          reject(err.message);
+        } else {
+          resolve(result && result.length > 0 ? result[0] : null);
+        }
+      });
+    });
+  }
+
+  /**
    * 查询分页数据
    * @param tbName 表
    * @param data 数据

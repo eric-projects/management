@@ -255,7 +255,7 @@ router.post('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext
 router.get('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
   // ctx.params.module, ctx.query.key
   console.log('dbHelper.Get');
-  await dbHelper.Get(ctx.params.module, ctx.params.key).then(data => {
+  await sqldb.query_row(ctx.params.module, ctx.params.key).then(data => {
     // console.log('dbHelper.Get', data);
     ctx.body = data;
   });

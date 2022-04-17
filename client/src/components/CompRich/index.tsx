@@ -21,7 +21,7 @@ export class CompRich extends Vue {
     fontsize_formats: '12px 14px 16px 18px 20px 22px 24px 28px 32px 36px 48px 56px 72px', // 字体大小
     height: this.height, // 高度
     placeholder: '在这里输入文字',
-
+    // readonly:true
     branding: false, // 隐藏右下角技术支持
   };
   @Emit('data-change') dataChange(value: string) {}

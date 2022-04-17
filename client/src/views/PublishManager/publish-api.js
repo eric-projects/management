@@ -11,8 +11,12 @@ publishApi.addDockerfileTemplate = data => {
   return httpHelper.post(`/api/${tmpModule}/${guidHelper.generate()}`, data);
 };
 
-publishApi.getDockerfileTemplate = data => {
+publishApi.getDockerfileTemplates = data => {
   return httpHelper.get(`/api/${tmpModule}`, {});
+};
+
+publishApi.getDockerfileTemplate = id => {
+  return httpHelper.get(`/api/${tmpModule}/${id}`);
 };
 
 export default publishApi;
