@@ -136,7 +136,9 @@ export default {
     closeTag() {},
     saveTemplate() {
       this.$refs.formb.validate().subscribe(() => {
-        publishApi.addDockerfileTemplate({ ...this.saveData, tag: this.tagValue.join(';') }).subscribe(() => {});
+        publishApi.addDockerfileTemplate({ ...this.saveData, tag: this.tagValue.join(';') }).subscribe(() => {
+          this.visible = false;
+        });
       });
     },
     handleInputConfirm() {

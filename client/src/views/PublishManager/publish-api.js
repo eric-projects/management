@@ -8,7 +8,7 @@ const publishApi = {};
 
 const tmpModule = 'publish_dockerfile';
 publishApi.addDockerfileTemplate = data => {
-  return httpHelper.post(`/api/${tmpModule}/${guidHelper.generate()}`, data);
+  return httpHelper.post(`/api/${tmpModule}/${data._key || guidHelper.generate()}`, data);
 };
 
 publishApi.getDockerfileTemplates = data => {
