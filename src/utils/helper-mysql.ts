@@ -36,6 +36,7 @@ var queryable = function (sql: string, callback: any) {
 };
 
 class SqlHelper {
+  DefaultKey = '_key';
   TypeString = 'varchar(255)';
   TypeText = 'text';
   TypeNumber = 'real';
@@ -320,13 +321,67 @@ class SqlHelper {
 
     let fArry = [];
     if (fields.length > 0) {
-      fArry = fields.map(m => m + '=@' + m);
+      fArry = fields.map(m => m + '=' + m);
     } else {
       fields = Object.keys(data).filter(f => !this.queryPrivateKeys.includes(f));
-      fArry = fields.map(m => m + '=@' + m);
+      fArry = fields.map(m => m + '=' + m);
     }
     var sql = `UPDATE ${tbName} SET ${fArry.join(',')} WHERE ${rowKey}='${(data as any)[rowKey]}'`;
     console.log(sql);
+    return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
+      queryable(sql, function (err: any, result: any) {
+        if (err) {
+          console.log(err.message);
+          reject(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
+
+  /**
+   * 插入或更新行数据
+   * @param tbName 表
+   * @param rowKey 主键
+   * @param data 数据
+   * @param fields 操作字段
+   * @param dbName 数据库
+   * @returns
+   */
+  async insert_or_update_row(tbName: string, rowKey: string, data: any, fields: string[] = [], dbName: string = '') {
+    if (!tbName || !data || !(await this.exist_table(tbName))) {
+      return false;
+    }
+
+    if (!rowKey) {
+      rowKey = this.DefaultKey;
+    }
+
+    // INSERT INTO t (a, c) VALUES (1, 3) ON DUPLICATE KEY UPDATE c=c+1;
+    if (fields.length === 0) {
+      fields = Object.keys(data);
+    }
+
+    var emtyF: any = [];
+    var dArry: any = [];
+    var uArry: any = [];
+    fields.forEach(m => {
+      if (data[m]) {
+        dArry.push(`'${data[m]}'`);
+
+        if (m != rowKey) {
+          uArry.push(`${m}='${data[m]}'`);
+        }
+      } else {
+        emtyF.push(m);
+      }
+    });
+
+    var sql = `INSERT INTO ${tbName} (${fields.filter(f => !emtyF.includes(f)).join(',')}) VALUES (${dArry.join(
+      ','
+    )}) ON DUPLICATE KEY UPDATE ${uArry.join(',')}`;
+    console.log('insert_or_update', sql);
     return new Promise((resolve: (value: any) => void, reject: (value: any) => void) => {
       queryable(sql, function (err: any, result: any) {
         if (err) {

@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     initData() {
-      ticketApi.txTicketDetail(1).subscribe(res => {
+      ticketApi.ticketNews(1).subscribe(res => {
         this.data = res.value;
       });
     },

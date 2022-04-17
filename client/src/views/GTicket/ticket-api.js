@@ -4,7 +4,7 @@ const ticketApi = {};
 // cache_key 数据传入主键
 // cache_data_path 存储数据路径
 // cache_data_key 数据自带主键
-// cache_field 数据结构
+// cache_field 数据结构 ,相隔
 /**
  * 龙虎榜
  * @param {*} date
@@ -109,9 +109,11 @@ ticketApi.txTicketDetail = (code, date) => {
  * @param {*} index 页码
  * @returns
  */
-ticketApi.txTicketDetail = index => {
+ticketApi.ticketNews = index => {
   var url = `http://comment.10jqka.com.cn/api/realtime.php?block=getnews&page=${index}`;
   var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
-  return httpHelper.get(`/node-api/${jm}`, { params: { cache_module: 'ticket_news', cache_data_key: `guid` } });
+  return httpHelper.get(`/node-api/${jm}`, {
+    params: { cache_module: 'ticket_news', cache_data_key: `guid`, cache_field: 'ctime,title,url' },
+  });
 };
 export default ticketApi;

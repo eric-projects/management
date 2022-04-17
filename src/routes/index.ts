@@ -78,22 +78,24 @@ router.post('/api/upload/string', bodyParser(), async (ctx: Koa.ParameterizedCon
 router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
   async function dataGet() {
     var url = jwtHelper.decrypt(jwtHelper.defaultKey, ctx.params.url);
-
+    var fields: string[] = [sqldb.DefaultKey, 'value'];
+    var fieldStruct: any = {};
+    console.log(ctx.query);
     if (ctx.query.cache_module) {
-      var fields: string[] = ['_key', 'value'];
-      var fieldStruct: any = {};
       if (ctx.query.cache_field) {
         fields = fields.concat(ctx.query.cache_field.split(','));
       }
 
       fields.forEach(f => {
-        if (f == '_key') {
+        if (f == sqldb.DefaultKey) {
           fieldStruct[f] = sqldb.TypeString;
         } else {
           fieldStruct[f] = sqldb.TypeText;
         }
       });
-      await sqldb.init_table(ctx.query.cache_module, { value: sqldb.TypeString, ...fieldStruct }, ['_key']);
+
+      console.log('sqldb.init_table', fieldStruct);
+      await sqldb.init_table(ctx.query.cache_module, { value: sqldb.TypeText, ...fieldStruct }, [sqldb.DefaultKey]);
     }
 
     console.log('url', url);
@@ -101,20 +103,27 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
       .get(url)
       .then(data => {
         var result = data.text;
+        var resultObj = JSON.parse(result);
         if (ctx.query.cache_module) {
-          // console.log(ctx.query.cache_module);
           if (ctx.query.cache_key) {
-            console.log('insert', ctx.query.cache_key);
-            // fields.push('value');
             if (ctx.query.cache_refresh) {
-              sqldb.update_row(ctx.query.cache_module, '_key', { _key: ctx.query.cache_key, value: result }, fields);
+              sqldb.update_row(
+                ctx.query.cache_module,
+                sqldb.DefaultKey,
+                { ...resultObj, _key: ctx.query.cache_key, value: result },
+                fields
+              );
             } else {
-              sqldb.insert(ctx.query.cache_module, { _key: ctx.query.cache_key, value: result }, fields);
+              sqldb.insert_or_update_row(
+                ctx.query.cache_module,
+                sqldb.DefaultKey,
+                { ...resultObj, _key: ctx.query.cache_key, value: result },
+                fields
+              );
             }
           } else if (ctx.query.cache_data_key) {
-            console.log(ctx.query.cache_data_key);
             // 针对数据自建key 存储数据
-            var cacheData = JSON.parse(result);
+            var cacheData = resultObj;
             if (ctx.query.cache_data_path) {
               var pathSplit = ctx.query.cache_data_path.split('.');
               var flag = 0;
@@ -127,28 +136,35 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
 
             if (cacheData instanceof Array) {
               cacheData.forEach(e => {
-                // dbHelper.Add(ctx.query.cache_module, e[ctx.query.cache_data_key], e).then(() => {});
                 if (!ctx.query.cache_refresh) {
-                  sqldb.insert(ctx.query.cache_module, { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) }, fields);
+                  sqldb.insert_or_update_row(
+                    ctx.query.cache_module,
+                    sqldb.DefaultKey,
+                    { ...e, _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) },
+                    fields
+                  );
                 } else {
-                  sqldb.update_row(ctx.query.cache_module, '_key', { _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) }, fields);
+                  sqldb.update_row(
+                    ctx.query.cache_module,
+                    sqldb.DefaultKey,
+                    { ...e, _key: e[ctx.query.cache_data_key], value: JSON.stringify(e) },
+                    fields
+                  );
                 }
-                // sqlitedb.insert(ctx.query.cache_module, { ...e, _key: e[ctx.query.cache_data_key] }, fields);
               });
             } else {
-              // dbHelper.Add(ctx.query.cache_module, cacheData[ctx.query.cache_data_key], cacheData).then(() => {});
               if (!ctx.query.cache_refresh) {
-                sqldb.insert(
+                sqldb.insert_or_update_row(
                   ctx.query.cache_module,
-                  // { ...cacheData, _key: cacheData[ctx.query.cache_data_key] },
-                  { _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
+                  sqldb.DefaultKey,
+                  { ...cacheData, _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
                   fields
                 );
               } else {
                 sqldb.update_row(
                   ctx.query.cache_module,
-                  '_key',
-                  { _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
+                  sqldb.DefaultKey,
+                  { ...cacheData, _key: cacheData[ctx.query.cache_data_key], value: JSON.stringify(cacheData) },
                   fields
                 );
               }
@@ -156,7 +172,7 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
           }
         }
 
-        var cacheData = JSON.parse(result);
+        var cacheData = resultObj;
         if (ctx.query.cache_data_path) {
           var pathSplit = ctx.query.cache_data_path.split('.');
           var flag = 0;
@@ -278,7 +294,7 @@ router.delete('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedCo
  * :key 数据key/数据path
  */
 router.post('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
-  var fields: string[] = ['_key', 'value'];
+  var fields: string[] = [sqldb.DefaultKey, 'value'];
   console.log(' ctx.params.key', ctx.params.key);
   if (ctx.query.cache_field) {
     fields = utilHelp.arrayDistinct(fields.concat(ctx.query.cache_field.split(',')));
@@ -291,9 +307,9 @@ router.post('/api/:module/:key', bodyParser(), async (ctx: Koa.ParameterizedCont
     fields.forEach(f => {
       fieldStruct[f] = sqldb.TypeString;
     });
-    await sqldb.init_table(ctx.params.module, { value: sqldb.TypeString, ...fieldStruct }, ['_key']);
+    await sqldb.init_table(ctx.params.module, { value: sqldb.TypeString, ...fieldStruct }, [sqldb.DefaultKey]);
   }
-  await sqldb.insert(ctx.params.module, { ...ctx.request.body, _key: ctx.params.key }, fields).then(
+  await sqldb.insert_or_update_row(ctx.params.module, sqldb.DefaultKey, { ...ctx.request.body, _key: ctx.params.key }, fields).then(
     () => {
       ctx.status = 200;
     },
