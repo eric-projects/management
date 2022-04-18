@@ -27,7 +27,9 @@ export class CompRich extends Vue {
   @Emit('data-change') dataChange(value: string) {}
 
   @Watch('data') onDataChange(value: string): void {
+    console.log('onDataChange', this.richData, value);
     this.richData = value;
+    this.$forceUpdate();
   }
 
   @Watch('richData') onRichDataChange(value: string): void {
@@ -35,7 +37,7 @@ export class CompRich extends Vue {
   }
 
   created() {
-    tinymce.init({});
+    tinymce.init({ ...this.init });
   }
   render() {
     return (

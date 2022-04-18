@@ -39,7 +39,6 @@
                 v-if="edit && tagVisible"
                 ref="input"
                 type="text"
-                size="small"
                 :style="{ width: '78px' }"
                 v-model="inputValue"
                 @blur="handleInputConfirm"
@@ -114,10 +113,10 @@ export default {
             <a-button
               type='link'
               on-click={() => {
-                this.onLook(row._key);
+                this.onEditRow(row._key);
               }}
             >
-              查看
+              编辑
             </a-button>
           </div>
         );
@@ -127,8 +126,9 @@ export default {
       this.edit = true;
       this.visible = true;
     },
-    onLook(id) {
+    onEditRow(id) {
       this.edit = false;
+      this.clearData();
       this.loadDetail(id);
       this.visible = true;
     },
@@ -162,6 +162,9 @@ export default {
         this.saveData = { ...res, value: res.value.replace(/\n/g, '<br>') };
         this.tagValue = (res.tag || []).split(';');
       });
+    },
+    clearData() {
+      this.saveData = { remark: '', name: '', value: '' };
     },
   },
 };
