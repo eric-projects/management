@@ -30,6 +30,7 @@ export class CompBaseTable extends Vue {
     pageSize: 10,
     showSizeChanger: true,
     size: 'small',
+    pageSizeOptions: ['10', '20', '50', '100'],
     showTotal: (total: string) => `共 ${total} 条`,
   };
 

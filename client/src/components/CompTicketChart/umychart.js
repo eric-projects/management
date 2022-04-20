@@ -43650,21 +43650,22 @@ function KLineChartContainer(uielement, OffscreenElement) {
       if (obj.PreventDefault == true) return; //已被上层替换,不调用默认的网络请求
     }
 
+    // alert(11)
     //请求数据
-    JSNetwork.HttpRequest({
-      url: this.StockHistoryDayApiUrl,
-      data: {
-        field: fieldList,
-        symbol: [this.Symbol],
-        orderfield: 'date',
-      },
-      type: 'post',
-      dataType: 'json',
-      async: true,
-      success: function(recvData) {
-        self.RecvFlowCapitalData(recvData);
-      },
-    });
+    // JSNetwork.HttpRequest({
+    //   url: this.StockHistoryDayApiUrl,
+    //   data: {
+    //     field: fieldList,
+    //     symbol: [this.Symbol],
+    //     orderfield: 'date',
+    //   },
+    //   type: 'post',
+    //   dataType: 'json',
+    //   async: true,
+    //   success: function(recvData) {
+    //     self.RecvFlowCapitalData(recvData);
+    //   },
+    // });
   };
 
   this.RecvFlowCapitalData = function(data) {
