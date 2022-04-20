@@ -41,7 +41,7 @@ import * as umychartcomplier from './umychart.complier';
 import { httpHelper, jwtHelper } from '@/common/utils';
 export default {
   props: {
-    code: { type: String, default: () => '601668.sh' },
+    code: { type: String, default: () => '600001.sz' },
     width: { type: Number },
   },
   data() {
@@ -50,9 +50,7 @@ export default {
   mounted() {
     function JSNetwork() {}
 
-    JSNetwork.HttpRequest = function(
-      obj //对请求进行封装
-    ) {
+    JSNetwork.HttpRequest = obj => {
       var url = obj.url;
       var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
       if (obj.type == 'post') {
@@ -101,58 +99,58 @@ export default {
           { Index: 'MA', Modify: true, Change: true, Overlay: true },
           // { Index: 'VOL', Modify: true, Change: true, Overlay: true },
           // { Index: 'RSI', Modify: true, Change: true, Overlay: true },
-        ], //窗口指标
+        ], // 窗口指标
 
         OverlayIndex: [
           // { Index: 'RSI', Windows: 0 },
           // { Index: 'MACD', Windows: 0 },
           // { Index: 'MA', Windows: 1 },
           { Index: 'PBX', Windows: 0, IsShareY: true },
-        ], //叠加指标
+        ], // 叠加指标
 
         //   OverlayIndexFrameWidth: 50,
 
         Symbol: symbol,
-        IsAutoUpdate: false, //是自动更新数据
-        //TradeIndex: {Index:'交易系统-BIAS'},    //交易系统
+        IsAutoUpdate: false, // 是自动更新数据
+        // TradeIndex: {Index:'交易系统-BIAS'},    // 交易系统
 
-        IsShowRightMenu: true, //右键菜单
-        IsShowCorssCursorInfo: true, //是否显示十字光标的刻度信息
+        IsShowRightMenu: true, // 右键菜单
+        IsShowCorssCursorInfo: true, // 是否显示十字光标的刻度信息
 
         KLine: {
-          DragMode: 1, //拖拽模式 0 禁止拖拽 1 数据拖拽 2 区间选择
-          Right: 1, //复权 0 不复权 1 前复权 2 后复权
-          Period: 0, //周期 0 日线 1 周线 2 月线 3 年线
-          MaxReqeustDataCount: 1000, //数据个数
-          PageSize: 20, //一屏显示多少数据
-          IndexTreeApiUrl: 'https://opensourcecache.zealink.com/cache/hqh5/index/commonindextree.json', //指标树下载地址
-          // Info: ['互动易', '大宗交易', '龙虎榜', '调研', '业绩预告', '公告'], //信息地雷
-          //Info:["公告","互动易","调研"],          //信息地雷
-          KLineDoubleClick: true, //双击分钟走势图
-          IsShowTooltip: true, //是否显示K线提示信息
-          //FirstShowDate:20180401,             //首屏显示的起始日期
+          DragMode: 1, // 拖拽模式 0 禁止拖拽 1 数据拖拽 2 区间选择
+          Right: 1, // 复权 0 不复权 1 前复权 2 后复权
+          Period: 0, // 周期 0 日线 1 周线 2 月线 3 年线
+          MaxReqeustDataCount: 1000, // 数据个数
+          PageSize: 20, // 一屏显示多少数据
+          IndexTreeApiUrl: 'https://opensourcecache.zealink.com/cache/hqh5/index/commonindextree.json', // 指标树下载地址
+          // Info: ['互动易', '大宗交易', '龙虎榜', '调研', '业绩预告', '公告'], // 信息地雷
+          // Info:["公告","互动易","调研"],          // 信息地雷
+          KLineDoubleClick: true, // 双击分钟走势图
+          IsShowTooltip: true, // 是否显示K线提示信息
+          // FirstShowDate:20180401,             // 首屏显示的起始日期
         },
 
-        //标题设置
+        // 标题设置
         KLineTitle: {
-          IsShowName: true, //不显示股票名称
-          IsShowSettingInfo: true, //不显示周期/复权
+          IsShowName: true, // 不显示股票名称
+          IsShowSettingInfo: true, // 不显示周期/复权
         },
 
-        //边框
+        // 边框
         Border: {
-          Left: 10, //左边间距
-          Right: 100, //右边间距
+          Left: 10, // 左边间距
+          Right: 100, // 右边间距
           Bottom: 25,
           Top: 25,
         },
 
-        //扩展图形
+        // 扩展图形
         ExtendChart: [
-          //{Name:'画图工具',Top:25,IsAutoIndent:1 }
+          // {Name:'画图工具',Top:25,IsAutoIndent:1 }
         ],
 
-        //子框架设置 (Height 窗口高度比例值)
+        // 子框架设置 (Height 窗口高度比例值)
         Frame: [
           { SplitCount: 8, StringFormat: 0, IsShowLeftText: false },
           // { SplitCount: 2, StringFormat: 0, IsShowLeftText: false },
@@ -163,20 +161,24 @@ export default {
       var windowHeight = $(window).height();
       var windowWidth = $(window).width();
       if (windowWidth <= 420) {
-        //手机小屏左右不显示坐标
+        // 手机小屏左右不显示坐标
         option.Border.Left = 1;
         option.Border.Right = 1;
-        option.KLine.IsShowTooltip = false; //关闭pc端tooltip
+        option.KLine.IsShowTooltip = false; // 关闭pc端tooltip
         option.KLine.Info = null;
         option.KLine.PageSize = 50;
-        option.ExtendChart = [{ Name: 'KLineTooltip' }]; //开启手机端tooltip
+        option.ExtendChart = [{ Name: 'KLineTooltip' }]; // 开启手机端tooltip
         option.ExtendChart = null;
         option.IsCorssOnlyDrawKLine = true;
         option.CorssCursorTouchEnd = true;
-        for (var i in option.Windows) {
+        option.Windows.forEach(i => {
           option.Windows[i].Modify = false;
           option.Windows[i].Change = false;
-        }
+        });
+        // for (var i in option.Windows) {
+        //   option.Windows[i].Modify = false;
+        //   option.Windows[i].Change = false;
+        // }
       }
 
       chart.SetOption(option);
