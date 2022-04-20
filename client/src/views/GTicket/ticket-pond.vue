@@ -52,18 +52,33 @@
       >
       <template slot="title-right"> <ticket-select-button :codes="selectCodes">加自选</ticket-select-button></template>
     </comp-base-table>
+    <a-modal v-model="visiblePbx" width="800px" title="技术线PBX" :footer="null">
+      <a-button
+        style="position:absolute;right: 10px;z-index: 100;"
+        type="primary"
+        @click="
+          () => {
+            this.$refs.kChart.refreshData(this.kCode);
+          }
+        "
+        >刷新</a-button
+      >
+      <k-chart ref="kChart" :code="kCode" :width="800"></k-chart>
+    </a-modal>
   </div>
 </template>
 
 <script>
 import ticketApi from './ticket-api';
 import { CompTableHeader, CompBaseTable } from '@/components';
+import KChart from '@/components/CompTicketChart/KChart.vue';
 import TicketSelectButton from '../ShareComp/ticket-select-button.vue';
 export default {
   components: {
     TicketSelectButton,
     CompBaseTable,
     CompTableHeader,
+    KChart,
   },
   data() {
     return {
@@ -73,6 +88,8 @@ export default {
       selectCodes: [],
       fieldsSlotMap: {},
       searchType: 'm:1+t:2',
+      visiblePbx: false,
+      kCode: '',
     };
   },
   created() {
@@ -109,7 +126,18 @@ export default {
       ];
 
       this.fieldsSlotMap['opeate'] = (cell, row) => {
-        return <div></div>;
+        return (
+          <div>
+            <a-button
+              type='primary'
+              on-click={() => {
+                this.showPbx(row);
+              }}
+            >
+              PBX
+            </a-button>
+          </div>
+        );
       };
       this.fieldsSlotMap['type'] = (cell, row) => {
         let tv = '上证';
@@ -154,6 +182,11 @@ export default {
     },
     onSelectRows(rows) {
       this.selectCodes = rows.map(m => `${m.type_code}${m.code}`);
+    },
+    showPbx(row) {
+      console.log('row', row.type_code + row.code);
+      this.kCode = `${row.code}.${row.type_code}`;
+      this.visiblePbx = true;
     },
   },
 };

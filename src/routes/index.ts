@@ -189,11 +189,9 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
   }
 
   if (ctx.query.cache_module && ctx.query.cache_key && !ctx.query.cache_refresh && (await sqldb.exist_table(ctx.query.cache_module))) {
-    console.log(ctx.query.cache_key + 'eric*********************1');
     await sqldb.query(ctx.query.cache_module, { _key: ctx.query.cache_key }).then(async (data: any) => {
       console.log('dbHelper.Get', data);
       if (!data || data.length == 0) {
-        console.log(ctx.query.cache_key + 'eric*********************2');
         await dataGet();
       } else {
         ctx.body = { ...data[0], value: JSON.parse(data[0].value) };
@@ -210,8 +208,28 @@ router.get('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext,
  */
 router.post('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {
   console.log('ctx.params');
-  console.log(ctx.params);
-  if (ctx.query.cache_module && ctx.query.cache_key) {
+  async function dataPost() {
+    var url = jwtHelper.decrypt(jwtHelper.defaultKey, ctx.params.url);
+    console.log(url);
+    await agent
+      .post(url)
+      .send(ctx.request.body)
+      .then(data => {
+        var result = data.text;
+        var resultObj = JSON.parse(result);
+        var cacheData = resultObj;
+        if (ctx.query.cache_data_path) {
+          var pathSplit = ctx.query.cache_data_path.split('.');
+          var flag = 0;
+          while (flag < pathSplit.length) {
+            cacheData = cacheData[pathSplit[flag]];
+            flag++;
+          }
+        }
+        ctx.body = { _key: ctx.query.cache_key, value: cacheData };
+      });
+  }
+  if (ctx.query.cache_module && ctx.query.cache_key && !ctx.query.cache_refresh && (await sqldb.exist_table(ctx.query.cache_module))) {
     console.log(ctx.query.cache_key + 'eric*********************1');
     await dbHelper.Get(ctx.query.cache_module, ctx.query.cache_key).then(async data => {
       // console.log('dbHelper.Get', data);
@@ -233,17 +251,7 @@ router.post('/node-api/:url', bodyParser(), async (ctx: Koa.ParameterizedContext
       }
     });
   } else {
-    var url = jwtHelper.decrypt(jwtHelper.defaultKey, ctx.params.url);
-    await agent
-      .post(url)
-      .send(ctx.request.body)
-      .then(data => {
-        ctx.body = data.body;
-        if (ctx.query.cache_module && ctx.query.cache_key) {
-          dbHelper.Add(ctx.query.cache_module, ctx.query.cache_key, data.body).then(() => {});
-        }
-        console.log(url, data);
-      });
+    await dataPost();
   }
 });
 

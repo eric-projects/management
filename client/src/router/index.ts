@@ -55,6 +55,10 @@ export default new Router({
       component: DesignerView,
     },
     {
+      path: '/kchart',
+      component: () => import('@/components/CompTicketChart/KChart.vue'),
+    },
+    {
       path: '/login',
       component: Login,
     },
