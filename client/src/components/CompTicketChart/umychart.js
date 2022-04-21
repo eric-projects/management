@@ -1188,7 +1188,6 @@ function JSChart(divElement, bOffscreen) {
 
   //K线切换指标
   this.ChangeIndex = function(windowIndex, indexName, option) {
-    debugger;
     if (this.JSChartContainer && typeof this.JSChartContainer.ChangeIndex == 'function')
       this.JSChartContainer.ChangeIndex(windowIndex, indexName, option);
   };
@@ -4111,7 +4110,6 @@ function JSChartContainer(uielement, OffscreenElement) {
     }
 
     //叠加坐标Y轴使用主图指标， 最大最小值
-    debugger;
     for (var i = 0; i < this.Frame.SubFrame.length; ++i) {
       var subFrame = this.Frame.SubFrame[i];
       for (var j = 0; j < subFrame.OverlayIndex.length; ++j) {
@@ -42319,7 +42317,6 @@ function KLineChartContainer(uielement, OffscreenElement) {
 
   //切换指标 指定切换窗口指标
   this.ChangeIndex = function(windowIndex, indexName, option) {
-    debugger;
     if (option && option.API)
       //切换api指标
       return this.ChangeAPIIndex(windowIndex, option);
@@ -42693,7 +42690,6 @@ function KLineChartContainer(uielement, OffscreenElement) {
   this.ChangeIndexTemplate = function(
     option //切换指标模板 可以设置指标窗口个数 每个窗口的指标
   ) {
-    debugger;
     if (!option.Windows) return;
     var count = option.Windows.length;
     if (count <= 0) return;
@@ -46414,7 +46410,6 @@ function MinuteChartContainer(uielement) {
   };
 
   this.ChangeIndex = function(windowIndex, indexName, option) {
-    debugger;
     if (this.Frame.SubFrame.length < 3) return;
 
     //查找系统指标

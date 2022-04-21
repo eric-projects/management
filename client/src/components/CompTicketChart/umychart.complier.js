@@ -297,7 +297,10 @@ var Character = {
       (cp >= 0x61 && cp <= 0x7a) ||
       cp === 0x5c ||
       //【】▲▼
-      cp === 0x3010 || cp === 0x3011 || cp === 0x25b2 || cp === 0x25bc ||
+      cp === 0x3010 ||
+      cp === 0x3011 ||
+      cp === 0x25b2 ||
+      cp === 0x25bc ||
       (cp >= 0x80 && Regex.NonAsciiIdentifierStart.test(Character.FromCodePoint(cp)))
     );
   },
@@ -312,7 +315,10 @@ var Character = {
       cp === 0x5c ||
       cp === 0x23 ||
       //【】▲▼
-      cp === 0x3010 || cp === 0x3011 || cp === 0x25b2 || cp === 0x25bc ||
+      cp === 0x3010 ||
+      cp === 0x3011 ||
+      cp === 0x25b2 ||
+      cp === 0x25bc ||
       (cp >= 0x80 && Regex.NonAsciiIdentifierPart.test(Character.FromCodePoint(cp)))
     );
   },
@@ -2546,6 +2552,7 @@ function JSAlgorithm(errorHandler, symbolData) {
   };
 
   this.IF = function(data, trueData, falseData) {
+    debugger;
     let isNumber = this.IsNumber(data);
     let isNumber2 = this.IsNumber(trueData);
     let isNumber3 = this.IsNumber(falseData);
@@ -2573,7 +2580,8 @@ function JSAlgorithm(errorHandler, symbolData) {
         else result[i] = null;
       }
     }
-
+    debugger;
+    console.log('eric-IF', data, trueData, falseData, result);
     return result;
   };
 
@@ -2594,6 +2602,7 @@ function JSAlgorithm(errorHandler, symbolData) {
   //平滑处理:当引用不到数据时进行的操作.此函数中,平滑时使用上一个周期的引用值.
   //例如: REF(CLOSE,BARSCOUNT(C)-1)表示第二根K线的收盘价.
   this.REF = function(data, n) {
+    debugger;
     let result = [];
     if (typeof n == 'number') {
       if (data.length <= 0) return result;
@@ -2615,7 +2624,8 @@ function JSAlgorithm(errorHandler, symbolData) {
         else result[i] = data[i];
       }
     }
-
+    debugger;
+    console.log('eric-REF', data, n, result);
     return result;
   };
 
@@ -2718,6 +2728,7 @@ function JSAlgorithm(errorHandler, symbolData) {
   //用法:MAX(A,B,C,D ..... ) 返回A,B,C,D ..... 中的较大值
   //例如: MAX(CLOSE-OPEN,0)表示若收盘价大于开盘价返回它们的差值,否则返回0
   this.MAX = function(args, node) {
+    debugger;
     if (args.length == 0) this.ThrowUnexpectedNode(node, 'MAX() Error: 参数个数不能为0');
     if (args.length == 1) return args[0];
 
@@ -2764,6 +2775,7 @@ function JSAlgorithm(errorHandler, symbolData) {
       maxAryData[i] = Math.max(maxAryData[i], maxNumber);
     }
 
+    console.log('eric-MAX', args, node, maxAryData);
     return maxAryData;
   };
 
@@ -2822,13 +2834,15 @@ function JSAlgorithm(errorHandler, symbolData) {
 
   //取正数
   this.ABS = function(data) {
+    debugger;
     let result = [];
 
     for (let i in data) {
       result[i] = null;
       if (!isNaN(data[i])) result[i] = Math.abs(data[i]);
     }
-
+    debugger;
+    console.log('eric-ABS', data, result);
     return result;
   };
 
@@ -2885,6 +2899,7 @@ function JSAlgorithm(errorHandler, symbolData) {
       }
     }
 
+    console.log(dayCount, result);
     return result;
   };
 
@@ -3708,6 +3723,7 @@ function JSAlgorithm(errorHandler, symbolData) {
       }
     }
 
+    console.log('eric-SUM', data, n, result);
     return result;
   };
 
@@ -4088,7 +4104,8 @@ function JSAlgorithm(errorHandler, symbolData) {
       var result = [];
       if (data.length <= 0) return result;
 
-      for (var i in data) { //初始化
+      for (var i in data) {
+        //初始化
         result[i] = 0;
       }
 
@@ -12419,7 +12436,8 @@ function JSSymbolData(ast, option, jsExecute) {
 
   this.ReadIndexArgumentValue = function(args, result) {
     result.Args = [];
-    for (var i in result.SytemIndex.Args) { //复制参数
+    for (var i in result.SytemIndex.Args) {
+      //复制参数
       var item = result.SytemIndex.Args[i];
       result.Args.push({ Value: item.Value, Name: item.Name });
     }
@@ -12509,7 +12527,8 @@ function JSSymbolData(ast, option, jsExecute) {
 
     if (Array.isArray(systemItem.Args) && systemItem.Args.length > 0) {
       indexInfo.Args = [];
-      for (var i in systemItem.Args) { //复制参数
+      for (var i in systemItem.Args) {
+        //复制参数
         var item = systemItem.Args[i];
         indexInfo.Args.push({ Value: item.Value, Name: item.Name });
       }
@@ -12641,6 +12660,7 @@ function JSSymbolData(ast, option, jsExecute) {
     var propertyName = member.Property.Name;
 
     var memberValue = {};
+    console.log('eric2', this.Execute.VarTable);
     if (this.Execute.VarTable.has(objName)) memberValue = this.Execute.VarTable.get(objName);
     else this.Execute.VarTable.set(objName, memberValue);
 
@@ -13062,7 +13082,8 @@ function JSSymbolData(ast, option, jsExecute) {
     if (findDate < 5000000) findDate += 19000000;
 
     var index = null;
-    for (let i in this.Data.Data) { //查找日期对应的索引
+    for (let i in this.Data.Data) {
+      //查找日期对应的索引
       if (this.Data.Data[i].Date == findDate) {
         index = parseInt(i);
         break;
@@ -13532,8 +13553,10 @@ function JSExecute(ast, option) {
     this.OutVarTable = [];
     this.VarTable = new Map();
     JSConsole.Complier.Log('[JSExecute::Execute] Load Arguments', this.Arguments);
-    for (let i in this.Arguments) { //预定义的变量
+    for (let i in this.Arguments) {
+      //预定义的变量
       let item = this.Arguments[i];
+      console.log('eric8', this.VarTable);
       this.VarTable.set(item.Name, item.Value);
     }
 
@@ -13929,6 +13952,7 @@ function JSExecute(ast, option) {
                 let varValue = this.VarTable.get(varName);
                 if (!Array.isArray(varValue)) {
                   varValue = this.SingleDataToArrayData(varValue);
+                  console.log('eric15', varValue, this.VarTable);
                   this.VarTable.set(varName, varValue); //把常量放到变量表里
                 }
               } else {
@@ -13969,6 +13993,7 @@ function JSExecute(ast, option) {
                   if (!Array.isArray(varValue)) varValue = this.SingleDataToArrayData(varValue);
                   varName = '__temp_si_' + i + '__';
                   isNoneName = true;
+                  console.log('eric17', varValue, this.VarTable);
                   this.VarTable.set(varName, varValue); //放到变量表里
                 }
               }
@@ -13977,6 +14002,7 @@ function JSExecute(ast, option) {
               if (j == 0) {
                 let aryValue = this.SingleDataToArrayData(itemExpression.Value);
                 varName = itemExpression.Value.toString();
+                console.log('eric18', aryValue, this.VarTable);
                 this.VarTable.set(varName, aryValue); //把常量放到变量表里
               }
             } else if (itemExpression.Type == Syntax.CallExpression) {
@@ -13988,6 +14014,7 @@ function JSExecute(ast, option) {
                   let varValue = itemExpression.Out;
                   varName = `__temp_sc_${itemExpression.Callee.Name}_${i}__`;
                   isNoneName = true;
+                  console.log('eric20', varValue, this.VarTable);
                   this.VarTable.set(varName, varValue);
                 }
               } else {
@@ -14019,6 +14046,7 @@ function JSExecute(ast, option) {
                 varName = '__temp_sb_' + i + '__';
                 let aryValue = itemExpression.Out;
                 isNoneName = true;
+                console.log('eric24', aryValue, this.VarTable);
                 this.VarTable.set(varName, aryValue);
               }
             }
@@ -14490,6 +14518,7 @@ function JSExecute(ast, option) {
     }
 
     if (JS_EXECUTE_DEBUG_LOG) JSConsole.Complier.Log('[JSExecute::VisitAssignmentExpression]', varName, ' = ', value);
+    console.log('eric34', value, this.VarTable);
     this.VarTable.set(varName, value);
   };
 
@@ -14725,8 +14754,10 @@ function JSExplainer(ast, option) {
       this.OutVarTable = [];
       this.VarTable = new Map();
       JSConsole.Complier.Log('[JSExecute::JSExplainer] Load Arguments', this.Arguments);
-      for (let i in this.Arguments) { //预定义的变量
+      for (let i in this.Arguments) {
+        //预定义的变量
         let item = this.Arguments[i];
+        console.log('eric38', item.Value, this.VarTable);
         this.VarTable.set(item.Name, item.Value);
       }
 
@@ -14826,6 +14857,7 @@ function JSExplainer(ast, option) {
             if (itemExpression.Type == Syntax.AssignmentExpression && itemExpression.Operator == ':' && itemExpression.Left) {
               varName = itemExpression.Left.Name;
               let varValue = this.VarTable.get(varName);
+              console.log('eric44', varValue, this.VarTable);
               this.VarTable.set(varName, varValue); //把常量放到变量表里
             } else if (itemExpression.Type == Syntax.Identifier) {
               let value = itemExpression.Name;
@@ -14848,6 +14880,7 @@ function JSExplainer(ast, option) {
                 let varValue = this.ReadVariable(varName, itemExpression);
                 varName = '__temp_si_' + i + '__';
                 isNoneName = true;
+                console.log('eric46', varValue, this.VarTable);
                 this.VarTable.set(varName, varValue); //放到变量表里
               }
             } else if (itemExpression.Type == Syntax.Literal) {
@@ -14855,6 +14888,7 @@ function JSExplainer(ast, option) {
               let aryValue = itemExpression.Value;
               varName = itemExpression.Value.toString();
               isNoneName = true;
+              console.log('eric47', aryValue, this.VarTable);
               this.VarTable.set(varName, aryValue); //把常量放到变量表里
             } else if (itemExpression.Type == Syntax.CallExpression) {
               if (this.IsDrawFunction(itemExpression.Callee.Name)) {
@@ -14864,12 +14898,14 @@ function JSExplainer(ast, option) {
                 let varValue = itemExpression.Out;
                 varName = `__temp_sc_${itemExpression.Callee.Name}_${i}__`;
                 isNoneName = true;
+                console.log('eric49', varValue, this.VarTable);
                 this.VarTable.set(varName, varValue);
               }
             } else if (itemExpression.Type == Syntax.BinaryExpression) {
               varName = '__temp_sb_' + i + '__';
               let aryValue = itemExpression.Out;
               isNoneName = true;
+              console.log('eric51', aryValue, this.VarTable);
               this.VarTable.set(varName, aryValue);
             }
           }
@@ -16486,6 +16522,7 @@ function JSExplainer(ast, option) {
     }
 
     JSConsole.Complier.Log('[JSExplainer::VisitAssignmentExpression]', varName, ' = ', value);
+    console.log('eric56', value, this.VarTable);
     this.VarTable.set(varName, value);
   };
 
@@ -21248,7 +21285,8 @@ function DownloadGroupData(obj) {
 }
 
 window.ScriptIndex = ScriptIndex;
-window.OverlayScriptIndex=OverlayScriptIndex;
+window.OverlayScriptIndex = OverlayScriptIndex;
+window.JSAlgorithm = JSAlgorithm;
 
 /* 测试例子
 var code1='VARHIGH:IF(VAR1<=REF(HH,-1),REF(H,BARSLAST(VAR1>=REF(HH,1))),DRAWNULL),COLORYELLOW;';

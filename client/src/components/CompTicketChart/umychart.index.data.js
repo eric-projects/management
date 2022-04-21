@@ -4192,20 +4192,34 @@ JSIndexScript.prototype.ASI = function() {
     Name: 'ASI',
     Description: '振动升降指标',
     IsMainIndex: false,
-    Args: [{ Name: 'N1', Value: 6 }],
+    Args: [
+      { Name: 'M1', Value: 18 },
+      { Name: 'M2', Value: 8 },
+    ],
     //脚本
     Script:
-      'X_1:=REF(CLOSE,1);\n\
-X_2:=ABS(HIGH-X_1);\n\
-X_3:=ABS(LOW-X_1);\n\
-X_4:=ABS(HIGH-REF(LOW,1));\n\
-X_5:=ABS(X_1-REF(OPEN,1));\n\
-X_6:=IF(X_2>X_3 AND X_2>X_4,X_2+X_3/2+X_5/4,IF(X_3>X_4 AND X_3>X_2,X_3+X_2/2+X_5/4,X_4+X_5/4));\n\
-X_7:=CLOSE-X_1+(CLOSE-OPEN)/2+X_1-REF(OPEN,1);\n\
-X_8:=8*X_7/X_6*MAX(X_2,X_3);\n\
-ASI:SUM(X_8,0),LINETHICK2;\n\
-MASI:MA(ASI,N1),LINETHICK2;',
+      'LC:=REF(CLOSE,1);\n\
+      AA:=ABS(HIGH-LC);\n\
+      BB:=ABS(LOW-LC);\n\
+      CC:=ABS(HIGH-REF(LOW,1));\n\
+      DD:=ABS(LC-REF(OPEN,1));\n\
+      R:=IF(AA>BB AND AA>CC,AA+BB/2+DD/4,IF(BB>CC AND BB>AA,BB+AA/2+DD/4,CC+DD/4));\n\
+      X:=CLOSE-LC+(CLOSE-OPEN)/2+LC-REF(OPEN,1);\n\
+      SI:=16*X/R*MAX(AA,BB);\n\
+      ASI:SUM(SI,M1);\n\
+      ASIT:MA(ASI,M2);',
   };
+
+  // 'X_1:=REF(CLOSE,1);\n\
+  // X_2:=ABS(HIGH-X_1);\n\
+  // X_3:=ABS(LOW-X_1);\n\
+  // X_4:=ABS(HIGH-REF(LOW,1));\n\
+  // X_5:=ABS(X_1-REF(OPEN,1));\n\
+  // X_6:=IF(X_2>X_3 AND X_2>X_4,X_2+X_3/2+X_5/4,IF(X_3>X_4 AND X_3>X_2,X_3+X_2/2+X_5/4,X_4+X_5/4));\n\
+  // X_7:=CLOSE-X_1+(CLOSE-OPEN)/2+X_1-REF(OPEN,1);\n\
+  // X_8:=8*X_7/X_6*MAX(X_2,X_3);\n\
+  // ASI:SUM(X_8,0),LINETHICK2;\n\
+  // MASI:MA(ASI,N1),LINETHICK2;',
 
   return data;
 };
@@ -4599,5 +4613,5 @@ JSIndexScript.prototype.TEST = function() {
 
 window.JSIndexScript = JSIndexScript;
 window.g_CustomIndex = g_CustomIndex;
-window.CONDITION_PERIOD=CONDITION_PERIOD;
+window.CONDITION_PERIOD = CONDITION_PERIOD;
 export default JSIndexScript;
