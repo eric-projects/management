@@ -127,10 +127,48 @@ ticketApi.riseBoard = () => {
   return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: 'data.display.header' } });
 };
 
+/**
+ * 当前涨停板块内股票
+ * @param {*} board
+ * @returns
+ */
 ticketApi.riseBoardCodes = board => {
   var url = `https://proxy.finance.qq.com/ifzqgtimg/appstock/news/ZtAnalysis/getByPlate?pltCode=${board}`;
   var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
   return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: 'data' } });
+};
+
+/**
+ * 行业板块
+ * @returns
+ */
+ticketApi.boardHangYe = () => {
+  // zgb 涨股比
+  // zdf 涨跌幅
+  var url = `https://proxy.finance.qq.com/ifzqgtimg/appstock/fundflow/Fundflow/getHyRank?t=zgb&o=1`;
+  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
+  return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: 'data.data' } });
+};
+
+/**
+ * 概念板块
+ * @returns
+ */
+ticketApi.boardGaiNian = () => {
+  var url = `https://proxy.finance.qq.com/ifzqgtimg/appstock/fundflow/Fundflow/getGnRank?t=zgb&o=1`;
+  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
+  return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: 'data.data' } });
+};
+
+/**
+ * 行业/概念明细股
+ * @param {*} code
+ * @returns
+ */
+ticketApi.boardTickets = code => {
+  var url = `https://proxy.finance.qq.com/cgi/cgi-bin/rank/hs/getBoardRankList?board_code=${code}&sort_type=price&direct=down`;
+  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
+  return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: 'data.rank_list' } });
 };
 
 export default ticketApi;

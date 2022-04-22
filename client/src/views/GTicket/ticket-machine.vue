@@ -15,15 +15,42 @@
           show-search
           placeholder="选择涨板块"
           style="width: 160px"
-          @change="riseBordChange"
+          optionFilterProp="children"
           @select="riseBordSelect"
         >
           <a-select-option v-for="(item, i) in riseBoardSource" :key="i" :value="item.ptCode">
-            {{ `${item.name}(${item.num})` }}
+            {{ `${item.name}_${item.num}` }}
           </a-select-option>
         </a-select></a-col
       >
-      <a-col :span="6">板块/概念：</a-col>
+      <a-col :span="6"
+        >行业：<a-select
+          allowClear
+          show-search
+          placeholder="选择行业"
+          style="width: 160px"
+          optionFilterProp="children"
+          @select="hyOrgnBordSelect"
+        >
+          <a-select-option v-for="(item, i) in hyBoardSource" :key="i" :value="item.code">
+            {{ `${item.name}_${item.code}` }}
+          </a-select-option>
+        </a-select></a-col
+      >
+      <a-col :span="6"
+        >概念：<a-select
+          allowClear
+          show-search
+          placeholder="选择概念"
+          style="width: 160px"
+          optionFilterProp="children"
+          @select="hyOrgnBordSelect"
+        >
+          <a-select-option v-for="(item, i) in gnBoardSource" :key="i" :value="item.code">
+            {{ `${item.name}_${item.code}` }}
+          </a-select-option>
+        </a-select></a-col
+      >
     </a-row>
     <a-row class="mt-2"
       ><a-col :span="3">
@@ -129,6 +156,8 @@ export default {
       dataSource: [],
       search$: new Subject(),
       riseBoardSource: [],
+      hyBoardSource: [],
+      gnBoardSource: [],
       resultData: [],
       visibleK: false,
       analysisData: {},
@@ -141,7 +170,9 @@ export default {
     };
   },
   created() {
-    this.getRiseBord();
+    this.getRiseBoard();
+    this.getHangYeBoard();
+    this.getGaiNianBoard();
     this.search$.pipe(debounceTime(400)).subscribe(() => {
       var queryData = { _index: 1 };
       queryData.code = this.code;
@@ -152,7 +183,7 @@ export default {
     });
   },
   methods: {
-    getRiseBord() {
+    getRiseBoard() {
       var currentHours = new Date().getHours();
       var cacheRiseBoard = localStorage.getItem('riseboard');
       if ((currentHours > 14 || currentHours < 9) && cacheRiseBoard) {
@@ -166,13 +197,31 @@ export default {
         localStorage.setItem('riseboard', JSON.stringify(res.value));
       });
     },
-    riseBordChange(value) {
-      console.log(`riseBordChange ${value}`);
+    getHangYeBoard() {
+      ticketApi.boardHangYe().subscribe(res => {
+        this.hyBoardSource = res.value;
+        localStorage.setItem('hyBoard', JSON.stringify(res.value));
+      });
+    },
+    getGaiNianBoard() {
+      ticketApi.boardGaiNian().subscribe(res => {
+        this.gnBoardSource = res.value;
+        localStorage.setItem('boardGaiNian', JSON.stringify(res.value));
+      });
     },
     riseBordSelect(value) {
       console.log('riseBordSelect', value);
       this.riseCode = value;
       ticketApi.riseBoardCodes(value).subscribe(res => {
+        console.log(res.value);
+        this.resultData = res.value;
+        this.getKData();
+      });
+    },
+    hyOrgnBordSelect(value) {
+      console.log('hyBordSelect', value);
+      // this.riseCode = value;
+      ticketApi.boardTickets(value).subscribe(res => {
         console.log(res.value);
         this.resultData = res.value;
         this.getKData();
@@ -286,9 +335,9 @@ export default {
         var len = data.CLOSE.length - 1;
         if (this.enablePBX) {
           var pbxData = khelp.PBX(data.CLOSE);
-          if (pbxData[len] > low && pbxData[len] < height) {
+          if (pbxData[len] < height) {
             // 站上了pbx
-            if (pbxData[len] > height) {
+            if (pbxData[len] < low) {
               // 高高在上
               remarks.push('PBX高');
             } else {
@@ -302,7 +351,7 @@ export default {
         if (this.enableOX) {
           var day144Data = khelp.MA(data.CLOSE, 144);
           var day233Data = khelp.MA(data.CLOSE, 233);
-          if (day144Data[len] < height && day144Data[len] > low && day233Data[len] < height && day233Data[len] > low) {
+          if (day144Data[len] < height && day233Data[len] < height) {
             // 站上了牛头分界线
             if (day144Data[len] < low && day233Data[len] < low) {
               // 高高在上
@@ -317,9 +366,9 @@ export default {
 
         if (this.enable4Line) {
           var day4Data = khelp.MA(data.CLOSE, 4);
-          if (day4Data[len] > low && day4Data[len] < height) {
+          if (day4Data[len] < height) {
             // 站上了4日线
-            if (day4Data[len] > height) {
+            if (day4Data[len] < low) {
               // 高高在上
               remarks.push('4日高');
             } else {
