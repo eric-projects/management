@@ -95,8 +95,8 @@ ticketApi.userSelectTicket = (codes, group, type = 'add_select' | 'delete_select
 
 /**
  * 获取票票明细
- * @param {*} code
- * @returns
+ * @param {*} code shxxxx格式
+ * @returns [{时间,开盘,收盘,最高,最低,成交量,{},换手,成交额,}]
  */
 ticketApi.txTicketDetail = (code, date) => {
   var url = `https://proxy.finance.qq.com/ifzqgtimg/appstock/app/newkline/newkline?param=${code},day,,,${date + 2}`;
@@ -116,4 +116,21 @@ ticketApi.ticketNews = index => {
     params: { cache_module: 'ticket_news', cache_data_key: `guid`, cache_field: 'ctime,title,url' },
   });
 };
+
+/**
+ * 当前涨停版块
+ * @returns
+ */
+ticketApi.riseBoard = () => {
+  var url = `https://proxy.finance.qq.com/ifzqgtimg/appstock/news/ZtAnalysis/index?ver=1`;
+  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
+  return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: 'data.display.header' } });
+};
+
+ticketApi.riseBoardCodes = board => {
+  var url = `https://proxy.finance.qq.com/ifzqgtimg/appstock/news/ZtAnalysis/getByPlate?pltCode=${board}`;
+  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
+  return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: 'data' } });
+};
+
 export default ticketApi;

@@ -43,6 +43,7 @@ import { httpHelper, jwtHelper } from '@/common/utils';
 export default {
   props: {
     code: { type: String, default: () => '600001.sz' },
+    zbs: { type: Array },
     width: { type: Number },
   },
   data() {
@@ -126,7 +127,8 @@ export default {
       var width = $(window).width();
       var divKline = document.getElementById('kline');
       divKline.style.width = (this.width || width) + 'px';
-      divKline.style.height = '360px';
+      divKline.style.height = 150 * (this.zbs || []).length + 360 + 'px';
+      debugger;
       chart.OnSize();
 
       var option = {
@@ -196,6 +198,12 @@ export default {
           // { SplitCount: 2, StringFormat: 0, IsShowLeftText: false },
         ],
       };
+
+      if (this.zbs) {
+        this.zbs.forEach(zb => {
+          option.Windows.push({ Index: zb, Modify: true, Change: true, Overlay: true });
+        });
+      }
 
       var windowHeight = $(window).height();
       var windowWidth = $(window).width();

@@ -794,9 +794,9 @@ JSIndexScript.prototype.MACD = function() {
     Description: '平滑异同平均',
     IsMainIndex: false,
     Args: [
-      { Name: 'SHORT', Value: 12 },
-      { Name: 'LONG', Value: 26 },
-      { Name: 'MID', Value: 9 },
+      { Name: 'SHORT', Value: 8 },
+      { Name: 'LONG', Value: 13 },
+      { Name: 'MID', Value: 5 },
     ],
     //脚本
     Script: 'DIF:EMA(CLOSE,SHORT)-EMA(CLOSE,LONG);\n\
@@ -907,9 +907,9 @@ JSIndexScript.prototype.RSI = function() {
     Description: '相对强弱指标',
     IsMainIndex: false,
     Args: [
-      { Name: 'N1', Value: 6 },
-      { Name: 'N2', Value: 12 },
-      { Name: 'N3', Value: 24 },
+      { Name: 'N1', Value: 7 },
+      { Name: 'N2', Value: 7 },
+      { Name: 'N3', Value: 7 },
     ],
     //脚本
     Script:
@@ -1524,8 +1524,8 @@ JSIndexScript.prototype.KD = function() {
     IsMainIndex: false,
     Args: [
       { Name: 'N', Value: 9 },
-      { Name: 'M1', Value: 3 },
-      { Name: 'M2', Value: 3 },
+      { Name: 'M1', Value: 2 },
+      { Name: 'M2', Value: 2 },
     ],
     //脚本
     Script: 'RSV:=(CLOSE-LLV(LOW,N))/(HHV(HIGH,N)-LLV(LOW,N))*100;\n\

@@ -163,6 +163,7 @@ export class MainLayout extends Vue {
         { id: 'ticket-pond', locales: '股票池', route: 'ticket-management/pond' },
         { id: 'ticket-rank', locales: '龙虎榜', route: 'ticket-management/rank' },
         { id: 'ticket-rise', locales: '涨停', route: 'ticket-management/rise' },
+        { id: 'ticket-machine', locales: '量化', route: 'ticket-management/machine' },
         { id: 'ticket-calculation', locales: '计算', route: 'ticket-management/calculation' },
       ],
     });

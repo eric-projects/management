@@ -172,7 +172,7 @@ khelp.IF = (data, trueData, falseData) => {
  * @param {*} dayCount 统计天数
  * @returns
  */
-khelp.MA = (data, dayCount) => {
+khelp.BaseMA = (data, dayCount) => {
   let result = [];
   if (dayCount <= 0) return result;
 
@@ -237,9 +237,9 @@ khelp.MA = (data, dayCount) => {
  * @returns PBX 数组值
  */
 khelp.PBX = (closeArry, dayCount = 5, p = 2) => {
-  var v = khelp.MA(closeArry, dayCount);
-  var v2 = khelp.MA(closeArry, dayCount * 2);
-  var v4 = khelp.MA(closeArry, dayCount * 4);
+  var v = khelp.BaseMA(closeArry, dayCount);
+  var v2 = khelp.BaseMA(closeArry, dayCount * 2);
+  var v4 = khelp.BaseMA(closeArry, dayCount * 4);
   return closeArry.map((m, i) => {
     return ((v[i] + v2[i] + v4[i]) / 3).toFixed(p) - 0;
   });
@@ -294,7 +294,7 @@ khelp.ASI = (dataArry, M1 = 18, M2 = 8) => {
   var R_ = khelp.IF(R1, R2, khelp.IF(R31, R32, R33));
   var SI_ = dataArry.map((m, i) => ((16 * X_[i]) / R_[i]) * khelp.MAX([AA_[i], BB_[i]], 0));
   var ASI = khelp.SUM(SI_, M1);
-  var ASIT = khelp.MA(ASI, M2);
+  var ASIT = khelp.BaseMA(ASI, M2);
 
   return dataArry.map((m, i) => [ASI[i], ASIT[i], ASI[i] - ASIT[i]]);
   //  X=(5.78-5.86+(5.78-5.80)/2+5.86-6.11); ===》-0.33999999999999986
@@ -309,6 +309,16 @@ khelp.ASI = (dataArry, M1 = 18, M2 = 8) => {
   // SI=16*X/R*MAX(AA,BB);
   // ASI:SUM(SI,M1);
   // ASIT:MA(ASI,M2);
+};
+
+/**
+ * 计算日线
+ * @param {*} closeArry 收盘价数组
+ * @param {*} dayCount 计算天数
+ * @returns
+ */
+khelp.MA = (closeArry, dayCount = 4) => {
+  return khelp.BaseMA(closeArry, dayCount);
 };
 export default khelp;
 
@@ -1316,6 +1326,6 @@ export default khelp;
 //   6.09,
 //   5.86,
 // ];
-// console.log('eric1111111111', khelp.MA(testD, 4));
-// console.log('eric1111111111', khelp.MA(testD, 144));
-// console.log('eric1111111111', khelp.MA(testD, 233));
+// console.log('eric1111111111', khelp.baseMA(testD, 4));
+// console.log('eric1111111111', khelp.baseMA(testD, 144));
+// console.log('eric1111111111', khelp.baseMA(testD, 233));
