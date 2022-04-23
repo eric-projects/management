@@ -55,16 +55,20 @@ export async function TicketLogic(ctx: Koa.ParameterizedContext, next: Koa.Next)
       console.log('ctx.request.query', ctx.request.body.type);
       await sqldb.delete_row(module, 'type', `'${type}'`);
       await ticketdfHelper.get_df_ticket(type).then(res => {
+        // f6成交额
+        // f23 市静率 （有值包含 正常和停牌）
         sqldb.insert_batch(
           module,
-          res.map((item: any) => ({
-            _key: item.f12,
-            code: item.f12,
-            name: item.f14,
-            type: type,
-            zm: pinyin.getCamelChars(item.f14),
-            type_code: shArry.includes(type) ? 'sh' : 'sz',
-          }))
+          res
+            .filter((item: any) => item.f23)
+            .map((item: any) => ({
+              _key: item.f12,
+              code: item.f12,
+              name: item.f14.replace(/ /g, ''),
+              type: type,
+              zm: pinyin.getCamelChars(item.f14).replace(/ /g, ''),
+              type_code: shArry.includes(type) ? 'sh' : 'sz',
+            }))
         );
       });
       break;

@@ -63,7 +63,7 @@
         "
         >刷新</a-button
       >
-      <k-chart ref="kChart" :code="kCode" :width="800"></k-chart>
+      <k-chart ref="kChart" :code="kCode" :width="800" :zbs="['AMO', 'RSI', 'KD', 'ASI']"></k-chart>
     </a-modal>
   </div>
 </template>
