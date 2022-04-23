@@ -1924,13 +1924,15 @@ JSIndexScript.prototype.AMO = function() {
     Description: '成交金额',
     IsMainIndex: false,
     Args: [
-      { Name: 'M1', Value: 5 },
-      { Name: 'M2', Value: 10 },
+      { Name: 'M1', Value: 6 },
+      { Name: 'M2', Value: 13 },
+      { Name: 'M3', Value: 21 },
     ],
     //脚本
     Script: 'AMOW:AMOUNT/10000.0,VOLSTICK;\n\
 AMO1:MA(AMOW,M1);\n\
-AMO2:MA(AMOW,M2);',
+AMO2:MA(AMOW,M2);\n\
+AMO3:MA(AMOW,M3);',
   };
 
   return data;

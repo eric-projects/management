@@ -91,11 +91,23 @@
         </a-checkbox></a-col
       ><a-col :span="3">
         <a-checkbox
-          v-model="enableASI"
+          v-model="enableAmount"
           style="color:blue"
           @change="
             e => {
               this.changeAnalysisCount(e, 30);
+            }
+          "
+        >
+          成交额
+        </a-checkbox></a-col
+      ><a-col :span="3">
+        <a-checkbox
+          v-model="enableASI"
+          style="color:blue"
+          @change="
+            e => {
+              this.changeAnalysisCount(e, 21);
             }
           "
         >
@@ -135,7 +147,7 @@
         "
         >刷新</a-button
       >
-      <k-chart ref="kChart" :code="kCode" :width="800" :zbs="['RSI', 'KD', 'ASI']"></k-chart>
+      <k-chart ref="kChart" :code="kCode" :width="800" :zbs="['AMO', 'RSI', 'KD', 'ASI']"></k-chart>
     </a-modal>
   </div>
 </template>
@@ -167,6 +179,7 @@ export default {
       enable4Line: false,
       enablePBX: false,
       enableASI: false,
+      enableAmount: false,
     };
   },
   created() {
@@ -271,15 +284,17 @@ export default {
             data.OPEN = [];
             data.CLOSE = [];
             data.HLOC = [];
+            data.AMOUNT = [];
             data.day = {};
             res.value.forEach((m, i) => {
               data.HIGH.push(+m[3]);
               data.LOW.push(+m[4]);
               data.OPEN.push(+m[1]);
               data.CLOSE.push(+m[2]);
+              data.AMOUNT.push(+m[8]);
               data.HLOC.push({ HIGH: +m[3], LOW: +m[4], OPEN: +m[1], CLOSE: +m[2] });
               if (i == res.value.length - 1) {
-                data.day = { HIGH: +m[3], LOW: +m[4], OPEN: +m[1], CLOSE: +m[2] };
+                data.day = { HIGH: +m[3], LOW: +m[4], OPEN: +m[1], CLOSE: +m[2], AMOUNT: +m[8] };
               }
             });
             this.analysisData[d.code] = data;
@@ -305,34 +320,31 @@ export default {
         var day = data.day;
         var height = day.HIGH;
         var low = day.LOW;
+        var len = data.CLOSE.length - 1;
         if (this.enableASI) {
           var asiData = khelp.ASI(data.HLOC);
-          var asiFlag = true;
-          var asiIndex = asiData.length - 1;
-          while (asiFlag) {
-            var current = asiData[asiIndex];
-            if (current[0] && current[1] && (current[2] || current[2] == 0)) {
-              if (current[2] == 0) {
-                // 当天金叉
-                asiFlag = false;
-                remarks.push('ASI当天金叉');
-              } else if (current[2] > 0) {
-                // 金叉中
-                remarks.push('ASI金叉中');
-                asiFlag = false;
-                asiIndex--;
+          var current = asiData[len];
+          if (current[0] && current[1] && (current[2] || current[2] == 0)) {
+            if (current[2] == 0) {
+              // 当天金叉
+              remarks.push('ASI当天金叉高');
+            } else if (current[2] > 0) {
+              // 金叉中
+              var pre = asiData[len - 1];
+              if (pre[1] && pre[2] < current[2]) {
+                remarks.push('ASI金叉高');
+              } else if (pre[1] && pre[2] > current[2]) {
+                remarks.push('ASI金叉低');
               } else {
-                // 死叉
-                asiFlag = false;
-                d.hidden = true;
+                remarks.push('ASI金叉中');
               }
             } else {
-              asiFlag = false;
+              // 死叉
+              d.hidden = true;
             }
           }
         }
 
-        var len = data.CLOSE.length - 1;
         if (this.enablePBX) {
           var pbxData = khelp.PBX(data.CLOSE);
           if (pbxData[len] < height) {
@@ -379,30 +391,62 @@ export default {
           }
         }
 
+        if (this.enableAmount) {
+          var amountData = khelp.AMO(data.AMOUNT);
+          var amountCount = 0;
+          if (amountData[len][0] < day.AMOUNT) {
+            amountCount++;
+          }
+
+          if (amountData[len][1] < day.AMOUNT) {
+            amountCount++;
+          }
+
+          if (amountData[len][2] < day.AMOUNT) {
+            amountCount++;
+          }
+          if (amountCount > 0) {
+            // 站上成交金线
+            if (amountCount == 3) {
+              // 高
+              remarks.push('成交额高');
+            } else if (amountCount == 2) {
+              remarks.push('成交额中');
+            } else {
+              remarks.push('成交额低');
+            }
+          } else {
+            d.hidden = true;
+          }
+        }
+
         d.remarks = remarks;
         return d;
       });
     },
     colorlogic(tag) {
+      var result = '';
       if (tag.includes('ASI')) {
-        return '#108ee9';
+        result = '#108ee9';
       }
 
       if (tag.includes('PBX')) {
-        return '#87d068';
+        result = '#87d068';
       }
 
       if (tag.includes('牛头')) {
-        return '#2db7f5';
+        result = '#2db7f5';
       }
 
       if (tag.includes('4日')) {
-        return 'pink';
+        result = 'blue';
       }
 
       if (tag.includes('高')) {
-        return 'red';
+        result = 'red';
       }
+
+      return result;
     },
   },
 };

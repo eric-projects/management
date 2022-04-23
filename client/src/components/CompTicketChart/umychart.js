@@ -60085,4 +60085,5 @@ window.ChartData=ChartData;
 window.IFrameSplitOperator=IFrameSplitOperator;
 window.ChartLine=ChartLine;
 window.DynamicTitleData=DynamicTitleData;
+window.ChartVolStick=ChartVolStick;
 export default JSChart;

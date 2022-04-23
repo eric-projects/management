@@ -320,6 +320,29 @@ khelp.ASI = (dataArry, M1 = 18, M2 = 8) => {
 khelp.MA = (closeArry, dayCount = 4) => {
   return khelp.BaseMA(closeArry, dayCount);
 };
+
+/**
+ * 计算成交金额
+ * @param {*} amountArry
+ * @param {*} M1
+ * @param {*} M2
+ * @param {*} M3
+ * @returns
+ */
+khelp.AMO = (amountArry, M1 = 6, M2 = 13, M3 = 21) => {
+  var AMOW = amountArry.map(m => m / 10000.0);
+  var AMO1 = khelp.BaseMA(AMOW, M1);
+  var AMO2 = khelp.BaseMA(AMOW, M3);
+  var AMO3 = khelp.BaseMA(AMOW, M3);
+
+  return amountArry.map((m, i) => [AMO1[i], AMO2[i], AMO3[i]]);
+  //脚本
+  //  Script: 'AMOW:AMOUNT/10000.0,VOLSTICK;\n\
+  //  AMO1:MA(AMOW,M1);\n\
+  //  AMO2:MA(AMOW,M2);\n\
+  //  AMO3:MA(AMOW,M3);',
+  //    };
+};
 export default khelp;
 
 // MA1:MA(CLOSE,M1)

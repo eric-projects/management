@@ -42,7 +42,7 @@ import * as umychartcomplier from './umychart.complier';
 import { httpHelper, jwtHelper } from '@/common/utils';
 export default {
   props: {
-    code: { type: String, default: () => '600001.sz' },
+    code: { type: String },
     zbs: { type: Array },
     width: { type: Number },
   },
@@ -119,7 +119,7 @@ export default {
   },
   methods: {
     initChart() {
-      var symbol = this.code;
+      var symbol = this.code || '601668.sh';
       // 创建股票K线图
       var chart = JSChart.Init(document.getElementById('kline'));
       this.chartObj = chart;
@@ -139,7 +139,7 @@ export default {
           { Index: 'MA', Modify: true, Change: true, Overlay: true },
           // { Index: 'VOL', Modify: true, Change: true, Overlay: true },
           // { Index: 'RSI', Modify: true, Change: true, Overlay: true },
-          // { Index: 'ASI', Modify: true, Change: true, Overlay: true },
+          // { Index: 'AMO', Modify: true, Change: true, Overlay: true },
         ], // 窗口指标
 
         OverlayIndex: [
