@@ -128,7 +128,6 @@ export default {
       var divKline = document.getElementById('kline');
       divKline.style.width = (this.width || width) + 'px';
       divKline.style.height = 150 * (this.zbs || []).length + 360 + 'px';
-      debugger;
       chart.OnSize();
 
       var option = {

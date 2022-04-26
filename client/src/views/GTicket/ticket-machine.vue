@@ -236,7 +236,7 @@ export default {
     this.getRiseBoard();
     this.getHangYeBoard();
     this.getGaiNianBoard();
-    this.initMySelect();
+    this.initMySelect(undefined);
     this.search$.pipe(debounceTime(400)).subscribe(() => {
       var queryData = { _index: 1 };
       queryData.code = this.code;
@@ -247,7 +247,7 @@ export default {
     });
   },
   methods: {
-    initMySelect(fun = undefined) {
+    initMySelect(fun) {
       ticketApi.my_select().subscribe(res => {
         this.mySelectOption = res.value.data.groupInfoList;
         if (fun) {

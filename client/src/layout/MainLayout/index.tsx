@@ -164,7 +164,8 @@ export class MainLayout extends Vue {
         { id: 'ticket-rank', locales: '龙虎榜', route: 'ticket-management/rank' },
         { id: 'ticket-rise', locales: '涨停', route: 'ticket-management/rise' },
         { id: 'ticket-machine', locales: '量化', route: 'ticket-management/machine' },
-        { id: 'ticket-calculation', locales: '计算', route: 'ticket-management/calculation' },
+        { id: 'ticket-calculation', locales: '计算买价', route: 'ticket-management/calculation' },
+        { id: 'ticket-value-investing', locales: '价值投资', route: 'ticket-management/ticket-value-investing' },
       ],
     });
     this.$forceUpdate();

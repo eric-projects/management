@@ -40,6 +40,7 @@ export default new Router({
         { path: 'rise', component: () => import('@/views/GTicket/ticket-rise.vue') },
         { path: 'machine', component: () => import('@/views/GTicket/ticket-machine.vue') },
         { path: 'calculation', component: () => import('@/views/GTicket/ticket-calculation.vue') },
+        { path: 'ticket-value-investing', component: () => import('@/views/GTicket/ticket-value-investing.vue') },
       ],
     },
     {

@@ -171,4 +171,16 @@ ticketApi.boardTickets = code => {
   return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: 'data.rank_list' } });
 };
 
+/**
+ * 价值透支
+ * @param {*} code 编码
+ * @param {*} type 1年报，2季报
+ * @returns
+ */
+ticketApi.valueInvesting = (code, type) => {
+  var url = `https://emweb.securities.eastmoney.com/PC_HSF10/NewFinanceAnalysis/ZYZBAjaxNew?type=${type}&code=${code}`;
+  var jm = jwtHelper.encrypt(jwtHelper.defaultKey, url);
+  return httpHelper.get(`/node-api/${jm}`, { params: { cache_data_path: 'data' } }, { loading: false });
+};
+
 export default ticketApi;
