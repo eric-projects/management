@@ -412,8 +412,8 @@ export default {
           d.hidden = true;
         } else {
           var day = data.day;
-          var height = day.HIGH;
-          var low = day.LOW;
+          var height = Math.max(day.OPEN, day.CLOSE);
+          var low = Math.min(day.OPEN, day.CLOSE);
           var len = data.CLOSE.length - 1;
           if (this.enableASI) {
             var asiData = khelp.ASI(data.HLOC);
@@ -424,13 +424,21 @@ export default {
                 remarks.push('ASI金叉高(当天)');
               } else if (current[2] > 0) {
                 // 金叉中
+                var ljASICount = 1;
+                for (let index = len - 1; index > len - 10; index--) {
+                  if (asiData[index][2] > 0) {
+                    ljASICount++;
+                  } else {
+                    break;
+                  }
+                }
                 var pre = asiData[len - 1];
                 if (pre && pre[1] && pre[2] < current[2]) {
-                  remarks.push('ASI金叉高');
+                  remarks.push(`ASI金叉高:${ljASICount}`);
                 } else if (pre[1] && pre[2] > current[2]) {
-                  remarks.push('ASI金叉低');
+                  remarks.push(`ASI金叉低:${ljASICount}`);
                 } else {
-                  remarks.push('ASI金叉中');
+                  remarks.push(`ASI金叉中:${ljASICount}`);
                 }
               } else {
                 // 死叉
@@ -443,11 +451,19 @@ export default {
             var pbxData = khelp.PBX(data.CLOSE);
             if (pbxData[len] < height) {
               // 站上了pbx
+              var ljPBXCount = 1;
+              for (let index = len - 1; index > len - 10; index--) {
+                if (pbxData[index] < Math.max(data.HLOC[index].OPEN, data.HLOC[index].CLOSE)) {
+                  ljPBXCount++;
+                } else {
+                  break;
+                }
+              }
               if (pbxData[len] < low) {
                 // 高高在上
-                remarks.push('PBX线高');
+                remarks.push(`PBX线高:${ljPBXCount}`);
               } else {
-                remarks.push('PBX线中');
+                remarks.push(`PBX线中:${ljPBXCount}`);
               }
             } else {
               d.hidden = true;
@@ -459,11 +475,20 @@ export default {
             var day233Data = khelp.MA(data.CLOSE, 233);
             if (day144Data[len] && day233Data[len] && day144Data[len] < height && day233Data[len] < height) {
               // 站上了牛头分界线
+              var ljOXCount = 1;
+              for (let index = len - 1; index > len - 10; index--) {
+                var minLow = Math.min(data.HLOC[index].OPEN, data.HLOC[index].CLOSE);
+                if (day144Data[index] < minLow || day233Data[index] < minLow) {
+                  ljOXCount++;
+                } else {
+                  break;
+                }
+              }
               if (day144Data[len] < low && day233Data[len] < low) {
                 // 高高在上
-                remarks.push('牛头线高');
+                remarks.push(`牛头线高:${ljOXCount}`);
               } else {
-                remarks.push('牛头线中');
+                remarks.push(`牛头线中:${ljOXCount}`);
               }
             } else {
               d.hidden = true;
@@ -474,11 +499,19 @@ export default {
             var day4Data = khelp.MA(data.CLOSE, 4);
             if (day4Data[len] && day4Data[len] < height) {
               // 站上了4日线
+              var lj4DayCount = 1;
+              for (let index = len - 1; index > len - 10; index--) {
+                if (day4Data[index] < Math.max(data.HLOC[index].OPEN, data.HLOC[index].CLOSE)) {
+                  lj4DayCount++;
+                } else {
+                  break;
+                }
+              }
               if (day4Data[len] < low) {
                 // 高高在上
-                remarks.push('4日线高');
+                remarks.push(`4日线高:${lj4DayCount}`);
               } else {
-                remarks.push('4日线中');
+                remarks.push(`4日线中:${lj4DayCount}`);
               }
             } else {
               d.hidden = true;
@@ -503,13 +536,21 @@ export default {
             }
             if (amountCount > 0) {
               // 站上成交金线
+              var ljAmountCount = 1;
+              for (let index = len - 1; index > len - 10; index--) {
+                if (amountData[index][0] < day.AMOUNT || amountData[index][1] < day.AMOUNT || amountData[index][2] < day.AMOUNT) {
+                  ljAmountCount++;
+                } else {
+                  break;
+                }
+              }
               if (amountCount == 3) {
                 // 高
-                remarks.push('成交额高');
+                remarks.push(`成交额高:${ljAmountCount}`);
               } else if (amountCount == 2) {
-                remarks.push('成交额中');
+                remarks.push(`成交额中:${ljAmountCount}`);
               } else {
-                remarks.push('成交额低');
+                remarks.push(`成交额低:${ljAmountCount}`);
               }
             } else {
               d.hidden = true;

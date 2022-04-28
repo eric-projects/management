@@ -62,6 +62,25 @@
       >
     </a-row>
     <a-divider />
+    <a-row>
+      <a-col :span="6">
+        <a-dropdown class="mb-2">
+          <a-menu slot="overlay" @click="clearSelect">
+            <a-menu-item v-for="item in mySelectOption" :key="item.groupId">
+              {{ item.groupName + '_' + item.stockList.length }}
+            </a-menu-item>
+          </a-menu>
+          <a-button> 清空自选 <a-icon type="down" /> </a-button>
+        </a-dropdown>
+        <a-dropdown>
+          <a-menu slot="overlay" @click="addSelect">
+            <a-menu-item v-for="item in mySelectOption" :key="item.groupId">
+              {{ item.groupName + '_' + item.stockList.length }}
+            </a-menu-item>
+          </a-menu>
+          <a-button type="primary"> 加入自选 <a-icon type="down" /> </a-button> </a-dropdown></a-col
+    ></a-row>
+
     <a-list bordered :data-source="resultData">
       <a-list-item slot="renderItem" slot-scope="item" v-if="!item.hidden">
         {{ `${item.name}(${item.code})` }}
@@ -113,9 +132,11 @@ export default {
       dataSource: [],
       hyBoardSource: [],
       gnBoardSource: [],
+      mySelectOption: [],
     };
   },
   created() {
+    this.initMySelect(undefined);
     this.getHangYeBoard();
     this.getGaiNianBoard();
     this.search$.pipe(debounceTime(400)).subscribe(() => {
@@ -128,6 +149,14 @@ export default {
     });
   },
   methods: {
+    initMySelect(fun) {
+      ticketApi.my_select().subscribe(res => {
+        this.mySelectOption = res.value.data.groupInfoList;
+        if (fun) {
+          fun();
+        }
+      });
+    },
     marketTypeSelect(value) {
       var queryData = { type: value, _index: -1 };
       ticketApi.searchData(queryData).subscribe(res => {
@@ -187,6 +216,20 @@ export default {
         this.code = tv + e;
         this.resultData = [{ code: tv + e, name: selectItem.name, _code: e }];
         this.getKData();
+      }
+    },
+    clearSelect(value, fun) {
+      this.initMySelect(() => {
+        var codes = this.mySelectOption.find(f => f.groupId == value.key).stockList;
+        if (codes.length > 0) {
+          ticketApi.userSelectTicket(codes, value.key, 'delete_select').subscribe(() => {});
+        }
+      });
+    },
+    addSelect(value) {
+      var codes = this.resultData.filter(f => !f.hidden).map(f => f.code);
+      if (codes.length > 0) {
+        ticketApi.userSelectTicket(codes, value.key, 'add_select').subscribe(() => {});
       }
     },
     getKData() {
